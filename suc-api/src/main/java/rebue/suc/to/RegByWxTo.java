@@ -1,0 +1,47 @@
+package rebue.suc.to;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+/**
+ * 注册用户(通过微信)的传输对象
+ */
+@ApiModel(value = "注册(微信)", description = "用户通过微信注册的参数")
+public class RegByWxTo extends RegBaseTo {
+    @ApiModelProperty(value = "微信的ID", required = true)
+    private String wxId;
+    @ApiModelProperty(value = "微信昵称", required = true)
+    private String wxNickname;
+    @ApiModelProperty(value = "微信头像", required = true)
+    private String wxFace;
+
+    public String getWxId() {
+        return wxId;
+    }
+
+    public void setWxId(String wxId) {
+        this.wxId = wxId;
+    }
+
+    public String getWxNickname() {
+        return wxNickname;
+    }
+
+    public void setWxNickname(String wxNickname) {
+        this.wxNickname = wxNickname;
+    }
+
+    public String getWxFace() {
+        return wxFace;
+    }
+
+    public void setWxFace(String wxFace) {
+        this.wxFace = wxFace;
+    }
+
+    @Override
+    public String toString() {
+        return "RegByWxTo [wxId=" + wxId + ", wxNickname=" + wxNickname + ", wxFace=" + wxFace + "]";
+    }
+
+}

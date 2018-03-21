@@ -1,0 +1,14 @@
+[
+	{
+		"templateName": "svc.btl",
+		"targetDir": "../suc-api/src/main/java/${modulePath}/svc/",
+		"targetFile": "${entityName}Svc.java",
+		"backup": false
+	},
+	{
+		"templateName": "svc-impl.btl",
+		"targetDir": "../suc-bll/src/main/java/${modulePath}/svc/impl/",
+		"targetFile": "${entityName}SvcImpl.java",
+		"backup": false
+	}
+]

@@ -1,0 +1,46 @@
+package rebue.suc.to;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "登录(QQ)", description = "用户通过QQ登录的参数")
+public class LoginByQqTo extends RegAndLoginBaseTo {
+    @ApiModelProperty(value = "QQ的ID")
+    private String qqId;
+    @ApiModelProperty(value = "QQ昵称")
+    private String qqNickname;
+    @ApiModelProperty(value = "QQ头像")
+    private String qqFace;
+
+    public String getQqId() {
+        return qqId;
+    }
+
+    public void setQqId(String qqId) {
+        this.qqId = qqId;
+    }
+
+    public String getQqNickname() {
+        return qqNickname;
+    }
+
+    public void setQqNickname(String qqNickname) {
+        this.qqNickname = qqNickname;
+    }
+
+    public String getQqFace() {
+        return qqFace;
+    }
+
+    public void setQqFace(String qqFace) {
+        this.qqFace = qqFace;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginByQqTo [qqId=" + qqId + ", qqNickname=" + qqNickname + ", qqFace=" + qqFace + ", getAppId()="
+                + getAppId() + ", getUserAgent()=" + getUserAgent() + ", getMac()=" + getMac() + ", getIp()=" + getIp()
+                + "]";
+    }
+
+}
