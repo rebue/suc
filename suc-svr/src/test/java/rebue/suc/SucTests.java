@@ -7,6 +7,8 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -20,8 +22,9 @@ import rebue.wheel.OkhttpUtils;
 import rebue.wheel.turing.DigestUtils;
 
 public class SucTests {
+    private final static Logger _log     = LoggerFactory.getLogger(SucTests.class);
 
-    private String       _hostUrl      = "http://localhost:9100/";
+    private String              _hostUrl = "http://localhost:9100/";
 //    private String       _hostUrl      = "http://120.77.220.106/suc-svr/";
 //    private String       _hostUrl      = "http://120.79.251.116/suc-svr/";
 
@@ -39,7 +42,7 @@ public class SucTests {
      * 8. 李四四注册成功
      * 9. 张三三是否被锁定
      */
-    @Test
+//    @Test
     public void test01() throws IOException {
         UserRegRo regRo;
         // 1. 没有填写必要参数
@@ -146,9 +149,11 @@ public class SucTests {
         Assert.assertEquals(false, isLocked(promoterId));
     }
 
-//    @Test
+    @Test
     public void test() throws JsonParseException, JsonMappingException, IOException {
-        System.out.println(getIdByUserName("韦玉婵"));
+        Long id = getIdByUserName("张三三");
+        _log.info("得到用户张三三的ID:{}", id);
+        _log.info("得到用户的信息:{}", getById(id));
     }
 
     /**
@@ -156,9 +161,19 @@ public class SucTests {
      */
     private Long getIdByUserName(String userName) throws JsonParseException, JsonMappingException, IOException {
         String url = _hostUrl + "/user/id/byusername";
-        Map<String, String> requestParams = new LinkedHashMap<>();
+        Map<String, Object> requestParams = new LinkedHashMap<>();
         requestParams.put("userName", userName);
         return _objectMapper.readValue(OkhttpUtils.get(url, requestParams), Long.class);
+    }
+
+    /**
+     * 获取用户信息(通过用户ID)
+     */
+    private String getById(Long id) throws JsonParseException, JsonMappingException, IOException {
+        String url = _hostUrl + "/user/";
+        Map<String, Object> requestParams = new LinkedHashMap<>();
+        requestParams.put("id", id.toString());
+        return OkhttpUtils.get(url, requestParams);
     }
 
     private UserRegRo regByLoginName(String loginName, String loginPswd, Long promoterId, String email, String mobile,
@@ -198,7 +213,7 @@ public class SucTests {
      */
     private Boolean isLocked(Long userId) throws JsonParseException, JsonMappingException, IOException {
         String url = _hostUrl + "/user/islocked";
-        Map<String, String> requestParams = new LinkedHashMap<>();
+        Map<String, Object> requestParams = new LinkedHashMap<>();
         requestParams.put("id", userId.toString());
         return _objectMapper.readValue(OkhttpUtils.get(url, requestParams), Boolean.class);
     }
@@ -209,7 +224,7 @@ public class SucTests {
      * 2. 注册成功
      * 3. QQ的ID已经存在
      */
-    @Test
+//    @Test
     public void test02() throws IOException {
         UserRegRo regRo;
         // 1. 没有填写必要参数
@@ -283,7 +298,7 @@ public class SucTests {
      * 2. 注册成功
      * 3. 微信的ID已经存在
      */
-    @Test
+//    @Test
     public void test03() throws IOException {
         UserRegRo regRo;
         // 1. 没有填写必要参数
@@ -355,7 +370,7 @@ public class SucTests {
      * 4. 超过5次输入密码错误，账号被锁定
      * 5. 登录成功
      */
-    @Test
+//    @Test
     public void test04() throws IOException {
         UserLoginRo loginRo;
         // 1. 没有填写必要参数
@@ -442,7 +457,7 @@ public class SucTests {
      * 6. 超过5次输入密码错误，账号被锁定
      * 7. 登录成功
      */
-    @Test
+//    @Test
     public void test05() throws IOException {
         UserLoginRo loginRo;
         // 1. 没有填写必要参数
@@ -537,7 +552,7 @@ public class SucTests {
      * 2. QQ的ID已经存在
      * 3. 登录成功
      */
-    @Test
+//    @Test
     public void test06() throws IOException {
         UserLoginRo loginRo;
         // 1. 没有填写必要参数
@@ -606,7 +621,7 @@ public class SucTests {
      * 2. 微信的ID已经存在
      * 3. 登录成功
      */
-    @Test
+//    @Test
     public void test07() throws IOException {
         UserLoginRo loginRo;
         // 1. 没有填写必要参数
