@@ -127,12 +127,12 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 	/**
 	 * 锁定用户
 	 */
-	@Update("update SUC_USER set IS_LOCK=1 where id=#{id}")
+	@Update("update SUC_USER set IS_LOCK=1 where ID=#{id}")
 	int lock(Long id);
 
 	/**
 	 * 解锁用户
 	 */
-	@Update("update SUC_USER set IS_LOCK=0 where id=#{id}")
+	@Update("update SUC_USER set IS_LOCK=0 where ID=#{id}")
 	int unlock(Long id);
 }
