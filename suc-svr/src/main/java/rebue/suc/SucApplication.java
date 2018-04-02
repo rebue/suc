@@ -1,6 +1,7 @@
 package rebue.suc;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.context.annotation.Bean;
 
@@ -15,6 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringCloudApplication
 @EnableSwagger2
+@ServletComponentScan("rebue")
 public class SucApplication {
 
     public static void main(String[] args) {
