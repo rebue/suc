@@ -1,6 +1,8 @@
 package rebue.suc.svc.impl;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -839,4 +841,130 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         return userMo.getId();
     }
 
+    /**
+     * 微信设置登录密码
+     * Title: setLoginPassword
+     * Description: 
+     * @param wxId
+     * @param newLoginPswd
+     * @return
+     * @date 2018年5月2日 下午12:57:25
+     * 1、判断参数是否为空
+     * 2、查询用户信息并判断该用户是否存在
+     * 3、判断登录密码是否为空
+     * 4、添加登录密码
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public Map<String, Object> setLoginPassword(String wxId, String newLoginPswd) {
+    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	if (wxId == null || wxId.equals("") || wxId.equals("null")) {
+			_log.error("设置登录密码时出现微信ID为空");
+			throw new RuntimeException("您未登陆，请先登录");
+		}
+    	
+    	if (newLoginPswd == null || newLoginPswd.equals("") || newLoginPswd.equals("null")) {
+			_log.error("设置登录密码时出现没有输入新的登录密码，微信ID为：{}", wxId);
+			throw new RuntimeException("请输入新的登录密码");
+		}
+    	
+    	_log.info("设置登录密码查询用户信息的参数为：{}", wxId);
+		// 查询用户信息
+		SucUserMo userMo = _mapper.selectUserInfoByWx(wxId);
+    	_log.info("设置登录密码查询用户信息的返回值为：{}", userMo.toString());
+    	if (userMo.getWxId() == null || userMo.getWxId().equals("") || userMo.getWxId().equals("null")) {
+    		_log.error("设置登录密码查询用户信息时出现用户信息为空，微信ID为：{}", wxId);
+    		throw new RuntimeException("找不到用户信息");
+		}
+    	
+    	if (userMo.getLoginPswd() != null && !userMo.getLoginPswd().equals("") && !userMo.getLoginPswd().equals("null")) {
+			_log.error("微信设置登录密码时出现该用户微信用户已设置了登录密码，微信ID为：{}", wxId);
+			throw new RuntimeException("您已设置过登录密码");
+		}
+    	
+    	String salt = RandomEx.random1(6);
+		newLoginPswd = saltPswd(newLoginPswd, salt);
+		_log.info("设置登录密码的参数为：{}", wxId + ", " + newLoginPswd + ", " + salt);
+		int setResult = _mapper.setLoginPswd(wxId, newLoginPswd, salt);
+		_log.info("设置登录密码的返回值为：{}", setResult);
+		if (setResult < 1) {
+			_log.error("设置登录密码设置登录密码时出错，微信ID为：{}", wxId);
+			throw new RuntimeException("设置失败");
+		}
+		
+		_log.info("微信设置登录密码成功，微信ID为：{}", wxId);
+		resultMap.put("result", 1);
+		resultMap.put("msg", "设置成功");
+    	return resultMap;
+    }
+    
+    /**
+     * 微信修改登录密码
+     * Title: changeLoginPassword
+     * Description: 
+     * @param wxId
+     * @param oldLoginPswd
+     * @param newLoginPswd
+     * @return
+     * @date 2018年5月2日 下午1:21:06
+     * 1、判断参数是否为空
+     * 2、查询用户信息并判断用户是否存在
+     * 3、判断用户是否已设置登录密码
+     * 4、判断输入的登录密码是否正确
+     * 5、修改登录密码
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public Map<String, Object> changeLoginPassword(String wxId, String oldLoginPswd, String newLoginPswd) {
+    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	if (wxId == null || wxId.equals("") || wxId.equals("null")) {
+			_log.error("设置或修改登录密码时出现微信ID为空");
+			throw new RuntimeException("您未登陆，请先登录");
+		}
+    	
+    	if (newLoginPswd == null || newLoginPswd.equals("") || newLoginPswd.equals("null")) {
+			_log.error("修改登录密码时出现没有输入新的登录密码，微信ID为：{}", wxId);
+			throw new RuntimeException("请输入新的登录密码");
+		}
+    	
+    	if (oldLoginPswd == null || oldLoginPswd.equals("") || oldLoginPswd.equals("null")) {
+    		_log.error("修改登录密码时出现没有输入旧的登录密码，微信ID为：{}", wxId);
+    		throw new RuntimeException("请输入旧的登录密码");
+    	}
+    	
+    	_log.info("修改登录密码查询用户信息的参数为：{}", wxId);
+		// 查询用户信息
+		SucUserMo userMo = _mapper.selectUserInfoByWx(wxId);
+    	_log.info("修改登录密码查询用户信息的返回值为：{}", userMo.toString());
+    	if (userMo.getWxId() == null || userMo.getWxId().equals("") || userMo.getWxId().equals("null")) {
+    		_log.error("修改登录密码查询用户信息时出现用户信息为空，微信ID为：{}", wxId);
+    		throw new RuntimeException("找不到用户信息");
+		}
+    	String salt = "";
+    	String oriLoginPswd = userMo.getLoginPswd();
+    	if (oriLoginPswd != null && !oriLoginPswd.equals("") && !oriLoginPswd.equals("null")) {
+    		oldLoginPswd = saltPswd(oldLoginPswd, userMo.getSalt());
+			if (!oriLoginPswd.equals(oldLoginPswd)) {
+				_log.error("修改登录密码时出现输入的旧密码不等于原来的旧密码，微信ID为：{}", wxId);
+				throw new RuntimeException("输入的旧密码不正确");
+			} else {
+				salt = userMo.getSalt();
+				newLoginPswd = saltPswd(newLoginPswd, salt);
+				_log.info("修改登录密码的参数为：{}", wxId + ", " + newLoginPswd);
+				int updateResult = _mapper.updateloginPswd(wxId, newLoginPswd);
+				_log.info("修改登录密码的返回值为：{}", updateResult);
+				if (updateResult < 1) {
+					_log.error("修改登录密码根据微信ID修改密码时出现错误，微信ID为：{}", wxId);
+					throw new RuntimeException("修改失败");
+				}
+			}
+		} else {
+			_log.error("微信修改登录密码时出现没有设置登录密码，微信ID为：{}", wxId);
+			throw new RuntimeException("您未设置登录密码，请先设置后再试");
+		}
+    	_log.info("微信修改登录密码成功，微信ID为：{}", wxId);
+    	resultMap.put("result", 1);
+    	resultMap.put("msg", "修改成功");
+    	return resultMap;
+    }
 }

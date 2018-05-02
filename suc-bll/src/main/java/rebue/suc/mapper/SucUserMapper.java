@@ -2,6 +2,8 @@ package rebue.suc.mapper;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import rebue.robotech.mapper.MybatisBaseMapper;
 import rebue.suc.mo.SucUserMo;
 import org.apache.ibatis.annotations.Select;
@@ -100,7 +102,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 	 * 根据手机号获取用户信息
 	 */
 	@Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_MOBILE, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK from SUC_USER "
-			+ " where lower(MOBILE) = lower(#{mobile,jdbcType=VARCHAR})")
+			+ " where MOBILE = #{mobile,jdbcType=VARCHAR}")
 	SucUserMo selectByMobile(String mobile);
 
 	/**
@@ -114,14 +116,14 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 	 * 根据QQ的id获取用户信息
 	 */
 	@Select("select ID, NICKNAME, QQ_NICKNAME, QQ_FACE, IS_LOCK from SUC_USER "
-			+ " where lower(QQ_ID) = lower(#{qqId,jdbcType=VARCHAR})")
+			+ " where QQ_ID = #{qqId,jdbcType=VARCHAR}")
 	SucUserMo selectByQq(String qqId);
 
 	/**
 	 * 根据微信的id获取用户信息
 	 */
 	@Select("select ID, NICKNAME, WX_NICKNAME, WX_FACE, IS_LOCK from SUC_USER "
-			+ " where lower(WX_ID) = lower(#{wxId,jdbcType=VARCHAR})")
+			+ " where WX_ID = #{wxId,jdbcType=VARCHAR}")
 	SucUserMo selectByWx(String wxId);
 
 	/**
@@ -135,4 +137,40 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 	 */
 	@Update("update SUC_USER set IS_LOCK=0 where ID=#{id}")
 	int unlock(Long id);
+	
+	/**
+	 * 根据微信ID查询登录密码、密码组合码、微信ID
+	 * Title: selectUserInfoByWx
+	 * Description: 
+	 * @param wxId
+	 * @return
+	 * @date 2018年4月28日 上午11:47:26
+	 */
+	@Select("SELECT LOGIN_PSWD, SALT, WX_ID FROM SUC_USER WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
+	SucUserMo selectUserInfoByWx(@Param("wxId") String wxId);
+	
+	/**
+	 * 根据微信ID修改登录密码
+	 * Title: updateloginPswd
+	 * Description: 
+	 * @param wxId
+	 * @param loginPswd
+	 * @return
+	 * @date 2018年4月28日 上午11:57:49
+	 */
+	@Update("UPDATE SUC_USER SET LOGIN_PSWD = #{loginPswd,jdbcType=VARCHAR} WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
+	int updateloginPswd(@Param("wxId") String wxId, @Param("loginPswd") String loginPswd);
+	
+	/**
+	 * 根据微信ID设置登录密码
+	 * Title: setLoginPswd
+	 * Description: 
+	 * @param wxId
+	 * @param loginPswd
+	 * @param salt
+	 * @return
+	 * @date 2018年4月28日 上午11:59:04
+	 */
+	@Update("UPDATE SUC_USER SET LOGIN_PSWD = #{loginPswd,jdbcType=VARCHAR}, SALT = #{salt,jdbcType=VARCHAR} WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
+	int setLoginPswd(@Param("wxId") String wxId, @Param("loginPswd") String loginPswd, @Param("salt") String salt);
 }

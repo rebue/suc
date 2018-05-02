@@ -1,5 +1,7 @@
 package rebue.suc.svc;
 
+import java.util.Map;
+
 import rebue.robotech.svc.MybatisBaseSvc;
 import rebue.suc.mo.SucUserMo;
 import rebue.suc.ro.BindWxRo;
@@ -94,5 +96,28 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * 获取用户ID(通过微信ID)
      */
     Long getIdByWxId(String wxId);
+
+	/**
+	 * 微信设置登录密码
+	 * Title: setLoginPassword
+	 * Description: 
+	 * @param wxId
+	 * @param newLoginPswd
+	 * @return
+	 * @date 2018年5月2日 下午1:10:03
+	 */
+	Map<String, Object> setLoginPassword(String wxId, String newLoginPswd);
+
+	/**
+	 * 微信修改登录密码
+	 * Title: changeLoginPassword
+	 * Description: 
+	 * @param wxId
+	 * @param oldLoginPswd
+	 * @param newLoginPswd
+	 * @return
+	 * @date 2018年5月2日 下午1:21:46
+	 */
+	Map<String, Object> changeLoginPassword(String wxId, String oldLoginPswd, String newLoginPswd);
 
 }
