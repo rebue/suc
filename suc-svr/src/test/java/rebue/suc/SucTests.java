@@ -22,13 +22,11 @@ import rebue.wheel.OkhttpUtils;
 import rebue.wheel.turing.DigestUtils;
 
 public class SucTests {
-    private final static Logger _log     = LoggerFactory.getLogger(SucTests.class);
+    private final static Logger _log          = LoggerFactory.getLogger(SucTests.class);
 
-    private String              _hostUrl = "http://localhost:9100/";
-//    private String       _hostUrl      = "http://120.77.220.106/suc-svr/";
-//    private String       _hostUrl      = "http://120.79.251.116/suc-svr/";
+    private String              _hostUrl      = "http://localhost:9100/";
 
-    private ObjectMapper _objectMapper = new ObjectMapper();
+    private ObjectMapper        _objectMapper = new ObjectMapper();
 
     /**
      * 测试用户注册(通过登录名称注册)
@@ -42,114 +40,86 @@ public class SucTests {
      * 8. 李四四注册成功
      * 9. 张三三是否被锁定
      */
-//    @Test
+    @Test
     public void test01() throws IOException {
         UserRegRo regRo;
         // 1. 没有填写必要参数
-        regRo = regByLoginName(null, "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "IP地址A");
+        regRo = regByLoginName(null, "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "IP地址A");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName(" ", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "IP地址A");
-        regRo = regByLoginName("张三", null, null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017",
-                (byte) 11, "用户浏览器A", "MAC地址A", "IP地址A");
+        regRo = regByLoginName(" ", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "IP地址A");
+        regRo = regByLoginName("张三", null, null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "IP地址A");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三", " ", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017",
-                (byte) 11, "用户浏览器A", "MAC地址A", "IP地址A");
+        regRo = regByLoginName("张三", " ", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "IP地址A");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", null, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", null, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, null, "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, null, "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "    ", "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "    ", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", null, "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", null, "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "   ", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "   ", "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", null);
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", null);
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "   ");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "   ");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
 
         // 2. 参数的格式不正确
-        regRo = regByLoginName("张三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "@163.com", "13545879858", "昵称A", "实名A", "450104201504011017",
-                (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@", "13545879858", "昵称A", "实名A", "450104201504011017",
-                (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "135458798581", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "135458798581", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "1354587985", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "1354587985", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "23545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "23545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "4501042015040110171", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "4501042015040110171", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "45010420150401101", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "45010420150401101", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011016", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011016", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.PARAM_ERROR, regRo.getResult());
 
         // 3. 注册成功
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.SUCCESS, regRo.getResult());
         Long promoterId = regRo.getUserId();
 
         // 4. 登录名称已存在
-        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("张三三", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.LOGIN_NAME_EXIST, regRo.getResult());
 
         // 5. Email已存在
-        regRo = regByLoginName("李四四", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("李四四", "12345678", null, "zhangsan@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.EMAIL_EXIST, regRo.getResult());
 
         // 6. Mobile已存在
-        regRo = regByLoginName("李四四", "12345678", null, "lisi@163.com", "13545879858", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("李四四", "12345678", null, "lisi@163.com", "13545879858", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.MOBILE_EXIST, regRo.getResult());
 
         // 7. 身份证号码已存在
-        regRo = regByLoginName("李四四", "12345678", null, "lisi@163.com", "13545879857", "昵称A", "实名A",
-                "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
+        regRo = regByLoginName("李四四", "12345678", null, "lisi@163.com", "13545879857", "昵称A", "实名A", "450104201504011017", (byte) 11, "用户浏览器A", "MAC地址A", "测试IP");
         Assert.assertEquals(RegResultDic.IDCARD_EXIST, regRo.getResult());
 
         // 8. 注册成功
-        regRo = regByLoginName("李四四", "12345678", promoterId, "lisi@163.com", "13545879857", "昵称B", "实名B",
-                "450104190001011014", (byte) 11, "用户浏览器B", "MAC地址B", "测试IPBS");
+        regRo = regByLoginName("李四四", "12345678", promoterId, "lisi@163.com", "13545879857", "昵称B", "实名B", "450104190001011014", (byte) 11, "用户浏览器B", "MAC地址B", "测试IPBS");
         Assert.assertEquals(RegResultDic.SUCCESS, regRo.getResult());
-        regRo = regByLoginName("王五五", "12345678", promoterId, "wangwu@163.com", "13545879859", "昵称C", "实名C",
-                "420921198212114647", (byte) 11, "用户浏览器C", "MAC地址C", "测试IPC");
+        regRo = regByLoginName("王五五", "12345678", promoterId, "wangwu@163.com", "13545879859", "昵称C", "实名C", "420921198212114647", (byte) 11, "用户浏览器C", "MAC地址C", "测试IPC");
         Assert.assertEquals(RegResultDic.SUCCESS, regRo.getResult());
 
         // 9. 张三三是否被锁定
         Assert.assertEquals(false, isLocked(promoterId));
     }
 
-    @Test
+//    @Test
     public void test() throws JsonParseException, JsonMappingException, IOException {
         Long id = getIdByUserName("张三三");
         _log.info("得到用户张三三的ID:{}", id);
@@ -176,9 +146,8 @@ public class SucTests {
         return OkhttpUtils.get(url, requestParams);
     }
 
-    private UserRegRo regByLoginName(String loginName, String loginPswd, Long promoterId, String email, String mobile,
-            String nickname, String realname, String idcard, Byte appId, String userAgent, String mac, String ip)
-            throws IOException {
+    private UserRegRo regByLoginName(String loginName, String loginPswd, Long promoterId, String email, String mobile, String nickname, String realname, String idcard, Byte appId,
+            String userAgent, String mac, String ip) throws IOException {
         String url = _hostUrl + "/user/reg/by/login/name";
         Map<String, Object> paramsMap = new LinkedHashMap<>();
         if (loginName != null)
@@ -224,7 +193,7 @@ public class SucTests {
      * 2. 注册成功
      * 3. QQ的ID已经存在
      */
-//    @Test
+    @Test
     public void test02() throws IOException {
         UserRegRo regRo;
         // 1. 没有填写必要参数
@@ -269,8 +238,7 @@ public class SucTests {
         Assert.assertEquals(RegResultDic.SUCCESS, regRo.getResult());
     }
 
-    private UserRegRo regByQq(String qqId, String qqNickname, String qqFace, Long promoterId, Byte appId,
-            String userAgent, String mac, String ip) throws IOException {
+    private UserRegRo regByQq(String qqId, String qqNickname, String qqFace, Long promoterId, Byte appId, String userAgent, String mac, String ip) throws IOException {
         String url = _hostUrl + "/user/reg/by/qq";
         Map<String, Object> paramsMap = new LinkedHashMap<>();
         if (qqId != null)
@@ -298,7 +266,7 @@ public class SucTests {
      * 2. 注册成功
      * 3. 微信的ID已经存在
      */
-//    @Test
+    @Test
     public void test03() throws IOException {
         UserRegRo regRo;
         // 1. 没有填写必要参数
@@ -339,8 +307,7 @@ public class SucTests {
         Assert.assertEquals(RegResultDic.SUCCESS, regRo.getResult());
     }
 
-    private UserRegRo regByWx(String wxId, String wxNickname, String wxFace, Long promoterId, Byte appId,
-            String userAgent, String mac, String ip) throws IOException {
+    private UserRegRo regByWx(String wxId, String wxNickname, String wxFace, Long promoterId, Byte appId, String userAgent, String mac, String ip) throws IOException {
         String url = _hostUrl + "/user/reg/by/wx";
         Map<String, Object> paramsMap = new LinkedHashMap<>();
         if (wxId != null)
@@ -370,7 +337,7 @@ public class SucTests {
      * 4. 超过5次输入密码错误，账号被锁定
      * 5. 登录成功
      */
-//    @Test
+    @Test
     public void test04() throws IOException {
         UserLoginRo loginRo;
         // 1. 没有填写必要参数
@@ -423,8 +390,7 @@ public class SucTests {
 
     }
 
-    private UserLoginRo loginByLoginName(String loginName, String loginPswd, Byte appId, String userAgent, String mac,
-            String ip) throws IOException {
+    private UserLoginRo loginByLoginName(String loginName, String loginPswd, Byte appId, String userAgent, String mac, String ip) throws IOException {
         String url = _hostUrl + "/user/login/by/login/name";
         Map<String, Object> paramsMap = new LinkedHashMap<>();
         if (loginName != null)
@@ -457,7 +423,7 @@ public class SucTests {
      * 6. 超过5次输入密码错误，账号被锁定
      * 7. 登录成功
      */
-//    @Test
+    @Test
     public void test05() throws IOException {
         UserLoginRo loginRo;
         // 1. 没有填写必要参数
@@ -522,8 +488,7 @@ public class SucTests {
 
     }
 
-    private UserLoginRo loginByUserName(String userName, String loginPswd, Byte appId, String userAgent, String mac,
-            String ip) throws IOException {
+    private UserLoginRo loginByUserName(String userName, String loginPswd, Byte appId, String userAgent, String mac, String ip) throws IOException {
         String url = _hostUrl + "/user/login/by/user/name";
         Map<String, Object> paramsMap = new LinkedHashMap<>();
         if (userName != null)
@@ -552,7 +517,7 @@ public class SucTests {
      * 2. QQ的ID已经存在
      * 3. 登录成功
      */
-//    @Test
+    @Test
     public void test06() throws IOException {
         UserLoginRo loginRo;
         // 1. 没有填写必要参数
@@ -594,8 +559,7 @@ public class SucTests {
         Assert.assertEquals(LoginResultDic.NOT_FOUND_USER, loginRo.getResult());
     }
 
-    private UserLoginRo loginByQq(String qqId, String qqNickname, String qqFace, Byte appId, String userAgent,
-            String mac, String ip) throws IOException {
+    private UserLoginRo loginByQq(String qqId, String qqNickname, String qqFace, Byte appId, String userAgent, String mac, String ip) throws IOException {
         String url = _hostUrl + "/user/login/by/qq";
         Map<String, Object> paramsMap = new LinkedHashMap<>();
         if (qqId != null)
@@ -621,7 +585,7 @@ public class SucTests {
      * 2. 微信的ID已经存在
      * 3. 登录成功
      */
-//    @Test
+    @Test
     public void test07() throws IOException {
         UserLoginRo loginRo;
         // 1. 没有填写必要参数
@@ -659,8 +623,7 @@ public class SucTests {
         Assert.assertEquals(LoginResultDic.NOT_FOUND_USER, loginRo.getResult());
     }
 
-    private UserLoginRo loginByWx(String wxId, String wxNickname, String wxFace, Byte appId, String userAgent,
-            String mac, String ip) throws IOException {
+    private UserLoginRo loginByWx(String wxId, String wxNickname, String wxFace, Byte appId, String userAgent, String mac, String ip) throws IOException {
         String url = _hostUrl + "/user/login/by/wx";
         Map<String, Object> paramsMap = new LinkedHashMap<>();
         if (wxId != null)
