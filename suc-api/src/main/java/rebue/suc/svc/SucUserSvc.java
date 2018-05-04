@@ -120,4 +120,25 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
 	 */
 	Map<String, Object> changeLoginPassword(String wxId, String oldLoginPswd, String newLoginPswd);
 
+	/**
+	 * 根据微信ID设置登录名称
+	 * Title: setLoginName
+	 * Description: 
+	 * @param wxId
+	 * @param loginName
+	 * @return
+	 * @date 2018年5月3日 下午5:38:56
+	 */
+	Map<String, Object> setLoginName(String wxId, String loginName);
+
+	/**
+	 * 根据微信ID获取用户登录名称
+	 * Title: selectLoginNameByWx
+	 * Description: 
+	 * @param wxId
+	 * @return
+	 * @date 2018年5月4日 上午9:04:49
+	 */
+	String selectLoginNameByWx(String wxId);
+
 }

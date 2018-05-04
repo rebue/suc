@@ -1,6 +1,7 @@
 package rebue.suc;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ import rebue.wheel.turing.DigestUtils;
 public class SucTests {
     private final static Logger _log          = LoggerFactory.getLogger(SucTests.class);
 
-    private String              _hostUrl      = "http://localhost:9100/";
+    private String              _hostUrl      = "http://localhost:9500/";
 
     private ObjectMapper        _objectMapper = new ObjectMapper();
 
@@ -40,7 +41,7 @@ public class SucTests {
      * 8. 李四四注册成功
      * 9. 张三三是否被锁定
      */
-    @Test
+    //@Test
     public void test01() throws IOException {
         UserRegRo regRo;
         // 1. 没有填写必要参数
@@ -193,7 +194,7 @@ public class SucTests {
      * 2. 注册成功
      * 3. QQ的ID已经存在
      */
-    @Test
+    //@Test
     public void test02() throws IOException {
         UserRegRo regRo;
         // 1. 没有填写必要参数
@@ -266,7 +267,7 @@ public class SucTests {
      * 2. 注册成功
      * 3. 微信的ID已经存在
      */
-    @Test
+   // @Test
     public void test03() throws IOException {
         UserRegRo regRo;
         // 1. 没有填写必要参数
@@ -337,7 +338,7 @@ public class SucTests {
      * 4. 超过5次输入密码错误，账号被锁定
      * 5. 登录成功
      */
-    @Test
+   // @Test
     public void test04() throws IOException {
         UserLoginRo loginRo;
         // 1. 没有填写必要参数
@@ -423,7 +424,7 @@ public class SucTests {
      * 6. 超过5次输入密码错误，账号被锁定
      * 7. 登录成功
      */
-    @Test
+    ///@Test
     public void test05() throws IOException {
         UserLoginRo loginRo;
         // 1. 没有填写必要参数
@@ -517,7 +518,7 @@ public class SucTests {
      * 2. QQ的ID已经存在
      * 3. 登录成功
      */
-    @Test
+   // @Test
     public void test06() throws IOException {
         UserLoginRo loginRo;
         // 1. 没有填写必要参数
@@ -585,7 +586,7 @@ public class SucTests {
      * 2. 微信的ID已经存在
      * 3. 登录成功
      */
-    @Test
+   // @Test
     public void test07() throws IOException {
         UserLoginRo loginRo;
         // 1. 没有填写必要参数
@@ -643,4 +644,12 @@ public class SucTests {
         return _objectMapper.readValue(OkhttpUtils.postByFormParams(url, paramsMap), UserLoginRo.class);
     }
 
+    @Test
+    public void setLoginName() throws IOException {
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("wxId", "ov3CM0udTraWqJbsWlBNqqicM-w");
+    	map.put("loginName", "名字不要太长这样就好了");
+    	String result = OkhttpUtils.postByFormParams(_hostUrl + "user/setloginname/bywxid", map);
+    	System.out.println(result);
+    }
 }

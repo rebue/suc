@@ -967,4 +967,78 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     	resultMap.put("msg", "修改成功");
     	return resultMap;
     }
+    
+    /**
+     * 通过微信ID设置登录名称
+     * Title: setLoginName
+     * Description: 
+     * @param wxId
+     * @param loginName
+     * @return
+     * @date 2018年5月3日 下午5:05:38
+     * 1、判断参数是否正确
+     * 2、根据微信ID判断该用户是否存在
+     * 3、判断登录名称是否已存在
+     * 4、设置或修改登录名称
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public Map<String, Object> setLoginName(String wxId, String loginName) {
+    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	if (wxId == null || wxId.equals("") || wxId.equals("null")) {
+			_log.error("通过微信ID设置登录名称时出现微信ID");
+			throw new RuntimeException("您未登录，请先登录");
+		}
+    	
+    	if (loginName == null || loginName.equals("null") || loginName.equals("")) {
+			_log.error("通过微信ID设置登录名称时出现登录名称为空，微信ID为：{}", wxId);
+			throw new RuntimeException("请输入登录名称");
+		}
+    	
+    	SucUserMo userMo = new SucUserMo();
+    	userMo.setWxId(wxId);
+    	_log.info("通过微信ID设置登录名称根据微信判断用户是否存在的参数为：{}", wxId);
+    	Boolean userFlag = _mapper.existSelective(userMo);
+    	_log.info("通过微信ID设置登录名称根据微信判断用户是否存在的返回值为：{}", userFlag);
+    	if (!userFlag) {
+			_log.error("通过微信ID设置登录名称根据微信判断用户是否存在时出现该用户不存在，微信ID为：{}", wxId);
+			throw new RuntimeException("您未注册，请先注册");
+		}
+    	
+    	userMo = new SucUserMo();
+    	userMo.setLoginName(loginName);
+    	_log.info("通过微信ID设置登录名称根据登录名称判断该名称是否已存在的参数为：{}", loginName);
+    	Boolean loginNameFlag = _mapper.existSelective(userMo);
+    	_log.info("通过微信ID设置登录名称根据登录名称判断该名称是否已存在的返回值为：{}", loginNameFlag);
+    	if (loginNameFlag) {
+			_log.error("根据微信ID设置登录名称时出现该登录名称已存在，微信ID为：{}", wxId);
+			throw new RuntimeException("该名称已存在");
+		}
+    	
+    	_log.info("根据微信ID设置登录名称的参数为：{}，{}", wxId, loginName);
+    	int setResult = _mapper.setLoginName(wxId, loginName);
+    	_log.info("根据微信ID设置登录名称的返回值为：{}", setResult);
+    	if (setResult != 1) {
+			_log.error("根据微信ID设置登录名称时出现设置失败，微信ID为：{}", wxId);
+			throw new RuntimeException("设置失败");
+		}
+    	
+    	_log.info("根据微信ID设置登录名称成功");
+    	resultMap.put("result", 1);
+    	resultMap.put("msg", "设置成功");
+    	return resultMap;
+    }
+    
+    /**
+     * 根据微信ID获取用户登录名称
+     * Title: selectLoginNameByWx
+     * Description: 
+     * @param wxId
+     * @return
+     * @date 2018年5月4日 上午9:04:08
+     */
+    @Override
+    public String selectLoginNameByWx(String wxId) {
+    	return _mapper.selectLoginNameByWx(wxId);
+    }
 }

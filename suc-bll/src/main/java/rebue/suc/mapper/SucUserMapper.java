@@ -173,4 +173,27 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 	 */
 	@Update("UPDATE SUC_USER SET LOGIN_PSWD = #{loginPswd,jdbcType=VARCHAR}, SALT = #{salt,jdbcType=VARCHAR} WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
 	int setLoginPswd(@Param("wxId") String wxId, @Param("loginPswd") String loginPswd, @Param("salt") String salt);
+	
+	/**
+	 * 根据微信ID设置登录名称
+	 * Title: setLoginName
+	 * Description: 
+	 * @param wxId
+	 * @param loginName
+	 * @return
+	 * @date 2018年5月3日 下午5:30:31
+	 */
+	@Update("UPDATE SUC_USER SET LOGIN_NAME = #{loginName,jdbcType=VARCHAR} WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
+	int setLoginName(@Param("wxId") String wxId, @Param("loginName") String loginName);
+	
+	/**
+	 * 根据微信ID获取用户登录名称
+	 * Title: selectLoginNameByWx
+	 * Description: 
+	 * @param wxId
+	 * @return
+	 * @date 2018年5月4日 上午9:02:28
+	 */
+	@Select("SELECT LOGIN_NAME FROM SUC_USER WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
+	String selectLoginNameByWx(@Param("wxId") String wxId);
 }
