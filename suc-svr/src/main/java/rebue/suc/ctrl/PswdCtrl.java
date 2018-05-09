@@ -64,7 +64,7 @@ public class PswdCtrl {
      * @return
      * @date 2018年5月2日 下午1:18:06
      */
-    @PostMapping("/loginpswd/setloginpassword")
+    @PostMapping("/loginpswd/add/bywxid")
     Map<String, Object> setLoginPassword(String wxId, String newLoginPswd) {
     	Map<String, Object> resultMap = new HashMap<String, Object>();
     	try {
@@ -106,7 +106,7 @@ public class PswdCtrl {
      * @return
      * @date 2018年5月2日 下午1:39:24
      */
-    @PostMapping("/loginpswd/changeloginpassword")
+    @PostMapping("/loginpswd/modify/bywxid")
     Map<String, Object> changeLoginPassword(String wxId, String oldLoginPswd, String newLoginPswd) {
     	Map<String, Object> resultMap = new HashMap<String, Object>();
     	try {
