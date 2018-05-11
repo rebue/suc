@@ -860,7 +860,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     	Map<String, Object> resultMap = new HashMap<String, Object>();
     	if (wxId == null || wxId.equals("") || wxId.equals("null")) {
 			_log.error("设置登录密码时出现微信ID为空");
-			throw new RuntimeException("您未登陆，请先登录");
+			throw new RuntimeException("您未登录，请先登录");
 		}
     	
     	if (newLoginPswd == null || newLoginPswd.equals("") || newLoginPswd.equals("null")) {
@@ -919,7 +919,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     	Map<String, Object> resultMap = new HashMap<String, Object>();
     	if (wxId == null || wxId.equals("") || wxId.equals("null")) {
 			_log.error("设置或修改登录密码时出现微信ID为空");
-			throw new RuntimeException("您未登陆，请先登录");
+			throw new RuntimeException("您未登录，请先登录");
 		}
     	
     	if (newLoginPswd == null || newLoginPswd.equals("") || newLoginPswd.equals("null")) {

@@ -16,10 +16,10 @@ import rebue.wheel.RandomEx;
 
 public class UserBindTests {
 
-    private String       _hostUrl      = "http://localhost:9100";
+    private String _hostUrl = "http://localhost:9100";
 //    private String       _hostUrl      = "http://120.77.220.106/suc-svr";
 
-    private Long         userId        = 438562865310466054L;
+    private Long         userId        = 467599399439171585L;
 
     private ObjectMapper _objectMapper = new ObjectMapper();
 
@@ -29,7 +29,7 @@ public class UserBindTests {
         // 用户绑定微信
         String url = _hostUrl + "/user/bind/wx";
         Map<String, Object> paramsMap = new LinkedHashMap<>();
-        paramsMap.put("userId", userId);
+        paramsMap.put("userId", "\"" + userId + "\"");
         paramsMap.put("wxId", wxId);
         paramsMap.put("wxNickname", "微信昵称C");
         paramsMap.put("wxFace", "微信头像C");
