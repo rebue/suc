@@ -1,9 +1,6 @@
 package rebue.suc.svc.impl;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +15,9 @@ import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.sbs.redis.RedisClient;
 import rebue.sbs.redis.RedisSetException;
 import rebue.suc.dic.BindWxResultDic;
+import rebue.suc.dic.LoginNameSetDic;
+import rebue.suc.dic.LoginPswdModifyDic;
+import rebue.suc.dic.LoginPswdSetDic;
 import rebue.suc.dic.LoginResultDic;
 import rebue.suc.dic.RegAndLoginTypeDic;
 import rebue.suc.dic.RegResultDic;
@@ -32,6 +32,9 @@ import rebue.suc.mo.SucUserMo;
 import rebue.suc.msg.SucUserAddMsg;
 import rebue.suc.pub.SucUserAddPub;
 import rebue.suc.ro.BindWxRo;
+import rebue.suc.ro.LoginNameSetRo;
+import rebue.suc.ro.LoginPswdModifyRo;
+import rebue.suc.ro.LoginPswdSetRo;
 import rebue.suc.ro.PayPswdVerifyRo;
 import rebue.suc.ro.UserLoginRo;
 import rebue.suc.ro.UserRegRo;
@@ -71,882 +74,893 @@ import rebue.wheel.turing.DigestUtils;
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long, SucUserMapper> implements SucUserSvc {
 
-    /**
-     */
-    private final static Logger _log                                = LoggerFactory.getLogger(SucUserSvcImpl.class);
-    /**
-     * 缓存当天连续输入登录密码错误的次数的Key的前缀 后面跟用户的用户id拼接成Key Value为失败次数
-     */
-    private static final String REDIS_KEY_LOGINPSWD_ERRCOUNT_PREFIX = "rebue.suc.svc.user.loginpswd.errcount.";
-    /**
-     * 缓存当天连续输入支付密码错误的次数的Key的前缀 后面跟用户的用户id拼接成Key Value为失败次数
-     */
-    private static final String REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX   = "rebue.suc.svc.user.paypswd.errcount.";
-    /**
-     * 用户账号的黑名单的前缀 后面跟用户的用户id拼接成Key Value为空值
-     */
-    private static final String REDIS_KEY_USER_BLACKLIST_PREFIX     = "rebue.suc.svc.user.blacklist.";
+	/**
+	 */
+	private final static Logger _log = LoggerFactory.getLogger(SucUserSvcImpl.class);
+	/**
+	 * 缓存当天连续输入登录密码错误的次数的Key的前缀 后面跟用户的用户id拼接成Key Value为失败次数
+	 */
+	private static final String REDIS_KEY_LOGINPSWD_ERRCOUNT_PREFIX = "rebue.suc.svc.user.loginpswd.errcount.";
+	/**
+	 * 缓存当天连续输入支付密码错误的次数的Key的前缀 后面跟用户的用户id拼接成Key Value为失败次数
+	 */
+	private static final String REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX = "rebue.suc.svc.user.paypswd.errcount.";
+	/**
+	 * 用户账号的黑名单的前缀 后面跟用户的用户id拼接成Key Value为空值
+	 */
+	private static final String REDIS_KEY_USER_BLACKLIST_PREFIX = "rebue.suc.svc.user.blacklist.";
 
-    @Resource
-    private SucLoginLogSvc      loginLogSvc;
-    @Resource
-    private SucLockLogSvc       lockLogSvc;
-    @Resource
-    private SucRegSvc           regSvc;
-    @Resource
-    private SucOpLogSvc         opLogSvc;
+	@Resource
+	private SucLoginLogSvc loginLogSvc;
+	@Resource
+	private SucLockLogSvc lockLogSvc;
+	@Resource
+	private SucRegSvc regSvc;
+	@Resource
+	private SucOpLogSvc opLogSvc;
 
-    @Resource
-    private RedisClient         redisClient;
-    @Resource
-    private Mapper              dozerMapper;
+	@Resource
+	private RedisClient redisClient;
+	@Resource
+	private Mapper dozerMapper;
 
-    @Resource
-    private SucUserAddPub       userAddPub;
+	@Resource
+	private SucUserAddPub userAddPub;
 
-    @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public int add(SucUserMo mo) {
-        // 如果id为空那么自动生成分布式id
-        if (mo.getId() == null || mo.getId() == 0) {
-            mo.setId(_idWorker.getId());
-        }
-        if (mo.getModifiedTimestamp() == null) {
-            mo.setModifiedTimestamp(System.currentTimeMillis());
-        }
-        int result = super.add(mo);
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int add(SucUserMo mo) {
+		// 如果id为空那么自动生成分布式id
+		if (mo.getId() == null || mo.getId() == 0) {
+			mo.setId(_idWorker.getId());
+		}
+		if (mo.getModifiedTimestamp() == null) {
+			mo.setModifiedTimestamp(System.currentTimeMillis());
+		}
+		int result = super.add(mo);
 
-        // 发布添加用户的消息
-        SucUserAddMsg msg = dozerMapper.map(mo, SucUserAddMsg.class);
-        userAddPub.send(msg);
+		// 发布添加用户的消息
+		SucUserAddMsg msg = dozerMapper.map(mo, SucUserAddMsg.class);
+		userAddPub.send(msg);
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * 用户注册(通过登录名称)
-     * TODO SUC : 用户注册(通过Email/Mobile)
-     */
-    @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public UserRegRo regByLoginName(RegByLoginNameTo to) {
-        if (StringUtils.isAnyBlank(to.getLoginName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
-                || to.getAppId() == null) {
-            _log.warn("没有填写用户登录名称/登录密码/应用ID/浏览器类型/MAC/IP: {}", to);
-            UserRegRo regRo = new UserRegRo();
-            regRo.setResult(RegResultDic.PARAM_ERROR);
-            return regRo;
-        }
-        if (to.getLoginName().length() < 3 || to.getLoginName().length() > 20
-                || RegexUtils.matchEmail(to.getLoginName()) || RegexUtils.matchMobile(to.getLoginName())) {
-            _log.warn("登录名称格式不正确: {}", to);
-            UserRegRo regRo = new UserRegRo();
-            regRo.setResult(RegResultDic.PARAM_ERROR);
-            return regRo;
-        }
-        if (to.getLoginPswd().length() != 32) {
-            _log.warn("登录密码经过MD5后应该为32个字符: {}", to);
-            UserRegRo regRo = new UserRegRo();
-            regRo.setResult(RegResultDic.PARAM_ERROR);
-            return regRo;
-        }
-        if (!StringUtils.isBlank(to.getEmail()) && !RegexUtils.matchEmail(to.getEmail())) {
-            _log.warn("电子邮箱格式不正确: {}", to);
-            UserRegRo regRo = new UserRegRo();
-            regRo.setResult(RegResultDic.PARAM_ERROR);
-            return regRo;
-        }
-        if (!StringUtils.isBlank(to.getMobile()) && !RegexUtils.matchMobile(to.getMobile())) {
-            _log.warn("手机号码格式不正确: {}", to);
-            UserRegRo regRo = new UserRegRo();
-            regRo.setResult(RegResultDic.PARAM_ERROR);
-            return regRo;
-        }
-        if (!StringUtils.isBlank(to.getIdcard()) && !IdCardValidator.validate(to.getIdcard())) {
-            _log.warn("身份证号码格式不正确: {}", to);
-            UserRegRo regRo = new UserRegRo();
-            regRo.setResult(RegResultDic.PARAM_ERROR);
-            return regRo;
-        }
-        SucUserMo condition = new SucUserMo();
-        condition.setLoginName(to.getLoginName());
-        if (_mapper.existSelective(condition)) {
-            _log.warn("用户登录名称已存在: {}", to);
-            UserRegRo regRo = new UserRegRo();
-            regRo.setResult(RegResultDic.LOGIN_NAME_EXIST);
-            return regRo;
-        }
-        if (!StringUtils.isBlank(to.getEmail())) {
-            condition = new SucUserMo();
-            condition.setEmail(to.getEmail());
-            if (_mapper.existSelective(condition)) {
-                _log.warn("电子邮箱已存在: {}", to);
-                UserRegRo regRo = new UserRegRo();
-                regRo.setResult(RegResultDic.EMAIL_EXIST);
-                return regRo;
-            }
-        }
-        if (!StringUtils.isBlank(to.getMobile())) {
-            condition = new SucUserMo();
-            condition.setMobile(to.getMobile());
-            if (_mapper.existSelective(condition)) {
-                _log.warn("手机号码已存在: {}", to);
-                UserRegRo regRo = new UserRegRo();
-                regRo.setResult(RegResultDic.MOBILE_EXIST);
-                return regRo;
-            }
-        }
-        if (!StringUtils.isBlank(to.getIdcard())) {
-            condition = new SucUserMo();
-            condition.setIdcard(to.getIdcard());
-            if (_mapper.existSelective(condition)) {
-                _log.warn("身份证号码已存在: {}", to);
-                UserRegRo regRo = new UserRegRo();
-                regRo.setResult(RegResultDic.IDCARD_EXIST);
-                return regRo;
-            }
-        }
-        SucUserMo userMo = dozerMapper.map(to, SucUserMo.class);
-        String salt = RandomEx.random1(6);
-        userMo.setSalt(salt);
-        userMo.setLoginPswd(saltPswd(to.getLoginPswd(), salt));
-        userMo.setPayPswd(userMo.getLoginPswd());
-        add(userMo);
-        return returnSuccessReg(to, RegAndLoginTypeDic.LOGIN_NAME, userMo);
-    }
+	/**
+	 * 用户注册(通过登录名称) TODO SUC : 用户注册(通过Email/Mobile)
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public UserRegRo regByLoginName(RegByLoginNameTo to) {
+		if (StringUtils.isAnyBlank(to.getLoginName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
+				|| to.getAppId() == null) {
+			_log.warn("没有填写用户登录名称/登录密码/应用ID/浏览器类型/MAC/IP: {}", to);
+			UserRegRo regRo = new UserRegRo();
+			regRo.setResult(RegResultDic.PARAM_ERROR);
+			return regRo;
+		}
+		if (to.getLoginName().length() < 3 || to.getLoginName().length() > 20
+				|| RegexUtils.matchEmail(to.getLoginName()) || RegexUtils.matchMobile(to.getLoginName())) {
+			_log.warn("登录名称格式不正确: {}", to);
+			UserRegRo regRo = new UserRegRo();
+			regRo.setResult(RegResultDic.PARAM_ERROR);
+			return regRo;
+		}
+		if (to.getLoginPswd().length() != 32) {
+			_log.warn("登录密码经过MD5后应该为32个字符: {}", to);
+			UserRegRo regRo = new UserRegRo();
+			regRo.setResult(RegResultDic.PARAM_ERROR);
+			return regRo;
+		}
+		if (!StringUtils.isBlank(to.getEmail()) && !RegexUtils.matchEmail(to.getEmail())) {
+			_log.warn("电子邮箱格式不正确: {}", to);
+			UserRegRo regRo = new UserRegRo();
+			regRo.setResult(RegResultDic.PARAM_ERROR);
+			return regRo;
+		}
+		if (!StringUtils.isBlank(to.getMobile()) && !RegexUtils.matchMobile(to.getMobile())) {
+			_log.warn("手机号码格式不正确: {}", to);
+			UserRegRo regRo = new UserRegRo();
+			regRo.setResult(RegResultDic.PARAM_ERROR);
+			return regRo;
+		}
+		if (!StringUtils.isBlank(to.getIdcard()) && !IdCardValidator.validate(to.getIdcard())) {
+			_log.warn("身份证号码格式不正确: {}", to);
+			UserRegRo regRo = new UserRegRo();
+			regRo.setResult(RegResultDic.PARAM_ERROR);
+			return regRo;
+		}
+		SucUserMo condition = new SucUserMo();
+		condition.setLoginName(to.getLoginName());
+		if (_mapper.existSelective(condition)) {
+			_log.warn("用户登录名称已存在: {}", to);
+			UserRegRo regRo = new UserRegRo();
+			regRo.setResult(RegResultDic.LOGIN_NAME_EXIST);
+			return regRo;
+		}
+		if (!StringUtils.isBlank(to.getEmail())) {
+			condition = new SucUserMo();
+			condition.setEmail(to.getEmail());
+			if (_mapper.existSelective(condition)) {
+				_log.warn("电子邮箱已存在: {}", to);
+				UserRegRo regRo = new UserRegRo();
+				regRo.setResult(RegResultDic.EMAIL_EXIST);
+				return regRo;
+			}
+		}
+		if (!StringUtils.isBlank(to.getMobile())) {
+			condition = new SucUserMo();
+			condition.setMobile(to.getMobile());
+			if (_mapper.existSelective(condition)) {
+				_log.warn("手机号码已存在: {}", to);
+				UserRegRo regRo = new UserRegRo();
+				regRo.setResult(RegResultDic.MOBILE_EXIST);
+				return regRo;
+			}
+		}
+		if (!StringUtils.isBlank(to.getIdcard())) {
+			condition = new SucUserMo();
+			condition.setIdcard(to.getIdcard());
+			if (_mapper.existSelective(condition)) {
+				_log.warn("身份证号码已存在: {}", to);
+				UserRegRo regRo = new UserRegRo();
+				regRo.setResult(RegResultDic.IDCARD_EXIST);
+				return regRo;
+			}
+		}
+		SucUserMo userMo = dozerMapper.map(to, SucUserMo.class);
+		String salt = RandomEx.random1(6);
+		userMo.setSalt(salt);
+		userMo.setLoginPswd(saltPswd(to.getLoginPswd(), salt));
+		userMo.setPayPswd(userMo.getLoginPswd());
+		add(userMo);
+		return returnSuccessReg(to, RegAndLoginTypeDic.LOGIN_NAME, userMo);
+	}
 
-    /**
-     * 用户注册(通过QQ)
-     */
-    @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public UserRegRo regByQq(RegByQqTo to) {
-        if (StringUtils.isAnyBlank(to.getQqId(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getMac(),
-                to.getIp()) || to.getAppId() == null) {
-            _log.warn("没有填写用户QQ的ID/QQ昵称/QQ头像/应用ID/浏览器类型/MAC/IP: {}", to);
-            UserRegRo regRo = new UserRegRo();
-            regRo.setResult(RegResultDic.PARAM_ERROR);
-            return regRo;
-        }
-        SucUserMo condition = new SucUserMo();
-        condition.setQqId(to.getQqId());
-        if (_mapper.existSelective(condition)) {
-            _log.warn("QQ的ID已存在: {}", to);
-            UserRegRo regRo = new UserRegRo();
-            regRo.setResult(RegResultDic.QQ_ID_EXIST);
-            return regRo;
-        }
-        SucUserMo userMo = dozerMapper.map(to, SucUserMo.class);
-        add(userMo);
-        return returnSuccessReg(to, RegAndLoginTypeDic.QQ, userMo);
-    }
+	/**
+	 * 用户注册(通过QQ)
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public UserRegRo regByQq(RegByQqTo to) {
+		if (StringUtils.isAnyBlank(to.getQqId(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getMac(),
+				to.getIp()) || to.getAppId() == null) {
+			_log.warn("没有填写用户QQ的ID/QQ昵称/QQ头像/应用ID/浏览器类型/MAC/IP: {}", to);
+			UserRegRo regRo = new UserRegRo();
+			regRo.setResult(RegResultDic.PARAM_ERROR);
+			return regRo;
+		}
+		SucUserMo condition = new SucUserMo();
+		condition.setQqId(to.getQqId());
+		if (_mapper.existSelective(condition)) {
+			_log.warn("QQ的ID已存在: {}", to);
+			UserRegRo regRo = new UserRegRo();
+			regRo.setResult(RegResultDic.QQ_ID_EXIST);
+			return regRo;
+		}
+		SucUserMo userMo = dozerMapper.map(to, SucUserMo.class);
+		add(userMo);
+		return returnSuccessReg(to, RegAndLoginTypeDic.QQ, userMo);
+	}
 
-    /**
-     * 用户注册(通过微信)
-     */
-    @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public UserRegRo regByWx(RegByWxTo to) {
-        if (StringUtils.isAnyBlank(to.getWxId(), to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp())
-                || to.getAppId() == null) {
-            _log.warn("没有填写用户微信的ID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
-            UserRegRo regRo = new UserRegRo();
-            regRo.setResult(RegResultDic.PARAM_ERROR);
-            return regRo;
-        }
-        SucUserMo condition = new SucUserMo();
-        condition.setWxId(to.getWxId());
-        if (_mapper.existSelective(condition)) {
-            _log.warn("微信的ID已存在: {}", to);
-            UserRegRo regRo = new UserRegRo();
-            regRo.setResult(RegResultDic.WX_ID_EXIST);
-            return regRo;
-        }
-        SucUserMo userMo = dozerMapper.map(to, SucUserMo.class);
-        add(userMo);
-        return returnSuccessReg(to, RegAndLoginTypeDic.WX, userMo);
-    }
+	/**
+	 * 用户注册(通过微信)
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public UserRegRo regByWx(RegByWxTo to) {
+		if (StringUtils.isAnyBlank(to.getWxId(), to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp())
+				|| to.getAppId() == null) {
+			_log.warn("没有填写用户微信的ID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
+			UserRegRo regRo = new UserRegRo();
+			regRo.setResult(RegResultDic.PARAM_ERROR);
+			return regRo;
+		}
+		SucUserMo condition = new SucUserMo();
+		condition.setWxId(to.getWxId());
+		if (_mapper.existSelective(condition)) {
+			_log.warn("微信的ID已存在: {}", to);
+			UserRegRo regRo = new UserRegRo();
+			regRo.setResult(RegResultDic.WX_ID_EXIST);
+			return regRo;
+		}
+		SucUserMo userMo = dozerMapper.map(to, SucUserMo.class);
+		add(userMo);
+		return returnSuccessReg(to, RegAndLoginTypeDic.WX, userMo);
+	}
 
-    /**
-     * 返回成功注册
-     * 
-     * @param regTo
-     *            登录参数
-     * @param regType
-     *            登录类型
-     * @param userMo
-     *            获取到的用户信息
-     * @return
-     */
-    private UserRegRo returnSuccessReg(RegBaseTo regTo, RegAndLoginTypeDic regType, SucUserMo userMo) {
-        SucRegMo regMo = dozerMapper.map(regTo, SucRegMo.class);
-        regMo.setId(userMo.getId());
-        regMo.setRegTime(new Date(userMo.getModifiedTimestamp()));
-        regMo.setRegType((byte) regType.getCode());
-        regSvc.add(regMo);
-        UserRegRo regRs = new UserRegRo();
-        regRs.setUserId(userMo.getId());
-        regRs.setResult(RegResultDic.SUCCESS);
-        _log.info("用户注册成功: {} {} {}", regTo, regType, userMo);
-        return regRs;
-    }
+	/**
+	 * 返回成功注册
+	 * 
+	 * @param regTo
+	 *            登录参数
+	 * @param regType
+	 *            登录类型
+	 * @param userMo
+	 *            获取到的用户信息
+	 * @return
+	 */
+	private UserRegRo returnSuccessReg(RegBaseTo regTo, RegAndLoginTypeDic regType, SucUserMo userMo) {
+		SucRegMo regMo = dozerMapper.map(regTo, SucRegMo.class);
+		regMo.setId(userMo.getId());
+		regMo.setRegTime(new Date(userMo.getModifiedTimestamp()));
+		regMo.setRegType((byte) regType.getCode());
+		regSvc.add(regMo);
+		UserRegRo regRs = new UserRegRo();
+		regRs.setUserId(userMo.getId());
+		regRs.setResult(RegResultDic.SUCCESS);
+		_log.info("用户注册成功: {} {} {}", regTo, regType, userMo);
+		return regRs;
+	}
 
-    /**
-     * 用户登录(通过登录名称)
-     */
-    @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public UserLoginRo loginByLoginName(LoginByLoginNameTo to) {
-        if (StringUtils.isAnyBlank(to.getLoginName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
-                || to.getAppId() == null) {
-            _log.warn("没有填写用户登录名称/密码/应用ID/浏览器类型/MAC/IP: {}", to);
-            UserLoginRo ro = new UserLoginRo();
-            ro.setResult(LoginResultDic.PARAM_ERROR);
-            return ro;
-        }
-        SucUserMo userMo = _mapper.selectByLoginName(to.getLoginName());
-        if (userMo == null) {
-            _log.warn("找不到此用户: {}", to);
-            UserLoginRo ro = new UserLoginRo();
-            ro.setResult(LoginResultDic.NOT_FOUND_USER);
-            return ro;
-        }
-        UserLoginRo ro = verifyLogin(userMo, to.getLoginPswd());
-        if (ro != null)
-            return ro;
-        return returnSuccessLogin(to, RegAndLoginTypeDic.LOGIN_NAME, userMo);
-    }
+	/**
+	 * 用户登录(通过登录名称)
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public UserLoginRo loginByLoginName(LoginByLoginNameTo to) {
+		if (StringUtils.isAnyBlank(to.getLoginName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
+				|| to.getAppId() == null) {
+			_log.warn("没有填写用户登录名称/密码/应用ID/浏览器类型/MAC/IP: {}", to);
+			UserLoginRo ro = new UserLoginRo();
+			ro.setResult(LoginResultDic.PARAM_ERROR);
+			return ro;
+		}
+		SucUserMo userMo = _mapper.selectByLoginName(to.getLoginName());
+		if (userMo == null) {
+			_log.warn("找不到此用户: {}", to);
+			UserLoginRo ro = new UserLoginRo();
+			ro.setResult(LoginResultDic.NOT_FOUND_USER);
+			return ro;
+		}
+		UserLoginRo ro = verifyLogin(userMo, to.getLoginPswd());
+		if (ro != null)
+			return ro;
+		return returnSuccessLogin(to, RegAndLoginTypeDic.LOGIN_NAME, userMo);
+	}
 
-    /**
-     * 用户登录(通过用户名称登录，按照 邮箱->手机->登录名 的顺序查找用户)
-     */
-    @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public UserLoginRo loginByUserName(LoginByUserNameTo to) {
-        if (StringUtils.isAnyBlank(to.getUserName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
-                || to.getAppId() == null) {
-            _log.warn("没有填写用户名/密码/应用ID/浏览器类型/MAC/IP: {}", to);
-            UserLoginRo ro = new UserLoginRo();
-            ro.setResult(LoginResultDic.PARAM_ERROR);
-            return ro;
-        }
-        RegAndLoginTypeDic loginType = null;
-        SucUserMo userMo = null;
-        if (RegexUtils.matchEmail(to.getUserName())) {
-            userMo = _mapper.selectByEmail(to.getUserName());
-            if (userMo != null) {
-                if (!userMo.getIsVerifiedEmail()) {
-                    _log.warn("用户用邮箱登录，但邮箱尚未通过验证: {}", to);
-                    UserLoginRo ro = new UserLoginRo();
-                    ro.setResult(LoginResultDic.NO_VERITY_EMAIL);
-                    return ro;
-                }
-                loginType = RegAndLoginTypeDic.EMAIL;
-            }
-        } else if (RegexUtils.matchMobile(to.getUserName())) {
-            userMo = _mapper.selectByMobile(to.getUserName());
-            if (userMo != null) {
-                if (!userMo.getIsVerifiedMobile()) {
-                    _log.warn("用户用手机号登录，但手机号尚未通过验证: {}", to);
-                    UserLoginRo ro = new UserLoginRo();
-                    ro.setResult(LoginResultDic.NO_VERITY_MOBILE);
-                    return ro;
-                }
-                loginType = RegAndLoginTypeDic.MOBILE;
-            }
-        }
-        if (userMo == null) {
-            userMo = _mapper.selectByLoginName(to.getUserName());
-            if (userMo != null) {
-                loginType = RegAndLoginTypeDic.LOGIN_NAME;
-            }
-        }
-        if (userMo == null) {
-            _log.warn("找不到此用户:" + to);
-            UserLoginRo ro = new UserLoginRo();
-            ro.setResult(LoginResultDic.NOT_FOUND_USER);
-            return ro;
-        }
-        UserLoginRo ro = verifyLogin(userMo, to.getLoginPswd());
-        if (ro != null)
-            return ro;
-        return returnSuccessLogin(to, loginType, userMo);
-    }
+	/**
+	 * 用户登录(通过用户名称登录，按照 邮箱->手机->登录名 的顺序查找用户)
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public UserLoginRo loginByUserName(LoginByUserNameTo to) {
+		if (StringUtils.isAnyBlank(to.getUserName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
+				|| to.getAppId() == null) {
+			_log.warn("没有填写用户名/密码/应用ID/浏览器类型/MAC/IP: {}", to);
+			UserLoginRo ro = new UserLoginRo();
+			ro.setResult(LoginResultDic.PARAM_ERROR);
+			return ro;
+		}
+		RegAndLoginTypeDic loginType = null;
+		SucUserMo userMo = null;
+		if (RegexUtils.matchEmail(to.getUserName())) {
+			userMo = _mapper.selectByEmail(to.getUserName());
+			if (userMo != null) {
+				if (!userMo.getIsVerifiedEmail()) {
+					_log.warn("用户用邮箱登录，但邮箱尚未通过验证: {}", to);
+					UserLoginRo ro = new UserLoginRo();
+					ro.setResult(LoginResultDic.NO_VERITY_EMAIL);
+					return ro;
+				}
+				loginType = RegAndLoginTypeDic.EMAIL;
+			}
+		} else if (RegexUtils.matchMobile(to.getUserName())) {
+			userMo = _mapper.selectByMobile(to.getUserName());
+			if (userMo != null) {
+				if (!userMo.getIsVerifiedMobile()) {
+					_log.warn("用户用手机号登录，但手机号尚未通过验证: {}", to);
+					UserLoginRo ro = new UserLoginRo();
+					ro.setResult(LoginResultDic.NO_VERITY_MOBILE);
+					return ro;
+				}
+				loginType = RegAndLoginTypeDic.MOBILE;
+			}
+		}
+		if (userMo == null) {
+			userMo = _mapper.selectByLoginName(to.getUserName());
+			if (userMo != null) {
+				loginType = RegAndLoginTypeDic.LOGIN_NAME;
+			}
+		}
+		if (userMo == null) {
+			_log.warn("找不到此用户:" + to);
+			UserLoginRo ro = new UserLoginRo();
+			ro.setResult(LoginResultDic.NOT_FOUND_USER);
+			return ro;
+		}
+		UserLoginRo ro = verifyLogin(userMo, to.getLoginPswd());
+		if (ro != null)
+			return ro;
+		return returnSuccessLogin(to, loginType, userMo);
+	}
 
-    /**
-     * 用户登录(通过QQ)
-     */
-    @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public UserLoginRo loginByQq(LoginByQqTo to) {
-        if (StringUtils.isAnyBlank(to.getQqId(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getMac(),
-                to.getIp()) || to.getAppId() == null) {
-            _log.warn("没有填写用户QQ的ID/QQ昵称/QQ头像/应用ID/浏览器类型/MAC/IP: {}", to);
-            UserLoginRo ro = new UserLoginRo();
-            ro.setResult(LoginResultDic.PARAM_ERROR);
-            return ro;
-        }
-        SucUserMo userMo = _mapper.selectByQq(to.getQqId());
-        if (userMo == null) {
-            _log.warn("找不到此用户: {}", to);
-            UserLoginRo ro = new UserLoginRo();
-            ro.setResult(LoginResultDic.NOT_FOUND_USER);
-            return ro;
-        }
-        UserLoginRo ro = verifyLogin(userMo, null);
-        if (ro != null)
-            return ro;
-        // 更新QQ的昵称和头像
-        if (!StringUtils.isAnyBlank(to.getQqNickname(), to.getQqFace())) {
-            if (!userMo.getQqNickname().equals(to.getQqNickname()) || !userMo.getQqFace().equals(to.getQqFace())) {
-                _log.info("更新QQ的昵称和头像: {} {} -> {}", userMo.getQqNickname(), userMo.getQqFace(), to);
-                Date now = new Date();
-                SucUserMo modifyUserMo = new SucUserMo();
-                modifyUserMo.setId(userMo.getId());
-                modifyUserMo.setQqNickname(to.getQqNickname());
-                modifyUserMo.setQqFace(to.getQqFace());
-                modifyUserMo.setModifiedTimestamp(now.getTime());
-                modify(modifyUserMo);
+	/**
+	 * 用户登录(通过QQ)
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public UserLoginRo loginByQq(LoginByQqTo to) {
+		if (StringUtils.isAnyBlank(to.getQqId(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getMac(),
+				to.getIp()) || to.getAppId() == null) {
+			_log.warn("没有填写用户QQ的ID/QQ昵称/QQ头像/应用ID/浏览器类型/MAC/IP: {}", to);
+			UserLoginRo ro = new UserLoginRo();
+			ro.setResult(LoginResultDic.PARAM_ERROR);
+			return ro;
+		}
+		SucUserMo userMo = _mapper.selectByQq(to.getQqId());
+		if (userMo == null) {
+			_log.warn("找不到此用户: {}", to);
+			UserLoginRo ro = new UserLoginRo();
+			ro.setResult(LoginResultDic.NOT_FOUND_USER);
+			return ro;
+		}
+		UserLoginRo ro = verifyLogin(userMo, null);
+		if (ro != null)
+			return ro;
+		// 更新QQ的昵称和头像
+		if (!StringUtils.isAnyBlank(to.getQqNickname(), to.getQqFace())) {
+			if (!userMo.getQqNickname().equals(to.getQqNickname()) || !userMo.getQqFace().equals(to.getQqFace())) {
+				_log.info("更新QQ的昵称和头像: {} {} -> {}", userMo.getQqNickname(), userMo.getQqFace(), to);
+				Date now = new Date();
+				SucUserMo modifyUserMo = new SucUserMo();
+				modifyUserMo.setId(userMo.getId());
+				modifyUserMo.setQqNickname(to.getQqNickname());
+				modifyUserMo.setQqFace(to.getQqFace());
+				modifyUserMo.setModifiedTimestamp(now.getTime());
+				modify(modifyUserMo);
 
-                // 记录用户操作日志
-                SucOpLogMo opLogMo = new SucOpLogMo();
-                opLogMo.setUserId(userMo.getId());
-                opLogMo.setOpType((byte) SucOpTypeDic.MODIFY_QQ_INFO.getCode());
-                opLogMo.setOpTime(now);
-                opLogMo.setOpDetail(userMo.getQqNickname() + " " + userMo.getQqFace() //
-                        + " ---> " + to.getQqNickname() + to.getQqFace());
-                opLogMo.setAppId(to.getAppId());
-                opLogMo.setUserAgent(to.getUserAgent());
-                opLogMo.setMac(to.getMac());
-                opLogMo.setIp(to.getIp());
-                opLogSvc.add(opLogMo);
-            }
-        }
-        return returnSuccessLogin(to, RegAndLoginTypeDic.QQ, userMo);
-    }
+				// 记录用户操作日志
+				SucOpLogMo opLogMo = new SucOpLogMo();
+				opLogMo.setUserId(userMo.getId());
+				opLogMo.setOpType((byte) SucOpTypeDic.MODIFY_QQ_INFO.getCode());
+				opLogMo.setOpTime(now);
+				opLogMo.setOpDetail(userMo.getQqNickname() + " " + userMo.getQqFace() //
+						+ " ---> " + to.getQqNickname() + to.getQqFace());
+				opLogMo.setAppId(to.getAppId());
+				opLogMo.setUserAgent(to.getUserAgent());
+				opLogMo.setMac(to.getMac());
+				opLogMo.setIp(to.getIp());
+				opLogSvc.add(opLogMo);
+			}
+		}
+		return returnSuccessLogin(to, RegAndLoginTypeDic.QQ, userMo);
+	}
 
-    /**
-     * 用户登录(通过微信)
-     */
-    @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public UserLoginRo loginByWx(LoginByWxTo to) {
-        if (StringUtils.isAnyBlank(to.getWxId(), to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp())
-                || to.getAppId() == null) {
-            _log.warn("没有填写用户微信的ID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
-            UserLoginRo ro = new UserLoginRo();
-            ro.setResult(LoginResultDic.PARAM_ERROR);
-            return ro;
-        }
-        SucUserMo userMo = _mapper.selectByWx(to.getWxId());
-        if (userMo == null) {
-            _log.warn("找不到此用户: {}", to);
-            UserLoginRo ro = new UserLoginRo();
-            ro.setResult(LoginResultDic.NOT_FOUND_USER);
-            return ro;
-        }
-        UserLoginRo ro = verifyLogin(userMo, null);
-        if (ro != null)
-            return ro;
-        // 更新微信的昵称和头像
-        if (!StringUtils.isAnyBlank(to.getWxNickname(), to.getWxFace())) {
-            if (!userMo.getWxNickname().equals(to.getWxNickname())
-                    || (userMo.getWxFace() != null && !userMo.getWxFace().equals(to.getWxFace()))) {
-                _log.info("更新微信的昵称和头像: {} {} -> {}", userMo.getWxNickname(), userMo.getWxFace(), to);
-                Date now = new Date();
-                SucUserMo modifyUserMo = new SucUserMo();
-                modifyUserMo.setId(userMo.getId());
-                modifyUserMo.setWxNickname(to.getWxNickname());
-                modifyUserMo.setWxFace(to.getWxFace());
-                modifyUserMo.setModifiedTimestamp(now.getTime());
-                modify(modifyUserMo);
+	/**
+	 * 用户登录(通过微信)
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public UserLoginRo loginByWx(LoginByWxTo to) {
+		if (StringUtils.isAnyBlank(to.getWxId(), to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp())
+				|| to.getAppId() == null) {
+			_log.warn("没有填写用户微信的ID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
+			UserLoginRo ro = new UserLoginRo();
+			ro.setResult(LoginResultDic.PARAM_ERROR);
+			return ro;
+		}
+		SucUserMo userMo = _mapper.selectByWx(to.getWxId());
+		if (userMo == null) {
+			_log.warn("找不到此用户: {}", to);
+			UserLoginRo ro = new UserLoginRo();
+			ro.setResult(LoginResultDic.NOT_FOUND_USER);
+			return ro;
+		}
+		UserLoginRo ro = verifyLogin(userMo, null);
+		if (ro != null)
+			return ro;
+		// 更新微信的昵称和头像
+		if (!StringUtils.isAnyBlank(to.getWxNickname(), to.getWxFace())) {
+			if (!userMo.getWxNickname().equals(to.getWxNickname())
+					|| (userMo.getWxFace() != null && !userMo.getWxFace().equals(to.getWxFace()))) {
+				_log.info("更新微信的昵称和头像: {} {} -> {}", userMo.getWxNickname(), userMo.getWxFace(), to);
+				Date now = new Date();
+				SucUserMo modifyUserMo = new SucUserMo();
+				modifyUserMo.setId(userMo.getId());
+				modifyUserMo.setWxNickname(to.getWxNickname());
+				modifyUserMo.setWxFace(to.getWxFace());
+				modifyUserMo.setModifiedTimestamp(now.getTime());
+				modify(modifyUserMo);
 
-                // 记录用户操作日志
-                SucOpLogMo opLogMo = new SucOpLogMo();
-                opLogMo.setUserId(userMo.getId());
-                opLogMo.setOpType((byte) SucOpTypeDic.MODIFY_WX_INFO.getCode());
-                opLogMo.setOpTime(now);
-                opLogMo.setOpDetail(userMo.getWxNickname() + " " + userMo.getWxFace() //
-                        + " ---> " + to.getWxNickname() + to.getWxFace());
-                opLogMo.setAppId(to.getAppId());
-                opLogMo.setUserAgent(to.getUserAgent());
-                opLogMo.setMac(to.getMac());
-                opLogMo.setIp(to.getIp());
-                opLogSvc.add(opLogMo);
-            }
-        }
-        return returnSuccessLogin(to, RegAndLoginTypeDic.WX, userMo);
-    }
+				// 记录用户操作日志
+				SucOpLogMo opLogMo = new SucOpLogMo();
+				opLogMo.setUserId(userMo.getId());
+				opLogMo.setOpType((byte) SucOpTypeDic.MODIFY_WX_INFO.getCode());
+				opLogMo.setOpTime(now);
+				opLogMo.setOpDetail(userMo.getWxNickname() + " " + userMo.getWxFace() //
+						+ " ---> " + to.getWxNickname() + to.getWxFace());
+				opLogMo.setAppId(to.getAppId());
+				opLogMo.setUserAgent(to.getUserAgent());
+				opLogMo.setMac(to.getMac());
+				opLogMo.setIp(to.getIp());
+				opLogSvc.add(opLogMo);
+			}
+		}
+		return returnSuccessLogin(to, RegAndLoginTypeDic.WX, userMo);
+	}
 
-    /**
-     * 返回成功登录
-     * 
-     * @param loginTo
-     *            登录参数
-     * @param loginType
-     *            登录类型
-     * @param userMo
-     *            获取到的用户信息
-     * @return
-     */
-    private UserLoginRo returnSuccessLogin(RegAndLoginBaseTo loginTo, RegAndLoginTypeDic loginType, SucUserMo userMo) {
-        SucLoginLogMo loginLogMo = dozerMapper.map(loginTo, SucLoginLogMo.class);
-        loginLogMo.setUserId(userMo.getId());
-        loginLogMo.setOpTime(new Date());
-        loginLogMo.setLoginType((byte) loginType.getCode());
-        loginLogSvc.add(loginLogMo);
-        UserLoginRo ro = new UserLoginRo();
-        ro.setUserId(userMo.getId());
-        ro.setResult(LoginResultDic.SUCCESS);
-        if (loginType == RegAndLoginTypeDic.EMAIL || loginType == RegAndLoginTypeDic.MOBILE
-                || loginType == RegAndLoginTypeDic.LOGIN_NAME) {
-            if (!StringUtils.isBlank(userMo.getNickname())) {
-                ro.setNickname(userMo.getNickname());
-            } else if (!StringUtils.isBlank(userMo.getWxNickname())) {
-                ro.setNickname(userMo.getWxNickname());
-            } else if (!StringUtils.isBlank(userMo.getQqNickname())) {
-                ro.setNickname(userMo.getQqNickname());
-            }
-            if (!StringUtils.isBlank(userMo.getFace())) {
-                ro.setFace(userMo.getFace());
-            } else if (!StringUtils.isBlank(userMo.getWxFace())) {
-                ro.setFace(userMo.getWxFace());
-            } else if (!StringUtils.isBlank(userMo.getQqFace())) {
-                ro.setFace(userMo.getQqFace());
-            }
-        }
-        _log.info("用户登录成功: {} {} {}", loginTo, loginType, userMo);
-        return ro;
-    }
+	/**
+	 * 返回成功登录
+	 * 
+	 * @param loginTo
+	 *            登录参数
+	 * @param loginType
+	 *            登录类型
+	 * @param userMo
+	 *            获取到的用户信息
+	 * @return
+	 */
+	private UserLoginRo returnSuccessLogin(RegAndLoginBaseTo loginTo, RegAndLoginTypeDic loginType, SucUserMo userMo) {
+		SucLoginLogMo loginLogMo = dozerMapper.map(loginTo, SucLoginLogMo.class);
+		loginLogMo.setUserId(userMo.getId());
+		loginLogMo.setOpTime(new Date());
+		loginLogMo.setLoginType((byte) loginType.getCode());
+		loginLogSvc.add(loginLogMo);
+		UserLoginRo ro = new UserLoginRo();
+		ro.setUserId(userMo.getId());
+		ro.setResult(LoginResultDic.SUCCESS);
+		if (loginType == RegAndLoginTypeDic.EMAIL || loginType == RegAndLoginTypeDic.MOBILE
+				|| loginType == RegAndLoginTypeDic.LOGIN_NAME) {
+			if (!StringUtils.isBlank(userMo.getNickname())) {
+				ro.setNickname(userMo.getNickname());
+			} else if (!StringUtils.isBlank(userMo.getWxNickname())) {
+				ro.setNickname(userMo.getWxNickname());
+			} else if (!StringUtils.isBlank(userMo.getQqNickname())) {
+				ro.setNickname(userMo.getQqNickname());
+			}
+			if (!StringUtils.isBlank(userMo.getFace())) {
+				ro.setFace(userMo.getFace());
+			} else if (!StringUtils.isBlank(userMo.getWxFace())) {
+				ro.setFace(userMo.getWxFace());
+			} else if (!StringUtils.isBlank(userMo.getQqFace())) {
+				ro.setFace(userMo.getQqFace());
+			}
+		}
+		_log.info("用户登录成功: {} {} {}", loginTo, loginType, userMo);
+		return ro;
+	}
 
-    /**
-     * 找到用户后，校验用户是否允许登录
-     * 
-     * @param userMo
-     *            查找到的用户
-     * @return 如果允许，返回null；值不为null，表示不允许
-     */
-    private UserLoginRo verifyLogin(SucUserMo userMo, String loginPswd) {
-        if (existBlacklist(userMo.getId())) {
-            _log.warn("发现尝试使用黑名单中的用户: {}", userMo);
-            UserLoginRo ro = new UserLoginRo();
-            ro.setResult(LoginResultDic.LOCKED);
-            return ro;
-        }
-        if (userMo.getIsLock()) {
-            _log.warn("账号已被锁定，不允许使用: {}", userMo);
-            UserLoginRo ro = new UserLoginRo();
-            ro.setResult(LoginResultDic.LOCKED);
-            return ro;
-        }
-        if (loginPswd != null) {
-            if (!userMo.getLoginPswd().equals(saltPswd(loginPswd, userMo.getSalt()))) {
-                Long errorCount;
-                try {
-                    errorCount = redisClient.incr(REDIS_KEY_LOGINPSWD_ERRCOUNT_PREFIX + userMo.getId(),
-                            DateUtils.getSecondUtilTomorrow());
-                } catch (RedisSetException e) {
-                    _log.error("操作当天连续输入登录密码错误的次数的缓存失败: {}", userMo);
-                    UserLoginRo ro = new UserLoginRo();
-                    ro.setResult(LoginResultDic.CACHE_FAIL);
-                    return ro;
-                }
-                if (errorCount >= 5) {
-                    try {
-                        addBlacklistUtilTomorrow(userMo.getId());
-                        appendLockLog(userMo.getId(), "用户登录系统多次输入密码错误被临时锁定，明日零时会自动解锁");
-                    } catch (RedisSetException e) {
-                        _log.error("添加黑名单缓存失败:{}", userMo);
-                        UserLoginRo ro = new UserLoginRo();
-                        ro.setResult(LoginResultDic.CACHE_FAIL);
-                        return ro;
-                    }
-                }
-                _log.warn("密码错误: {}", loginPswd);
-                UserLoginRo ro = new UserLoginRo();
-                ro.setResult(LoginResultDic.PASSWORD_ERROR);
-                return ro;
-            }
-            redisClient.del(REDIS_KEY_LOGINPSWD_ERRCOUNT_PREFIX + userMo.getId());
-        }
-        return null;
-    }
+	/**
+	 * 找到用户后，校验用户是否允许登录
+	 * 
+	 * @param userMo
+	 *            查找到的用户
+	 * @return 如果允许，返回null；值不为null，表示不允许
+	 */
+	private UserLoginRo verifyLogin(SucUserMo userMo, String loginPswd) {
+		if (existBlacklist(userMo.getId())) {
+			_log.warn("发现尝试使用黑名单中的用户: {}", userMo);
+			UserLoginRo ro = new UserLoginRo();
+			ro.setResult(LoginResultDic.LOCKED);
+			return ro;
+		}
+		if (userMo.getIsLock()) {
+			_log.warn("账号已被锁定，不允许使用: {}", userMo);
+			UserLoginRo ro = new UserLoginRo();
+			ro.setResult(LoginResultDic.LOCKED);
+			return ro;
+		}
+		if (loginPswd != null) {
+			if (!userMo.getLoginPswd().equals(saltPswd(loginPswd, userMo.getSalt()))) {
+				Long errorCount;
+				try {
+					errorCount = redisClient.incr(REDIS_KEY_LOGINPSWD_ERRCOUNT_PREFIX + userMo.getId(),
+							DateUtils.getSecondUtilTomorrow());
+				} catch (RedisSetException e) {
+					_log.error("操作当天连续输入登录密码错误的次数的缓存失败: {}", userMo);
+					UserLoginRo ro = new UserLoginRo();
+					ro.setResult(LoginResultDic.CACHE_FAIL);
+					return ro;
+				}
+				if (errorCount >= 5) {
+					try {
+						addBlacklistUtilTomorrow(userMo.getId());
+						appendLockLog(userMo.getId(), "用户登录系统多次输入密码错误被临时锁定，明日零时会自动解锁");
+					} catch (RedisSetException e) {
+						_log.error("添加黑名单缓存失败:{}", userMo);
+						UserLoginRo ro = new UserLoginRo();
+						ro.setResult(LoginResultDic.CACHE_FAIL);
+						return ro;
+					}
+				}
+				_log.warn("密码错误: {}", loginPswd);
+				UserLoginRo ro = new UserLoginRo();
+				ro.setResult(LoginResultDic.PASSWORD_ERROR);
+				return ro;
+			}
+			redisClient.del(REDIS_KEY_LOGINPSWD_ERRCOUNT_PREFIX + userMo.getId());
+		}
+		return null;
+	}
 
-    /**
-     * 加盐摘要密码
-     * 
-     * @param pswd
-     *            登录密码(不是明文，而是将明文MD5传过来)
-     * @param salt
-     *            盐值
-     * @return
-     */
-    private String saltPswd(String pswd, String salt) {
-        return DigestUtils.md5AsHexStr((pswd + salt).toLowerCase().getBytes());
-    }
+	/**
+	 * 加盐摘要密码
+	 * 
+	 * @param pswd
+	 *            登录密码(不是明文，而是将明文MD5传过来)
+	 * @param salt
+	 *            盐值
+	 * @return
+	 */
+	private String saltPswd(String pswd, String salt) {
+		return DigestUtils.md5AsHexStr((pswd + salt).toLowerCase().getBytes());
+	}
 
-    /**
-     * 检查用户是否存在黑名单中
-     */
-    private Boolean existBlacklist(Long userId) {
-        return redisClient.exists(REDIS_KEY_USER_BLACKLIST_PREFIX + userId);
-    }
+	/**
+	 * 检查用户是否存在黑名单中
+	 */
+	private Boolean existBlacklist(Long userId) {
+		return redisClient.exists(REDIS_KEY_USER_BLACKLIST_PREFIX + userId);
+	}
 
-    /**
-     * 将用户ID加入黑名单，直到明天
-     */
-    private void addBlacklistUtilTomorrow(Long userId) throws RedisSetException {
-        redisClient.set(REDIS_KEY_USER_BLACKLIST_PREFIX + userId, "", DateUtils.getSecondUtilTomorrow());
-    }
+	/**
+	 * 将用户ID加入黑名单，直到明天
+	 */
+	private void addBlacklistUtilTomorrow(Long userId) throws RedisSetException {
+		redisClient.set(REDIS_KEY_USER_BLACKLIST_PREFIX + userId, "", DateUtils.getSecondUtilTomorrow());
+	}
 
-    /**
-     * 添加锁定日志(加入黑名单后等操作后)
-     */
-    private void appendLockLog(Long userId, String lockReason) {
-        SucLockLogMo lockMo = new SucLockLogMo();
-        lockMo.setUserId(userId);
-        lockMo.setLockReason("系统锁定：" + lockReason);
-        lockMo.setLockTime(new Date());
-        lockMo.setLockOpId(0L);
-        lockLogSvc.add(lockMo);
-    }
+	/**
+	 * 添加锁定日志(加入黑名单后等操作后)
+	 */
+	private void appendLockLog(Long userId, String lockReason) {
+		SucLockLogMo lockMo = new SucLockLogMo();
+		lockMo.setUserId(userId);
+		lockMo.setLockReason("系统锁定：" + lockReason);
+		lockMo.setLockTime(new Date());
+		lockMo.setLockOpId(0L);
+		lockLogSvc.add(lockMo);
+	}
 
-    /**
-     * 判断支付时是否需要输入密码
-     * 
-     * @param userId
-     *            用户ID
-     * @param amount
-     *            金额
-     */
-    @Override
-    public Boolean requirePayPswd(Long userId, Double amount) {
-        return amount != null && amount > 200;
-    }
+	/**
+	 * 判断支付时是否需要输入密码
+	 * 
+	 * @param userId
+	 *            用户ID
+	 * @param amount
+	 *            金额
+	 */
+	@Override
+	public Boolean requirePayPswd(Long userId, Double amount) {
+		return amount != null && amount > 200;
+	}
 
-    /**
-     * 校验支付密码
-     * 
-     * @param userId
-     *            用户ID
-     * @param payPswd
-     *            支付密码
-     * @param amount
-     *            支付金额(判断金额在一定数量下可以免密码输入)
-     */
-    @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public PayPswdVerifyRo verifyPayPswd(Long userId, String payPswd, Double amount) {
-        if (userId == null || userId == 0) {
-            _log.warn("没有填写用户ID");
-            PayPswdVerifyRo ro = new PayPswdVerifyRo();
-            ro.setResult(VerifyPayPswdResultDic.PARAM_ERROR);
-            return ro;
-        }
-        SucUserMo userMo = _mapper.selectByPrimaryKey(userId);
-        if (userMo == null) {
-            _log.warn("找不到此用户: {}", userId);
-            PayPswdVerifyRo ro = new PayPswdVerifyRo();
-            ro.setResult(VerifyPayPswdResultDic.NOT_FOUND_USER);
-            return ro;
-        }
-        if (existBlacklist(userMo.getId())) {
-            _log.warn("发现尝试使用黑名单中的用户: {}", userMo);
-            PayPswdVerifyRo ro = new PayPswdVerifyRo();
-            ro.setResult(VerifyPayPswdResultDic.LOCKED);
-            return ro;
-        }
-        if (userMo.getIsLock()) {
-            _log.warn("账号已被锁定，不允许使用: {}", userMo);
-            PayPswdVerifyRo ro = new PayPswdVerifyRo();
-            ro.setResult(VerifyPayPswdResultDic.LOCKED);
-            return ro;
-        }
-        if (requirePayPswd(userId, amount)) {
-            if (StringUtils.isBlank(userMo.getPayPswd())) {
-                _log.warn("用户没有设置支付密码: {}", userMo);
-                PayPswdVerifyRo ro = new PayPswdVerifyRo();
-                ro.setResult(VerifyPayPswdResultDic.NOT_SET_PASSWORD);
-                return ro;
-            }
-            if (StringUtils.isBlank(payPswd)) {
-                _log.warn("没有填写支付密码");
-                PayPswdVerifyRo ro = new PayPswdVerifyRo();
-                ro.setResult(VerifyPayPswdResultDic.PARAM_ERROR);
-                return ro;
-            }
-            _log.info("校验支付密码: {}-{}", payPswd, userMo.getPayPswd());
-            if (!userMo.getPayPswd().equals(saltPswd(payPswd, userMo.getSalt()))) {
-                Long errorCount;
-                try {
-                    errorCount = redisClient.incr(REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX + userMo.getId(),
-                            DateUtils.getSecondUtilTomorrow());
-                } catch (RedisSetException e) {
-                    _log.error("操作当天连续输入密码错误的次数的缓存失败: {}", userMo);
-                    PayPswdVerifyRo ro = new PayPswdVerifyRo();
-                    ro.setResult(VerifyPayPswdResultDic.CACHE_FAIL);
-                    return ro;
-                }
-                if (errorCount >= 5) {
-                    try {
-                        addBlacklistUtilTomorrow(userMo.getId());
-                        appendLockLog(userMo.getId(), "用户多次输入支付密码错误被临时锁定，明日零时会自动解锁");
-                    } catch (RedisSetException e) {
-                        _log.error("添加黑名单缓存失败:{}", userMo);
-                        PayPswdVerifyRo ro = new PayPswdVerifyRo();
-                        ro.setResult(VerifyPayPswdResultDic.CACHE_FAIL);
-                        return ro;
-                    }
-                }
-                _log.warn("密码错误: {}", payPswd);
-                PayPswdVerifyRo ro = new PayPswdVerifyRo();
-                ro.setResult(VerifyPayPswdResultDic.PASSWORD_ERROR);
-                return ro;
-            }
-            redisClient.del(REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX + userMo.getId());
-        }
-        PayPswdVerifyRo ro = new PayPswdVerifyRo();
-        ro.setResult(VerifyPayPswdResultDic.SUCCESS);
-        return ro;
-    }
+	/**
+	 * 校验支付密码
+	 * 
+	 * @param userId
+	 *            用户ID
+	 * @param payPswd
+	 *            支付密码
+	 * @param amount
+	 *            支付金额(判断金额在一定数量下可以免密码输入)
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public PayPswdVerifyRo verifyPayPswd(Long userId, String payPswd, Double amount) {
+		if (userId == null || userId == 0) {
+			_log.warn("没有填写用户ID");
+			PayPswdVerifyRo ro = new PayPswdVerifyRo();
+			ro.setResult(VerifyPayPswdResultDic.PARAM_ERROR);
+			return ro;
+		}
+		SucUserMo userMo = _mapper.selectByPrimaryKey(userId);
+		if (userMo == null) {
+			_log.warn("找不到此用户: {}", userId);
+			PayPswdVerifyRo ro = new PayPswdVerifyRo();
+			ro.setResult(VerifyPayPswdResultDic.NOT_FOUND_USER);
+			return ro;
+		}
+		if (existBlacklist(userMo.getId())) {
+			_log.warn("发现尝试使用黑名单中的用户: {}", userMo);
+			PayPswdVerifyRo ro = new PayPswdVerifyRo();
+			ro.setResult(VerifyPayPswdResultDic.LOCKED);
+			return ro;
+		}
+		if (userMo.getIsLock()) {
+			_log.warn("账号已被锁定，不允许使用: {}", userMo);
+			PayPswdVerifyRo ro = new PayPswdVerifyRo();
+			ro.setResult(VerifyPayPswdResultDic.LOCKED);
+			return ro;
+		}
+		if (requirePayPswd(userId, amount)) {
+			if (StringUtils.isBlank(userMo.getPayPswd())) {
+				_log.warn("用户没有设置支付密码: {}", userMo);
+				PayPswdVerifyRo ro = new PayPswdVerifyRo();
+				ro.setResult(VerifyPayPswdResultDic.NOT_SET_PASSWORD);
+				return ro;
+			}
+			if (StringUtils.isBlank(payPswd)) {
+				_log.warn("没有填写支付密码");
+				PayPswdVerifyRo ro = new PayPswdVerifyRo();
+				ro.setResult(VerifyPayPswdResultDic.PARAM_ERROR);
+				return ro;
+			}
+			_log.info("校验支付密码: {}-{}", payPswd, userMo.getPayPswd());
+			if (!userMo.getPayPswd().equals(saltPswd(payPswd, userMo.getSalt()))) {
+				Long errorCount;
+				try {
+					errorCount = redisClient.incr(REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX + userMo.getId(),
+							DateUtils.getSecondUtilTomorrow());
+				} catch (RedisSetException e) {
+					_log.error("操作当天连续输入密码错误的次数的缓存失败: {}", userMo);
+					PayPswdVerifyRo ro = new PayPswdVerifyRo();
+					ro.setResult(VerifyPayPswdResultDic.CACHE_FAIL);
+					return ro;
+				}
+				if (errorCount >= 5) {
+					try {
+						addBlacklistUtilTomorrow(userMo.getId());
+						appendLockLog(userMo.getId(), "用户多次输入支付密码错误被临时锁定，明日零时会自动解锁");
+					} catch (RedisSetException e) {
+						_log.error("添加黑名单缓存失败:{}", userMo);
+						PayPswdVerifyRo ro = new PayPswdVerifyRo();
+						ro.setResult(VerifyPayPswdResultDic.CACHE_FAIL);
+						return ro;
+					}
+				}
+				_log.warn("密码错误: {}", payPswd);
+				PayPswdVerifyRo ro = new PayPswdVerifyRo();
+				ro.setResult(VerifyPayPswdResultDic.PASSWORD_ERROR);
+				return ro;
+			}
+			redisClient.del(REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX + userMo.getId());
+		}
+		PayPswdVerifyRo ro = new PayPswdVerifyRo();
+		ro.setResult(VerifyPayPswdResultDic.SUCCESS);
+		return ro;
+	}
 
-    /**
-     * 判断用户是否被锁定
-     */
-    @Override
-    public Boolean isLocked(Long id) {
-        SucUserMo condition = new SucUserMo();
-        condition.setId(id);
-        condition.setIsLock(true);
-        return _mapper.existSelective(condition);
-    }
+	/**
+	 * 判断用户是否被锁定
+	 */
+	@Override
+	public Boolean isLocked(Long id) {
+		SucUserMo condition = new SucUserMo();
+		condition.setId(id);
+		condition.setIsLock(true);
+		return _mapper.existSelective(condition);
+	}
 
-    /**
-     * 用户绑定微信
-     */
-    @Override
-    public BindWxRo bindWx(BindWxTo to) {
-        if (to.getUserId() == null || to.getAppId() == null || StringUtils.isAnyBlank(to.getWxId(), to.getWxNickname(),
-                to.getUserAgent(), to.getMac(), to.getIp())) {
-            _log.warn("没有填写用户ID/微信ID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
-            BindWxRo ro = new BindWxRo();
-            ro.setResult(BindWxResultDic.PARAM_ERROR);
-            return ro;
-        }
+	/**
+	 * 用户绑定微信
+	 */
+	@Override
+	public BindWxRo bindWx(BindWxTo to) {
+		if (to.getUserId() == null || to.getAppId() == null || StringUtils.isAnyBlank(to.getWxId(), to.getWxNickname(),
+				to.getUserAgent(), to.getMac(), to.getIp())) {
+			_log.warn("没有填写用户ID/微信ID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
+			BindWxRo ro = new BindWxRo();
+			ro.setResult(BindWxResultDic.PARAM_ERROR);
+			return ro;
+		}
 
-        SucUserMo userMo = getById(to.getUserId());
-        if (userMo == null) {
-            _log.warn("用户绑定微信发现没有此用户: " + to.getUserId());
-            BindWxRo ro = new BindWxRo();
-            ro.setResult(BindWxResultDic.NOT_FOUND_USER);
-            return ro;
-        }
-        if (userMo.getIsLock()) {
-            _log.warn("用户绑定微信发现用户被锁定: " + userMo);
-            BindWxRo ro = new BindWxRo();
-            ro.setResult(BindWxResultDic.USER_LOCKED);
-            return ro;
-        }
+		SucUserMo userMo = getById(to.getUserId());
+		if (userMo == null) {
+			_log.warn("用户绑定微信发现没有此用户: " + to.getUserId());
+			BindWxRo ro = new BindWxRo();
+			ro.setResult(BindWxResultDic.NOT_FOUND_USER);
+			return ro;
+		}
+		if (userMo.getIsLock()) {
+			_log.warn("用户绑定微信发现用户被锁定: " + userMo);
+			BindWxRo ro = new BindWxRo();
+			ro.setResult(BindWxResultDic.USER_LOCKED);
+			return ro;
+		}
 
-        SucUserMo condition = new SucUserMo();
-        condition.setWxId(to.getWxId());
-        if (_mapper.existSelective(condition)) {
-            _log.warn("微信的ID已存在: {}", to);
-            BindWxRo ro = new BindWxRo();
-            ro.setResult(BindWxResultDic.WX_ID_EXIST);
-            return ro;
-        }
+		SucUserMo condition = new SucUserMo();
+		condition.setWxId(to.getWxId());
+		if (_mapper.existSelective(condition)) {
+			_log.warn("微信的ID已存在: {}", to);
+			BindWxRo ro = new BindWxRo();
+			ro.setResult(BindWxResultDic.WX_ID_EXIST);
+			return ro;
+		}
 
-        // 当前时间
-        Date now = new Date();
+		// 当前时间
+		Date now = new Date();
 
-        // 绑定微信
-        SucUserMo modifyUserMo = new SucUserMo();
-        modifyUserMo.setId(to.getUserId());
-        modifyUserMo.setWxId(to.getWxId());
-        modifyUserMo.setWxNickname(to.getWxNickname());
-        modifyUserMo.setWxFace(to.getWxFace());
-        modifyUserMo.setModifiedTimestamp(now.getTime());
-        modify(modifyUserMo);
+		// 绑定微信
+		SucUserMo modifyUserMo = new SucUserMo();
+		modifyUserMo.setId(to.getUserId());
+		modifyUserMo.setWxId(to.getWxId());
+		modifyUserMo.setWxNickname(to.getWxNickname());
+		modifyUserMo.setWxFace(to.getWxFace());
+		modifyUserMo.setModifiedTimestamp(now.getTime());
+		modify(modifyUserMo);
 
-        // 记录用户操作日志
-        SucOpLogMo opLogMo = new SucOpLogMo();
-        opLogMo.setUserId(to.getUserId());
-        opLogMo.setOpType((byte) SucOpTypeDic.BIND_WX.getCode());
-        opLogMo.setOpTime(now);
-        opLogMo.setOpDetail(userMo.getWxNickname() + " " + userMo.getWxFace() //
-                + " ---> " + to.getWxNickname() + to.getWxFace());
-        opLogMo.setAppId(to.getAppId());
-        opLogMo.setUserAgent(to.getUserAgent());
-        opLogMo.setMac(to.getMac());
-        opLogMo.setIp(to.getIp());
-        opLogSvc.add(opLogMo);
+		// 记录用户操作日志
+		SucOpLogMo opLogMo = new SucOpLogMo();
+		opLogMo.setUserId(to.getUserId());
+		opLogMo.setOpType((byte) SucOpTypeDic.BIND_WX.getCode());
+		opLogMo.setOpTime(now);
+		opLogMo.setOpDetail(userMo.getWxNickname() + " " + userMo.getWxFace() //
+				+ " ---> " + to.getWxNickname() + to.getWxFace());
+		opLogMo.setAppId(to.getAppId());
+		opLogMo.setUserAgent(to.getUserAgent());
+		opLogMo.setMac(to.getMac());
+		opLogMo.setIp(to.getIp());
+		opLogSvc.add(opLogMo);
 
-        // 返回成功
-        _log.info("用户绑定微信成功: {}", to);
-        BindWxRo ro = new BindWxRo();
-        ro.setResult(BindWxResultDic.SUCCESS);
-        return ro;
-    }
+		// 返回成功
+		_log.info("用户绑定微信成功: {}", to);
+		BindWxRo ro = new BindWxRo();
+		ro.setResult(BindWxResultDic.SUCCESS);
+		return ro;
+	}
 
-    /**
-     * 获取用户ID(通过用户名称)
-     */
-    @Override
-    public Long getIdByUserName(String userName) {
-        if (userName == null) {
-            _log.warn("没有填写用户名称: {}", userName);
-            return null;
-        }
-        SucUserMo userMo = null;
-        if (RegexUtils.matchEmail(userName)) {
-            userMo = _mapper.selectByEmail(userName);
-            if (userMo != null) {
-                if (!userMo.getIsVerifiedEmail()) {
-                    _log.warn("用户用邮箱登录，但邮箱尚未通过验证: {}", userName);
-                    return null;
-                }
-            }
-        } else if (RegexUtils.matchMobile(userName)) {
-            userMo = _mapper.selectByMobile(userName);
-            if (userMo != null) {
-                if (!userMo.getIsVerifiedMobile()) {
-                    _log.warn("用户用手机号登录，但手机号尚未通过验证: {}", userName);
-                    return null;
-                }
-            }
-        }
-        if (userMo == null) {
-            userMo = _mapper.selectByLoginName(userName);
-        }
-        if (userMo == null) {
-            return null;
-        }
-        return userMo.getId();
-    }
+	/**
+	 * 获取用户ID(通过用户名称)
+	 */
+	@Override
+	public Long getIdByUserName(String userName) {
+		if (userName == null) {
+			_log.warn("没有填写用户名称: {}", userName);
+			return null;
+		}
+		SucUserMo userMo = null;
+		if (RegexUtils.matchEmail(userName)) {
+			userMo = _mapper.selectByEmail(userName);
+			if (userMo != null) {
+				if (!userMo.getIsVerifiedEmail()) {
+					_log.warn("用户用邮箱登录，但邮箱尚未通过验证: {}", userName);
+					return null;
+				}
+			}
+		} else if (RegexUtils.matchMobile(userName)) {
+			userMo = _mapper.selectByMobile(userName);
+			if (userMo != null) {
+				if (!userMo.getIsVerifiedMobile()) {
+					_log.warn("用户用手机号登录，但手机号尚未通过验证: {}", userName);
+					return null;
+				}
+			}
+		}
+		if (userMo == null) {
+			userMo = _mapper.selectByLoginName(userName);
+		}
+		if (userMo == null) {
+			return null;
+		}
+		return userMo.getId();
+	}
 
-    /**
-     * 获取用户ID(通过微信ID)
-     */
-    @Override
-    public Long getIdByWxId(String wxId) {
-        if (wxId == null) {
-            _log.warn("没有填写微信ID: {}", wxId);
-            return null;
-        }
-        SucUserMo userMo = _mapper.selectByWx(wxId);
-        if (userMo == null) {
-            return null;
-        }
-        return userMo.getId();
-    }
+	/**
+	 * 获取用户ID(通过微信ID)
+	 */
+	@Override
+	public Long getIdByWxId(String wxId) {
+		if (wxId == null) {
+			_log.warn("没有填写微信ID: {}", wxId);
+			return null;
+		}
+		SucUserMo userMo = _mapper.selectByWx(wxId);
+		if (userMo == null) {
+			return null;
+		}
+		return userMo.getId();
+	}
 
-    /**
-     * 微信设置登录密码
-     * Title: setLoginPassword
-     * Description: 
-     * @param wxId
-     * @param newLoginPswd
-     * @return
-     * @date 2018年5月2日 下午12:57:25
-     * 1、判断参数是否为空
-     * 2、查询用户信息并判断该用户是否存在
-     * 3、判断登录密码是否为空
-     * 4、添加登录密码
-     */
-    @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Map<String, Object> setLoginPassword(String wxId, String newLoginPswd) {
-    	Map<String, Object> resultMap = new HashMap<String, Object>();
-    	if (wxId == null || wxId.equals("") || wxId.equals("null")) {
+	/**
+	 * 微信设置登录密码 Title: setLoginPassword Description:
+	 * 
+	 * @param wxId
+	 * @param newLoginPswd
+	 * @return
+	 * @date 2018年5月2日 下午12:57:25 1、判断参数是否为空 2、查询用户信息并判断该用户是否存在 3、判断登录密码是否为空
+	 *       4、添加登录密码
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public LoginPswdSetRo setLoginPassword(String wxId, String newLoginPswd) {
+		LoginPswdSetRo setRo = new LoginPswdSetRo();
+		if (wxId == null || wxId.equals("") || wxId.equals("null")) {
 			_log.error("设置登录密码时出现微信ID为空");
-			throw new RuntimeException("您未登录，请先登录");
+			setRo.setResult(LoginPswdSetDic.NOT_LOGIN);
+			setRo.setMsg("您未登录，请先登录");
+			return setRo;
 		}
-    	
-    	if (newLoginPswd == null || newLoginPswd.equals("") || newLoginPswd.equals("null")) {
+
+		if (newLoginPswd == null || newLoginPswd.equals("") || newLoginPswd.equals("null")) {
 			_log.error("设置登录密码时出现没有输入新的登录密码，微信ID为：{}", wxId);
-			throw new RuntimeException("请输入新的登录密码");
+			setRo.setResult(LoginPswdSetDic.NEW_LOGINPSWD_NULL);
+			setRo.setMsg("请输入登录密码");
+			return setRo;
 		}
-    	
-    	_log.info("设置登录密码查询用户信息的参数为：{}", wxId);
+
+		_log.info("设置登录密码查询用户信息的参数为：{}", wxId);
 		// 查询用户信息
 		SucUserMo userMo = _mapper.selectUserInfoByWx(wxId);
-    	_log.info("设置登录密码查询用户信息的返回值为：{}", userMo.toString());
-    	if (userMo.getWxId() == null || userMo.getWxId().equals("") || userMo.getWxId().equals("null")) {
-    		_log.error("设置登录密码查询用户信息时出现用户信息为空，微信ID为：{}", wxId);
-    		throw new RuntimeException("找不到用户信息");
+		_log.info("设置登录密码查询用户信息的返回值为：{}", userMo.toString());
+		if (userMo.getWxId() == null || userMo.getWxId().equals("") || userMo.getWxId().equals("null")) {
+			_log.error("设置登录密码查询用户信息时出现用户信息为空，微信ID为：{}", wxId);
+			setRo.setResult(LoginPswdSetDic.NOT_FOUND_USER);
+			setRo.setMsg("找不到用户信息");
+			return setRo;
 		}
-    	
-    	if (userMo.getLoginPswd() != null && !userMo.getLoginPswd().equals("") && !userMo.getLoginPswd().equals("null")) {
+
+		if (userMo.getLoginPswd() != null && !userMo.getLoginPswd().equals("")
+				&& !userMo.getLoginPswd().equals("null")) {
 			_log.error("微信设置登录密码时出现该用户微信用户已设置了登录密码，微信ID为：{}", wxId);
-			throw new RuntimeException("您已设置过登录密码");
+			setRo.setResult(LoginPswdSetDic.HAVE_SET);
+			setRo.setMsg("您已设置过登录密码");
+			return setRo;
 		}
-    	
-    	String salt = RandomEx.random1(6);
+
+		String salt = RandomEx.random1(6);
 		newLoginPswd = saltPswd(newLoginPswd, salt);
 		_log.info("设置登录密码的参数为：{}", wxId + ", " + newLoginPswd + ", " + salt);
 		int setResult = _mapper.setLoginPswd(wxId, newLoginPswd, salt);
 		_log.info("设置登录密码的返回值为：{}", setResult);
 		if (setResult < 1) {
 			_log.error("设置登录密码设置登录密码时出错，微信ID为：{}", wxId);
-			throw new RuntimeException("设置失败");
+			setRo.setResult(LoginPswdSetDic.SET_ERROR);
+			setRo.setMsg("设置失败");
+			return setRo;
 		}
-		
+
 		_log.info("微信设置登录密码成功，微信ID为：{}", wxId);
-		resultMap.put("result", 1);
-		resultMap.put("msg", "设置成功");
-    	return resultMap;
-    }
-    
-    /**
-     * 微信修改登录密码
-     * Title: changeLoginPassword
-     * Description: 
-     * @param wxId
-     * @param oldLoginPswd
-     * @param newLoginPswd
-     * @return
-     * @date 2018年5月2日 下午1:21:06
-     * 1、判断参数是否为空
-     * 2、查询用户信息并判断用户是否存在
-     * 3、判断用户是否已设置登录密码
-     * 4、判断输入的登录密码是否正确
-     * 5、修改登录密码
-     */
-    @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Map<String, Object> changeLoginPassword(String wxId, String oldLoginPswd, String newLoginPswd) {
-    	Map<String, Object> resultMap = new HashMap<String, Object>();
-    	if (wxId == null || wxId.equals("") || wxId.equals("null")) {
+		setRo.setResult(LoginPswdSetDic.SUCCESS);
+		setRo.setMsg("设置成功");
+		return setRo;
+	}
+
+	/**
+	 * 微信修改登录密码 Title: changeLoginPassword Description:
+	 * 
+	 * @param wxId
+	 * @param oldLoginPswd
+	 * @param newLoginPswd
+	 * @return
+	 * @date 2018年5月2日 下午1:21:06 1、判断参数是否为空 2、查询用户信息并判断用户是否存在 3、判断用户是否已设置登录密码
+	 *       4、判断输入的登录密码是否正确 5、修改登录密码
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public LoginPswdModifyRo changeLoginPassword(String wxId, String oldLoginPswd, String newLoginPswd) {
+		LoginPswdModifyRo modifyRo = new LoginPswdModifyRo();
+		if (wxId == null || wxId.equals("") || wxId.equals("null")) {
 			_log.error("设置或修改登录密码时出现微信ID为空");
-			throw new RuntimeException("您未登录，请先登录");
+			modifyRo.setResult(LoginPswdModifyDic.NOT_LOGIN);
+			modifyRo.setMsg("您未登录，请先登录");
+			return modifyRo;
 		}
-    	
-    	if (newLoginPswd == null || newLoginPswd.equals("") || newLoginPswd.equals("null")) {
+
+		if (newLoginPswd == null || newLoginPswd.equals("") || newLoginPswd.equals("null")) {
 			_log.error("修改登录密码时出现没有输入新的登录密码，微信ID为：{}", wxId);
-			throw new RuntimeException("请输入新的登录密码");
+			modifyRo.setResult(LoginPswdModifyDic.NEW_LOGINPSWD_NULL);
+			modifyRo.setMsg("请输入新的登录密码");
+			return modifyRo;
 		}
-    	
-    	if (oldLoginPswd == null || oldLoginPswd.equals("") || oldLoginPswd.equals("null")) {
-    		_log.error("修改登录密码时出现没有输入旧的登录密码，微信ID为：{}", wxId);
-    		throw new RuntimeException("请输入旧的登录密码");
-    	}
-    	
-    	_log.info("修改登录密码查询用户信息的参数为：{}", wxId);
+
+		if (oldLoginPswd == null || oldLoginPswd.equals("") || oldLoginPswd.equals("null")) {
+			_log.error("修改登录密码时出现没有输入旧的登录密码，微信ID为：{}", wxId);
+			modifyRo.setResult(LoginPswdModifyDic.OLD_LOGINPSWD_NULL);
+			modifyRo.setMsg("请输入旧的登录密码");
+			return modifyRo;
+		}
+
+		_log.info("修改登录密码查询用户信息的参数为：{}", wxId);
 		// 查询用户信息
 		SucUserMo userMo = _mapper.selectUserInfoByWx(wxId);
-    	_log.info("修改登录密码查询用户信息的返回值为：{}", userMo.toString());
-    	if (userMo.getWxId() == null || userMo.getWxId().equals("") || userMo.getWxId().equals("null")) {
-    		_log.error("修改登录密码查询用户信息时出现用户信息为空，微信ID为：{}", wxId);
-    		throw new RuntimeException("找不到用户信息");
+		_log.info("修改登录密码查询用户信息的返回值为：{}", userMo.toString());
+		if (userMo.getWxId() == null || userMo.getWxId().equals("") || userMo.getWxId().equals("null")) {
+			_log.error("修改登录密码查询用户信息时出现用户信息为空，微信ID为：{}", wxId);
+			modifyRo.setResult(LoginPswdModifyDic.NOT_FOUND_USER);
+			modifyRo.setMsg("找不到用户信息");
+			return modifyRo;
 		}
-    	String salt = "";
-    	String oriLoginPswd = userMo.getLoginPswd();
-    	if (oriLoginPswd != null && !oriLoginPswd.equals("") && !oriLoginPswd.equals("null")) {
-    		oldLoginPswd = saltPswd(oldLoginPswd, userMo.getSalt());
+		String salt = "";
+		String oriLoginPswd = userMo.getLoginPswd();
+		if (oriLoginPswd != null && !oriLoginPswd.equals("") && !oriLoginPswd.equals("null")) {
+			oldLoginPswd = saltPswd(oldLoginPswd, userMo.getSalt());
 			if (!oriLoginPswd.equals(oldLoginPswd)) {
 				_log.error("修改登录密码时出现输入的旧密码不等于原来的旧密码，微信ID为：{}", wxId);
-				throw new RuntimeException("输入的旧密码不正确");
+				modifyRo.setResult(LoginPswdModifyDic.OLD_LOGINPSWD_ERROR);
+				modifyRo.setMsg("输入的旧密码不正确");
+				return modifyRo;
 			} else {
 				salt = userMo.getSalt();
 				newLoginPswd = saltPswd(newLoginPswd, salt);
@@ -955,90 +969,99 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 				_log.info("修改登录密码的返回值为：{}", updateResult);
 				if (updateResult < 1) {
 					_log.error("修改登录密码根据微信ID修改密码时出现错误，微信ID为：{}", wxId);
+					modifyRo.setResult(LoginPswdModifyDic.NOT_SET_LOGINPSWD);
+					modifyRo.setMsg("修改失败");
 					throw new RuntimeException("修改失败");
 				}
 			}
 		} else {
 			_log.error("微信修改登录密码时出现没有设置登录密码，微信ID为：{}", wxId);
-			throw new RuntimeException("您未设置登录密码，请先设置后再试");
+			modifyRo.setResult(LoginPswdModifyDic.MODIFY_ERROR);
+			modifyRo.setMsg("您未设置登录密码，请先设置后再试");
+			return modifyRo;
 		}
-    	_log.info("微信修改登录密码成功，微信ID为：{}", wxId);
-    	resultMap.put("result", 1);
-    	resultMap.put("msg", "修改成功");
-    	return resultMap;
-    }
-    
-    /**
-     * 通过微信ID设置登录名称
-     * Title: setLoginName
-     * Description: 
-     * @param wxId
-     * @param loginName
-     * @return
-     * @date 2018年5月3日 下午5:05:38
-     * 1、判断参数是否正确
-     * 2、根据微信ID判断该用户是否存在
-     * 3、判断登录名称是否已存在
-     * 4、设置或修改登录名称
-     */
-    @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Map<String, Object> setLoginName(String wxId, String loginName) {
-    	Map<String, Object> resultMap = new HashMap<String, Object>();
-    	if (wxId == null || wxId.equals("") || wxId.equals("null")) {
+		_log.info("微信修改登录密码成功，微信ID为：{}", wxId);
+		modifyRo.setResult(LoginPswdModifyDic.SUCCESS);
+		modifyRo.setMsg("修改成功");
+		return modifyRo;
+	}
+
+	/**
+	 * 通过微信ID设置登录名称 Title: setLoginName Description:
+	 * 
+	 * @param wxId
+	 * @param loginName
+	 * @return
+	 * @date 2018年5月3日 下午5:05:38 1、判断参数是否正确 2、根据微信ID判断该用户是否存在 3、判断登录名称是否已存在
+	 *       4、设置或修改登录名称
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public LoginNameSetRo setLoginName(String wxId, String loginName) {
+		LoginNameSetRo setRo = new LoginNameSetRo();
+		if (wxId == null || wxId.equals("") || wxId.equals("null")) {
 			_log.error("通过微信ID设置登录名称时出现微信ID");
-			throw new RuntimeException("您未登录，请先登录");
+			setRo.setResult(LoginNameSetDic.NOT_LOGIN);
+			setRo.setMsg("您未登录，请先登录");
+			return setRo;
 		}
-    	
-    	if (loginName == null || loginName.equals("null") || loginName.equals("")) {
+
+		if (loginName == null || loginName.equals("null") || loginName.equals("")) {
 			_log.error("通过微信ID设置登录名称时出现登录名称为空，微信ID为：{}", wxId);
-			throw new RuntimeException("请输入登录名称");
+			setRo.setResult(LoginNameSetDic.NEW_LOGINNAME_NULL);
+			setRo.setMsg("请输入登录名称");
+			return setRo;
 		}
-    	
-    	SucUserMo userMo = new SucUserMo();
-    	userMo.setWxId(wxId);
-    	_log.info("通过微信ID设置登录名称根据微信判断用户是否存在的参数为：{}", wxId);
-    	Boolean userFlag = _mapper.existSelective(userMo);
-    	_log.info("通过微信ID设置登录名称根据微信判断用户是否存在的返回值为：{}", userFlag);
-    	if (!userFlag) {
+
+		SucUserMo userMo = new SucUserMo();
+		userMo.setWxId(wxId);
+		_log.info("通过微信ID设置登录名称根据微信判断用户是否存在的参数为：{}", wxId);
+		Boolean userFlag = _mapper.existSelective(userMo);
+		_log.info("通过微信ID设置登录名称根据微信判断用户是否存在的返回值为：{}", userFlag);
+		if (!userFlag) {
 			_log.error("通过微信ID设置登录名称根据微信判断用户是否存在时出现该用户不存在，微信ID为：{}", wxId);
-			throw new RuntimeException("您未注册，请先注册");
+			setRo.setResult(LoginNameSetDic.NOT_REGISTER);
+			setRo.setMsg("您未注册，请先注册");
+			return setRo;
 		}
-    	
-    	userMo = new SucUserMo();
-    	userMo.setLoginName(loginName);
-    	_log.info("通过微信ID设置登录名称根据登录名称判断该名称是否已存在的参数为：{}", loginName);
-    	Boolean loginNameFlag = _mapper.existSelective(userMo);
-    	_log.info("通过微信ID设置登录名称根据登录名称判断该名称是否已存在的返回值为：{}", loginNameFlag);
-    	if (loginNameFlag) {
+
+		userMo = new SucUserMo();
+		userMo.setLoginName(loginName);
+		_log.info("通过微信ID设置登录名称根据登录名称判断该名称是否已存在的参数为：{}", loginName);
+		Boolean loginNameFlag = _mapper.existSelective(userMo);
+		_log.info("通过微信ID设置登录名称根据登录名称判断该名称是否已存在的返回值为：{}", loginNameFlag);
+		if (loginNameFlag) {
 			_log.error("根据微信ID设置登录名称时出现该登录名称已存在，微信ID为：{}", wxId);
-			throw new RuntimeException("该名称已存在");
+			setRo.setResult(LoginNameSetDic.LOGNAME_ALREADY_EXIST);
+			setRo.setMsg("该名称已存在");
+			return setRo;
 		}
-    	
-    	_log.info("根据微信ID设置登录名称的参数为：{}，{}", wxId, loginName);
-    	int setResult = _mapper.setLoginName(wxId, loginName);
-    	_log.info("根据微信ID设置登录名称的返回值为：{}", setResult);
-    	if (setResult != 1) {
+
+		_log.info("根据微信ID设置登录名称的参数为：{}，{}", wxId, loginName);
+		int setResult = _mapper.setLoginName(wxId, loginName);
+		_log.info("根据微信ID设置登录名称的返回值为：{}", setResult);
+		if (setResult != 1) {
 			_log.error("根据微信ID设置登录名称时出现设置失败，微信ID为：{}", wxId);
-			throw new RuntimeException("设置失败");
+			setRo.setResult(LoginNameSetDic.SET_ERROR);
+			setRo.setMsg("设置失败");
+			return setRo;
 		}
-    	
-    	_log.info("根据微信ID设置登录名称成功");
-    	resultMap.put("result", 1);
-    	resultMap.put("msg", "设置成功");
-    	return resultMap;
-    }
-    
-    /**
-     * 根据微信ID获取用户登录名称
-     * Title: selectLoginNameByWx
-     * Description: 
-     * @param wxId
-     * @return
-     * @date 2018年5月4日 上午9:04:08
-     */
-    @Override
-    public String selectLoginNameByWx(String wxId) {
-    	return _mapper.selectLoginNameByWx(wxId);
-    }
+
+		_log.info("根据微信ID设置登录名称成功");
+		setRo.setResult(LoginNameSetDic.SUCCESS);
+		setRo.setMsg("设置成功");
+		return setRo;
+	}
+
+	/**
+	 * 根据微信ID获取用户登录名称 Title: selectLoginNameByWx Description:
+	 * 
+	 * @param wxId
+	 * @return
+	 * @date 2018年5月4日 上午9:04:08
+	 */
+	@Override
+	public String selectLoginNameByWx(String wxId) {
+		return _mapper.selectLoginNameByWx(wxId);
+	}
 }

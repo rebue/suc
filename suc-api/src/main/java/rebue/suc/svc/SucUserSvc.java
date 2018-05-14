@@ -1,10 +1,11 @@
 package rebue.suc.svc;
 
-import java.util.Map;
-
 import rebue.robotech.svc.MybatisBaseSvc;
 import rebue.suc.mo.SucUserMo;
 import rebue.suc.ro.BindWxRo;
+import rebue.suc.ro.LoginNameSetRo;
+import rebue.suc.ro.LoginPswdModifyRo;
+import rebue.suc.ro.LoginPswdSetRo;
 import rebue.suc.ro.PayPswdVerifyRo;
 import rebue.suc.ro.UserLoginRo;
 import rebue.suc.ro.UserRegRo;
@@ -106,7 +107,7 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
 	 * @return
 	 * @date 2018年5月2日 下午1:10:03
 	 */
-	Map<String, Object> setLoginPassword(String wxId, String newLoginPswd);
+    LoginPswdSetRo setLoginPassword(String wxId, String newLoginPswd);
 
 	/**
 	 * 微信修改登录密码
@@ -118,7 +119,7 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
 	 * @return
 	 * @date 2018年5月2日 下午1:21:46
 	 */
-	Map<String, Object> changeLoginPassword(String wxId, String oldLoginPswd, String newLoginPswd);
+    LoginPswdModifyRo changeLoginPassword(String wxId, String oldLoginPswd, String newLoginPswd);
 
 	/**
 	 * 根据微信ID设置登录名称
@@ -129,7 +130,7 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
 	 * @return
 	 * @date 2018年5月3日 下午5:38:56
 	 */
-	Map<String, Object> setLoginName(String wxId, String loginName);
+   LoginNameSetRo setLoginName(String wxId, String loginName);
 
 	/**
 	 * 根据微信ID获取用户登录名称
