@@ -23,13 +23,13 @@ import rebue.wheel.OkhttpUtils;
 import rebue.wheel.turing.DigestUtils;
 
 public class SucTests {
-    private final static Logger _log          = LoggerFactory.getLogger(SucTests.class);
+    private final static Logger _log     = LoggerFactory.getLogger(SucTests.class);
 
-//    private String              _hostUrl      = "http://localhost:9100/";
+    private String              _hostUrl = "http://localhost:9100/";
 //    private String              _hostUrl      = "http://192.168.1.201/suc-svr";
-    private String              _hostUrl      = "http://120.79.251.116/suc-svr";
+//    private String              _hostUrl      = "http://120.79.251.116/suc-svr";
 
-    private ObjectMapper        _objectMapper = new ObjectMapper();
+    private ObjectMapper _objectMapper = new ObjectMapper();
 
     /**
      * 测试用户注册(通过登录名称注册)
