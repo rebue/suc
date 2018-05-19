@@ -1,12 +1,9 @@
 package rebue.suc.msg;
 
-import io.swagger.annotations.ApiModelProperty;
-
-public class SucUserAddMsg {
+public class SucAddUserDoneMsg {
     /**
      * 用户ID
      */
-    @ApiModelProperty(value = "用户ID")
     private Long id;
 
     public Long getId() {

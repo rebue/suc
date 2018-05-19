@@ -29,8 +29,8 @@ import rebue.suc.mo.SucLoginLogMo;
 import rebue.suc.mo.SucOpLogMo;
 import rebue.suc.mo.SucRegMo;
 import rebue.suc.mo.SucUserMo;
-import rebue.suc.msg.SucUserAddMsg;
-import rebue.suc.pub.SucUserAddPub;
+import rebue.suc.msg.SucAddUserDoneMsg;
+import rebue.suc.pub.SucAddUserDonePub;
 import rebue.suc.ro.BindWxRo;
 import rebue.suc.ro.LoginNameSetRo;
 import rebue.suc.ro.LoginPswdModifyRo;
@@ -105,7 +105,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	private Mapper dozerMapper;
 
 	@Resource
-	private SucUserAddPub userAddPub;
+	private SucAddUserDonePub userAddPub;
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -120,7 +120,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 		int result = super.add(mo);
 
 		// 发布添加用户的消息
-		SucUserAddMsg msg = dozerMapper.map(mo, SucUserAddMsg.class);
+		SucAddUserDoneMsg msg = dozerMapper.map(mo, SucAddUserDoneMsg.class);
 		userAddPub.send(msg);
 
 		return result;
