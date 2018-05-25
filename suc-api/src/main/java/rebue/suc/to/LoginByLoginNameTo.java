@@ -1,9 +1,13 @@
 package rebue.suc.to;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "登录(登录名称)", description = "用户通过登录名称登录的参数")
+@JsonInclude(Include.NON_NULL)
 public class LoginByLoginNameTo extends RegAndLoginBaseTo {
     @ApiModelProperty(value = "登录名称")
     private String loginName;
@@ -28,8 +32,8 @@ public class LoginByLoginNameTo extends RegAndLoginBaseTo {
 
     @Override
     public String toString() {
-        return "LoginByLoginNameTo [loginName=" + loginName + ", loginPswd=" + loginPswd + ", getAppId()=" + getAppId()
-                + ", getUserAgent()=" + getUserAgent() + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
+        return "LoginByLoginNameTo [loginName=" + loginName + ", loginPswd=" + loginPswd + ", getAppId()=" + getAppId() + ", getUserAgent()=" + getUserAgent() + ", getMac()="
+                + getMac() + ", getIp()=" + getIp() + "]";
     }
 
 }

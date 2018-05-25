@@ -1,9 +1,13 @@
 package rebue.suc.to;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "登录(微信)", description = "用户通过微信登录的参数")
+@JsonInclude(Include.NON_NULL)
 public class LoginByWxTo extends RegAndLoginBaseTo {
     @ApiModelProperty(value = "微信的ID")
     private String wxId;
@@ -38,9 +42,8 @@ public class LoginByWxTo extends RegAndLoginBaseTo {
 
     @Override
     public String toString() {
-        return "LoginByWxTo [wxId=" + wxId + ", wxNickname=" + wxNickname + ", wxFace=" + wxFace + ", getAppId()="
-                + getAppId() + ", getUserAgent()=" + getUserAgent() + ", getMac()=" + getMac() + ", getIp()=" + getIp()
-                + "]";
+        return "LoginByWxTo [wxId=" + wxId + ", wxNickname=" + wxNickname + ", wxFace=" + wxFace + ", getAppId()=" + getAppId() + ", getUserAgent()=" + getUserAgent()
+                + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
     }
 
 }

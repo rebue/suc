@@ -3,10 +3,11 @@ package rebue.suc.svc;
 import rebue.robotech.svc.MybatisBaseSvc;
 import rebue.suc.mo.SucUserMo;
 import rebue.suc.ro.BindWxRo;
-import rebue.suc.ro.LoginNameSetRo;
+import rebue.suc.ro.GetLoginNameRo;
 import rebue.suc.ro.LoginPswdModifyRo;
 import rebue.suc.ro.LoginPswdSetRo;
 import rebue.suc.ro.PayPswdVerifyRo;
+import rebue.suc.ro.SetLoginNameRo;
 import rebue.suc.ro.UserLoginRo;
 import rebue.suc.ro.UserRegRo;
 import rebue.suc.to.BindWxTo;
@@ -98,48 +99,52 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      */
     Long getIdByWxId(String wxId);
 
-	/**
-	 * 微信设置登录密码
-	 * Title: setLoginPassword
-	 * Description: 
-	 * @param wxId
-	 * @param newLoginPswd
-	 * @return
-	 * @date 2018年5月2日 下午1:10:03
-	 */
+    /**
+     * 微信设置登录密码
+     * Title: setLoginPassword
+     * Description:
+     * 
+     * @param wxId
+     * @param newLoginPswd
+     * @return
+     * @date 2018年5月2日 下午1:10:03
+     */
     LoginPswdSetRo setLoginPassword(String wxId, String newLoginPswd);
 
-	/**
-	 * 微信修改登录密码
-	 * Title: changeLoginPassword
-	 * Description: 
-	 * @param wxId
-	 * @param oldLoginPswd
-	 * @param newLoginPswd
-	 * @return
-	 * @date 2018年5月2日 下午1:21:46
-	 */
+    /**
+     * 微信修改登录密码
+     * Title: changeLoginPassword
+     * Description:
+     * 
+     * @param wxId
+     * @param oldLoginPswd
+     * @param newLoginPswd
+     * @return
+     * @date 2018年5月2日 下午1:21:46
+     */
     LoginPswdModifyRo changeLoginPassword(String wxId, String oldLoginPswd, String newLoginPswd);
 
-	/**
-	 * 根据微信ID设置登录名称
-	 * Title: setLoginName
-	 * Description: 
-	 * @param wxId
-	 * @param loginName
-	 * @return
-	 * @date 2018年5月3日 下午5:38:56
-	 */
-   LoginNameSetRo setLoginName(String wxId, String loginName);
+    /**
+     * 根据微信ID设置登录名称
+     * Title: setLoginName
+     * Description:
+     * 
+     * @param wxId
+     * @param loginName
+     * @return
+     * @date 2018年5月3日 下午5:38:56
+     */
+    SetLoginNameRo setLoginName(String wxId, String loginName);
 
-	/**
-	 * 根据微信ID获取用户登录名称
-	 * Title: selectLoginNameByWx
-	 * Description: 
-	 * @param wxId
-	 * @return
-	 * @date 2018年5月4日 上午9:04:49
-	 */
-	String selectLoginNameByWx(String wxId);
+    /**
+     * 根据微信ID获取用户登录名称
+     * Title: selectLoginNameByWx
+     * Description:
+     * 
+     * @param wxId
+     * @return
+     * @date 2018年5月4日 上午9:04:49
+     */
+    GetLoginNameRo getLoginNameByWx(String wxId);
 
 }

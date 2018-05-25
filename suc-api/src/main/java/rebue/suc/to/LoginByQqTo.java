@@ -1,9 +1,13 @@
 package rebue.suc.to;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "登录(QQ)", description = "用户通过QQ登录的参数")
+@JsonInclude(Include.NON_NULL)
 public class LoginByQqTo extends RegAndLoginBaseTo {
     @ApiModelProperty(value = "QQ的ID")
     private String qqId;
@@ -38,9 +42,8 @@ public class LoginByQqTo extends RegAndLoginBaseTo {
 
     @Override
     public String toString() {
-        return "LoginByQqTo [qqId=" + qqId + ", qqNickname=" + qqNickname + ", qqFace=" + qqFace + ", getAppId()="
-                + getAppId() + ", getUserAgent()=" + getUserAgent() + ", getMac()=" + getMac() + ", getIp()=" + getIp()
-                + "]";
+        return "LoginByQqTo [qqId=" + qqId + ", qqNickname=" + qqNickname + ", qqFace=" + qqFace + ", getAppId()=" + getAppId() + ", getUserAgent()=" + getUserAgent()
+                + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
     }
 
 }

@@ -1,5 +1,8 @@
 package rebue.suc.to;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -7,6 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 注册用户(通过微信)的传输对象
  */
 @ApiModel(value = "注册(微信)", description = "用户通过微信注册的参数")
+@JsonInclude(Include.NON_NULL)
 public class RegByWxTo extends RegBaseTo {
     @ApiModelProperty(value = "微信的ID", required = true)
     private String wxId;

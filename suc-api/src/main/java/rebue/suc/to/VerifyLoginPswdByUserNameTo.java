@@ -1,9 +1,13 @@
 package rebue.suc.to;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "通过用户名称校验登录密码的传输对象（参数）")
+@JsonInclude(Include.NON_NULL)
 public class VerifyLoginPswdByUserNameTo extends RegAndLoginBaseTo {
     @ApiModelProperty(value = "用户名称(Email/Moblie/LoginName)")
     private String userName;
@@ -28,8 +32,8 @@ public class VerifyLoginPswdByUserNameTo extends RegAndLoginBaseTo {
 
     @Override
     public String toString() {
-        return "VerifyLoginPswdByUserNameTo [userName=" + userName + ", loginPswd=" + loginPswd + ", getAppId()=" + getAppId()
-                + ", getUserAgent()=" + getUserAgent() + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
+        return "VerifyLoginPswdByUserNameTo [userName=" + userName + ", loginPswd=" + loginPswd + ", getAppId()=" + getAppId() + ", getUserAgent()=" + getUserAgent()
+                + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
     }
 
 }

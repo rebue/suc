@@ -1,5 +1,8 @@
 package rebue.suc.to;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -7,6 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 用户绑定微信的传输对象（参数）
  */
 @ApiModel(value = "用户绑定微信的传输对象（参数）")
+@JsonInclude(Include.NON_NULL)
 public class BindWxTo extends RegAndLoginBaseTo {
     @ApiModelProperty(value = "用户ID", required = true)
     private Long   userId;
@@ -51,9 +55,8 @@ public class BindWxTo extends RegAndLoginBaseTo {
 
     @Override
     public String toString() {
-        return "BindWxTo [userId=" + userId + ", wxId=" + wxId + ", wxNickname=" + wxNickname + ", wxFace=" + wxFace
-                + ", getAppId()=" + getAppId() + ", getUserAgent()=" + getUserAgent() + ", getMac()=" + getMac()
-                + ", getIp()=" + getIp() + "]";
+        return "BindWxTo [userId=" + userId + ", wxId=" + wxId + ", wxNickname=" + wxNickname + ", wxFace=" + wxFace + ", getAppId()=" + getAppId() + ", getUserAgent()="
+                + getUserAgent() + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
     }
 
 }

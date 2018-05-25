@@ -12,22 +12,22 @@ package rebue.suc.ro;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import rebue.suc.dic.LoginNameSetDic;
+import rebue.suc.dic.SetLoginNameDic;
 
 @JsonInclude(Include.NON_NULL)
-public class LoginNameSetRo {
+public class SetLoginNameRo {
 
 	/** 返回值 **/
-	private LoginNameSetDic result;
+	private SetLoginNameDic result;
 
 	/** 返回结果 **/
 	private String msg;
 
-	public LoginNameSetDic getResult() {
+	public SetLoginNameDic getResult() {
 		return result;
 	}
 
-	public void setResult(LoginNameSetDic result) {
+	public void setResult(SetLoginNameDic result) {
 		this.result = result;
 	}
 

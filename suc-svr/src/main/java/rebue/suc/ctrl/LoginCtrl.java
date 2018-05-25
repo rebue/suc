@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
@@ -29,7 +30,7 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过登录名称(LoginName)登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-3: 密码错误;-4: 账号被锁定)")
     @PostMapping("/user/login/by/login/name")
-    UserLoginRo loginByLoginName(LoginByLoginNameTo loginTo) {
+    UserLoginRo loginByLoginName(@RequestBody LoginByLoginNameTo loginTo) {
         _log.info("login: " + loginTo);
         return svc.loginByLoginName(loginTo);
     }
@@ -39,7 +40,7 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过用户名称(Email/Moblie/LoginName)登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-3: 密码错误;-4: 账号被锁定;-5: 用户用Email登录，但Email尚未通过验证;-6: 用户用手机号登录，但手机号尚未通过验证)")
     @PostMapping("/user/login/by/user/name")
-    UserLoginRo loginByUserName(LoginByUserNameTo loginTo) {
+    UserLoginRo loginByUserName(@RequestBody LoginByUserNameTo loginTo) {
         _log.info("login: " + loginTo);
         return svc.loginByUserName(loginTo);
     }
@@ -49,7 +50,7 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过QQ登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-4: 账号被锁定)")
     @PostMapping("/user/login/by/qq")
-    UserLoginRo loginByQq(LoginByQqTo loginTo) {
+    UserLoginRo loginByQq(@RequestBody LoginByQqTo loginTo) {
         _log.info("login: " + loginTo);
         return svc.loginByQq(loginTo);
     }
@@ -59,7 +60,7 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过微信登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-4: 账号被锁定)")
     @PostMapping("/user/login/by/wx")
-    UserLoginRo loginByWx(LoginByWxTo loginTo) {
+    UserLoginRo loginByWx(@RequestBody LoginByWxTo loginTo) {
         _log.info("login: " + loginTo);
         return svc.loginByWx(loginTo);
     }

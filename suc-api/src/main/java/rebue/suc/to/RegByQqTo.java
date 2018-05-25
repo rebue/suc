@@ -1,5 +1,8 @@
 package rebue.suc.to;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -7,6 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 注册用户(通过QQ)的传输对象
  */
 @ApiModel(value = "注册(QQ)", description = "用户通过QQ注册的参数")
+@JsonInclude(Include.NON_NULL)
 public class RegByQqTo extends RegBaseTo {
     @ApiModelProperty(value = "QQ的ID", required = true)
     private String qqId;
