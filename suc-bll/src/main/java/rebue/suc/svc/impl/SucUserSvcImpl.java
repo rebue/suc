@@ -1060,7 +1060,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         } else {
             ro.setResult(GetLoginNameDic.SUCCESS);
             ro.setMsg("获取成功");
-            ro.setMsg(loginName);
+            ro.setLoginName(loginName);
         }
         return ro;
     }
