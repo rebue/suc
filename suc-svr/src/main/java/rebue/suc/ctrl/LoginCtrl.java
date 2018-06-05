@@ -1,7 +1,6 @@
 package rebue.suc.ctrl;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -39,11 +38,11 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过登录名称(LoginName)登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-3: 密码错误;-4: 账号被锁定)")
     @PostMapping("/user/login/by/login/name")
-    UserLoginRo loginByLoginName(@RequestBody LoginByLoginNameTo loginTo, HttpServletRequest req, HttpServletResponse resp) {
+    UserLoginRo loginByLoginName(@RequestBody LoginByLoginNameTo loginTo, HttpServletResponse resp) {
         _log.info("login: " + loginTo);
         UserLoginRo ro = svc.loginByLoginName(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, req, resp);
+            jwtSignWithCookie(ro, resp);
         }
         return ro;
     }
@@ -53,11 +52,11 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过用户名称(Email/Moblie/LoginName)登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-3: 密码错误;-4: 账号被锁定;-5: 用户用Email登录，但Email尚未通过验证;-6: 用户用手机号登录，但手机号尚未通过验证)")
     @PostMapping("/user/login/by/user/name")
-    UserLoginRo loginByUserName(@RequestBody LoginByUserNameTo loginTo, HttpServletRequest req, HttpServletResponse resp) {
+    UserLoginRo loginByUserName(@RequestBody LoginByUserNameTo loginTo, HttpServletResponse resp) {
         _log.info("login: " + loginTo);
         UserLoginRo ro = svc.loginByUserName(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, req, resp);
+            jwtSignWithCookie(ro, resp);
         }
         return ro;
     }
@@ -67,11 +66,11 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过QQ登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-4: 账号被锁定)")
     @PostMapping("/user/login/by/qq")
-    UserLoginRo loginByQq(@RequestBody LoginByQqTo loginTo, HttpServletRequest req, HttpServletResponse resp) {
+    UserLoginRo loginByQq(@RequestBody LoginByQqTo loginTo, HttpServletResponse resp) {
         _log.info("login: " + loginTo);
         UserLoginRo ro = svc.loginByQq(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, req, resp);
+            jwtSignWithCookie(ro, resp);
         }
         return ro;
     }
@@ -81,11 +80,11 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过微信登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-4: 账号被锁定)")
     @PostMapping("/user/login/by/wx")
-    UserLoginRo loginByWx(@RequestBody LoginByWxTo loginTo, HttpServletRequest req, HttpServletResponse resp) {
+    UserLoginRo loginByWx(@RequestBody LoginByWxTo loginTo, HttpServletResponse resp) {
         _log.info("login: " + loginTo);
         UserLoginRo ro = svc.loginByWx(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, req, resp);
+            jwtSignWithCookie(ro, resp);
         }
         return ro;
     }
@@ -96,11 +95,12 @@ public class LoginCtrl {
      * @param userId
      *            用户ID
      */
-    private void jwtSignWithCookie(UserLoginRo userLoginRo, HttpServletRequest req, HttpServletResponse resp) {
+    private void jwtSignWithCookie(UserLoginRo userLoginRo, HttpServletResponse resp) {
         JwtSignRo signRo = jwtSvc.sign(userLoginRo.getUserId().toString());
         if (JwtSignResultDic.SUCCESS.equals(signRo.getResult())) {
-            JwtUtils.addCookie(signRo.getSign(), signRo.getExpirationTime(), req, resp);
+            JwtUtils.addCookie(signRo.getSign(), signRo.getExpirationTime(), resp);
             userLoginRo.setSign(signRo.getSign());
+            userLoginRo.setExpirationTime(signRo.getExpirationTime());
         }
     }
 

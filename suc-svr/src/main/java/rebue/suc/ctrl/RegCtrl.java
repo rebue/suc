@@ -1,7 +1,6 @@
 package rebue.suc.ctrl;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -38,11 +37,11 @@ public class RegCtrl {
      */
     @ApiOperation("用户通过登录名称注册\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 用户登录名已存在;-3: Email已存在;-4: 手机号码已存在;-5: 身份证号码已存在;-6: QQ的ID已存在;-7: 微信的ID已存在)")
     @PostMapping("/user/reg/by/login/name")
-    UserRegRo regByLoginName(@RequestBody RegByLoginNameTo regTo, HttpServletRequest req, HttpServletResponse resp) {
+    UserRegRo regByLoginName(@RequestBody RegByLoginNameTo regTo, HttpServletResponse resp) {
         _log.info("reg by login name: {}", regTo);
         UserRegRo ro = svc.regByLoginName(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, req, resp);
+            jwtSignWithCookie(ro, resp);
         }
         return ro;
     }
@@ -52,11 +51,11 @@ public class RegCtrl {
      */
     @ApiOperation("用户通过QQ注册\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 用户登录名已存在;-3: Email已存在;-4: 手机号码已存在;-5: 身份证号码已存在;-6: QQ的ID已存在;-7: 微信的ID已存在)")
     @PostMapping("/user/reg/by/qq")
-    UserRegRo regByQq(@RequestBody RegByQqTo regTo, HttpServletRequest req, HttpServletResponse resp) {
+    UserRegRo regByQq(@RequestBody RegByQqTo regTo, HttpServletResponse resp) {
         _log.info("reg by qq: {}", regTo);
         UserRegRo ro = svc.regByQq(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, req, resp);
+            jwtSignWithCookie(ro, resp);
         }
         return ro;
     }
@@ -66,11 +65,11 @@ public class RegCtrl {
      */
     @ApiOperation("用户通过微信注册\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 用户登录名已存在;-3: Email已存在;-4: 手机号码已存在;-5: 身份证号码已存在;-6: 微信的ID已存在;-7: 微信的ID已存在)")
     @PostMapping("/user/reg/by/wx")
-    UserRegRo regByWx(@RequestBody RegByWxTo regTo, HttpServletRequest req, HttpServletResponse resp) {
+    UserRegRo regByWx(@RequestBody RegByWxTo regTo, HttpServletResponse resp) {
         _log.info("reg by wx: {}", regTo);
         UserRegRo ro = svc.regByWx(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, req, resp);
+            jwtSignWithCookie(ro, resp);
         }
         return ro;
     }
@@ -81,11 +80,12 @@ public class RegCtrl {
      * @param userId
      *            用户ID
      */
-    private void jwtSignWithCookie(UserRegRo userRegRo, HttpServletRequest req, HttpServletResponse resp) {
+    private void jwtSignWithCookie(UserRegRo userRegRo, HttpServletResponse resp) {
         JwtSignRo signRo = jwtSvc.sign(userRegRo.getUserId().toString());
         if (JwtSignResultDic.SUCCESS.equals(signRo.getResult())) {
-            JwtUtils.addCookie(signRo.getSign(), signRo.getExpirationTime(), req, resp);
+            JwtUtils.addCookie(signRo.getSign(), signRo.getExpirationTime(), resp);
             userRegRo.setSign(signRo.getSign());
+            userRegRo.setExpirationTime(signRo.getExpirationTime());
         }
     }
 
