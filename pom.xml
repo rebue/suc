@@ -33,6 +33,12 @@
 				<artifactId>suc-bll</artifactId>
 				<version>1.0.7</version>
 			</dependency>
+
+			<dependency>
+				<groupId>com.github.rebue.jwt</groupId>
+				<artifactId>jwt-svr-feign</artifactId>
+				<version>1.0.7</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

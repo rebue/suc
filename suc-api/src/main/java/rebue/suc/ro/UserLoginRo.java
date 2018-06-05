@@ -23,6 +23,8 @@ public class UserLoginRo {
     private String         nickname;
     @ApiModelProperty(value = "用户头像")
     private String         face;
+    @ApiModelProperty(value = "签名(成功后可将签名放入Cookie中)")
+    private String         sign;
 
     public Long getUserId() {
         return userId;
@@ -56,10 +58,17 @@ public class UserLoginRo {
         this.face = face;
     }
 
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
     @Override
     public String toString() {
-        return "UserLoginRo [userId=" + userId + ", result=" + result + ", nickname=" + nickname + ", face=" + face
-                + "]";
+        return "UserLoginRo [userId=" + userId + ", result=" + result + ", nickname=" + nickname + ", face=" + face + ", sign=" + sign + "]";
     }
 
 }

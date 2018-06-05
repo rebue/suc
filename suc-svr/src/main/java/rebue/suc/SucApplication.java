@@ -3,6 +3,7 @@ package rebue.suc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.client.SpringCloudApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -17,6 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringCloudApplication
 @EnableSwagger2
 @ServletComponentScan("rebue")
+@EnableFeignClients(basePackages = { "rebue.jwt.svr.feign" })
 public class SucApplication {
 
     public static void main(String[] args) {
@@ -26,8 +28,7 @@ public class SucApplication {
 
     @Bean
     public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
-                .apis(RequestHandlerSelectors.basePackage("rebue.suc")).paths(PathSelectors.any()).build();
+        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage("rebue.suc")).paths(PathSelectors.any()).build();
     }
 
     private ApiInfo apiInfo() {

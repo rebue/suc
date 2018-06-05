@@ -285,6 +285,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         regMo.setRegTime(new Date(userMo.getModifiedTimestamp()));
         regMo.setRegType((byte) regType.getCode());
         regSvc.add(regMo);
+
         UserRegRo regRs = new UserRegRo();
         regRs.setUserId(userMo.getId());
         regRs.setResult(RegResultDic.SUCCESS);
