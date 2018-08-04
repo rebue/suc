@@ -529,14 +529,14 @@
     from SUC_USER
     <where>
       <if test="users != null and users != ''">
-        and LOGIN_NAME LIKE '%${users}%' 
-        OR NICKNAME LIKE '%${users}%' 
-        OR REALNAME LIKE '%${users}%' 
-        OR IDCARD LIKE '%users%' 
-        OR EMAIL LIEK '%${users}%' 
-        OR MOBILE LIKE '%${users}%' 
-        OR QQ_NICKNAME LIKE '%${users}%' 
-        OR WX_NICKNAME LIKE '%${users}%'
+        and LOGIN_NAME 	LIKE '%${users}%' 
+        OR NICKNAME 		LIKE '%${users}%' 
+        OR REALNAME 		LIKE '%${users}%' 
+        OR IDCARD 		LIKE '%${users}%' 
+        OR EMAIL 			LIKE '%${users}%' 
+        OR MOBILE 		LIKE '%${users}%' 
+        OR QQ_NICKNAME 	LIKE '%${users}%' 
+        OR WX_NICKNAME 	LIKE '%${users}%'
       </if>
     </where>
   </select>
