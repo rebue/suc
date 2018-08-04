@@ -196,4 +196,52 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 	 */
 	@Select("SELECT LOGIN_NAME FROM SUC_USER WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
 	String selectLoginNameByWx(@Param("wxId") String wxId);
+	
+	/**
+	 *　设置用户锁定/解锁
+	 * @param id
+	 * @param isLock
+	 * @return
+	 */
+	@Update("update SUC_USER set IS_LOCK=#{isLock,jdbcType=TINYINT} where ID=#{id,jdbcType=BIGINT}")
+	int lockOrUnlockById(@Param("id") Long id, @Param("isLock") Boolean isLock);
+	
+	/**
+	 * 根据id解除登录密码
+	 * @param id
+	 * @return
+	 */
+	@Update("UPDATE SUC_USER SET LOGIN_PSWD=NULL WHERE ID=#{id,jdbcType=BIGINT}")
+	int removeLoginPassWord(@Param("id") Long id);
+	
+	/**
+	 * 根据用户id解除支付密码
+	 * @param id
+	 * @return
+	 */
+	@Update("UPDATE SUC_USER SET PAY_PSWD=NULL WHERE ID=#{id,jdbcType=BIGINT}")
+	int removePayPassWord(@Param("id") Long id);
+	
+	/**
+	 * 根据用户id解绑微信
+	 * @param id
+	 * @return
+	 */
+	@Update("UPDATE SUC_USER SET WX_ID=NULL, WX_NICKNAME=NULL, WX_FACE=NULL WHERE ID=#{id,jdbcType=BIGINT}")
+	int unbindWeChat(@Param("id") Long id);
+	
+	/**
+	 * 根据用户id解绑微信
+	 * @param id
+	 * @return
+	 */
+	@Update("UPDATE SUC_USER SET QQ_ID=NULL, QQ_NICKNAME=NULL, QQ_FACE=NULL WHERE ID=#{id,jdbcType=BIGINT}")
+	int unbindQQ(@Param("id") Long id);
+	
+	/**
+	 * 多条件同时查询
+	 * @param users
+	 * @return
+	 */
+	List<SucUserMo> selectMeanwhile(@Param("users") String users);
 }

@@ -521,4 +521,23 @@
       </if>
     </where>
   </select>
+  
+  <!-- 多条件同时查询 -->
+  <select id="selectMeanwhile" parameterType="String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from SUC_USER
+    <where>
+      <if test="users != null and users != ''">
+        and LOGIN_NAME LIKE '%${users}%' 
+        OR NICKNAME LIKE '%${users}%' 
+        OR REALNAME LIKE '%${users}%' 
+        OR IDCARD LIKE '%users%' 
+        OR EMAIL LIEK '%${users}%' 
+        OR MOBILE LIKE '%${users}%' 
+        OR QQ_NICKNAME LIKE '%${users}%' 
+        OR WX_NICKNAME LIKE '%${users}%'
+      </if>
+    </where>
+  </select>
 </mapper>
