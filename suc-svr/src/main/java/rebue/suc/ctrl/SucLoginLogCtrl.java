@@ -1,6 +1,4 @@
-package ${modulePackage}.ctrl;
-
-import java.util.List;
+package rebue.suc.ctrl;
 
 import javax.annotation.Resource;
 
@@ -17,22 +15,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
 
-import ${moClassFullName};
-import ${modulePackage}.svc.${entityName}Svc;
-import ${modulePackage}.ro.${entityName}Ro;
+import rebue.suc.mo.SucLoginLogMo;
+import rebue.suc.svc.SucLoginLogSvc;
+import rebue.suc.ro.SucLoginLogRo;
 
 @RestController
-public class ${entityName}Ctrl {
+public class SucLoginLogCtrl {
     /**
      * @mbg.generated
      */
-    private final static Logger _log = LoggerFactory.getLogger(${entityName}Ctrl.class);
+    private final static Logger _log = LoggerFactory.getLogger(SucLoginLogCtrl.class);
 
     /**
      * @mbg.generated
      */
     @Resource
-    private ${entityName}Svc svc;
+    private SucLoginLogSvc svc;
 
     /**
      * 有唯一约束的字段名称
@@ -42,14 +40,14 @@ public class ${entityName}Ctrl {
     private String _uniqueFilesName = "某字段内容";
 
     /**
-     * 添加${entityTitle}
+     * 添加用户登录日志
      *
      * @mbg.generated
      */
-    @PostMapping("/${strutil.toLowerCase(entityNamePrefix)}/${strutil.toLowerCase(entitySimpleName)}")
-    ${entityName}Ro add(@RequestBody ${moClassShortName} mo) throws Exception {
-        _log.info("add ${moClassShortName}:" + mo);
-        ${entityName}Ro ro = new ${entityName}Ro();
+    @PostMapping("/suc/loginlog")
+    SucLoginLogRo add(@RequestBody SucLoginLogMo mo) throws Exception {
+        _log.info("add SucLoginLogMo:" + mo);
+        SucLoginLogRo ro = new SucLoginLogRo();
         try {
             int result = svc.add(mo);
             if (result == 1) {
@@ -75,14 +73,14 @@ public class ${entityName}Ctrl {
     }
 
     /**
-     * 修改${entityTitle}
+     * 修改用户登录日志
      *
      * @mbg.generated
      */
-    @PutMapping("/${strutil.toLowerCase(entityNamePrefix)}/${strutil.toLowerCase(entitySimpleName)}")
-    ${entityName}Ro modify(@RequestBody ${moClassShortName} mo) throws Exception {
-        _log.info("modify ${moClassShortName}:" + mo);
-        ${entityName}Ro ro = new ${entityName}Ro();
+    @PutMapping("/suc/loginlog")
+    SucLoginLogRo modify(@RequestBody SucLoginLogMo mo) throws Exception {
+        _log.info("modify SucLoginLogMo:" + mo);
+        SucLoginLogRo ro = new SucLoginLogRo();
         try {
             int result = svc.modify(mo);
             if (result == 1) {
@@ -108,42 +106,15 @@ public class ${entityName}Ctrl {
     }
 
     /**
-     * 删除${entityTitle}
+     * 删除用户登录日志
      * 
      * @mbg.generated
      */
-    @DeleteMapping("/${strutil.toLowerCase(entityNamePrefix)}/${strutil.toLowerCase(entitySimpleName)}")
-    ${entityName}Ro del(<&
-        for(id in ids){
-            if(!idLP.first) {
-                print(', ');
-            }
-            print('@RequestParam("');
-            print(id.key);
-            print('") ');
-            print(id.value);
-            print(' ');
-            print(id.key);
-        }
-    &>) {
-        _log.info("save ${moClassShortName}:" + <&
-            for(id in ids){
-                if(!idLP.first) {
-                    print(', ');
-                }
-                print(id.key);
-            }
-        &>);
-        int result = svc.del(<&
-            for(id in ids){
-                if(!idLP.first) {
-                    print(', ');
-                }
-                print(id.key);
-            }
-        &>);
-
-        ${entityName}Ro ro = new ${entityName}Ro();
+    @DeleteMapping("/suc/loginlog")
+    SucLoginLogRo del(@RequestParam("id") java.lang.Long id) {
+        _log.info("save SucLoginLogMo:" + id);
+        int result = svc.del(id);
+        SucLoginLogRo ro = new SucLoginLogRo();
         if (result == 1) {
             String msg = "删除成功";
             _log.info("{}: id-{}", msg, id);
@@ -160,46 +131,34 @@ public class ${entityName}Ctrl {
     }
 
     /**
-     * 查询${entityTitle}
+     * 查询用户登录日志
      * 
      * @mbg.generated
      */
-    @GetMapping("/${strutil.toLowerCase(entityNamePrefix)}/${strutil.toLowerCase(entitySimpleName)}")
-    PageInfo<${moClassShortName}> list(${moClassShortName} mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        _log.info("list ${moClassShortName}:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+    @GetMapping("/suc/loginlog")
+    PageInfo<SucLoginLogMo> list(SucLoginLogMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+        _log.info("list SucLoginLogMo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             String msg = "pageSize不能大于50";
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<${moClassShortName}> result = svc.list(mo, pageNum, pageSize);
+        PageInfo<SucLoginLogMo> result = svc.list(mo, pageNum, pageSize);
         _log.info("result: " + result);
         return result;
     }
 
     /**
-     * 获取单个${entityTitle}
+     * 获取单个用户登录日志
      * 
      * @mbg.generated
      */
-    @GetMapping("/${strutil.toLowerCase(entityNamePrefix)}/${strutil.toLowerCase(entitySimpleName)}/getbyid")
-    ${entityName}Ro getById(<&
-        for(id in ids){
-            if(!idLP.first) {
-                print(', ');
-            }
-            print('@RequestParam("');
-            print(id.key);
-            print('") ');
-            print(id.value);
-            print(' ');
-            print(id.key);
-        }
-    &>) {
-        _log.info("get ${moClassShortName} by id: " + id);
-        ${moClassShortName} result = svc.getById(id);
+    @GetMapping("/suc/loginlog/getbyid")
+    SucLoginLogRo getById(@RequestParam("id") java.lang.Long id) {
+        _log.info("get SucLoginLogMo by id: " + id);
+        SucLoginLogMo result = svc.getById(id);
         _log.info("get: " + result);
-        ${entityName}Ro ro = new ${entityName}Ro();
+        SucLoginLogRo ro = new SucLoginLogRo();
         if (result == null) {
             String msg = "获取失败，没有找到该条记录";
             _log.error("{}: id-{}", msg, id);

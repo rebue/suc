@@ -1,15 +1,12 @@
 package rebue.suc.svc.impl;
 
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
+import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.suc.mapper.SucOpLogMapper;
 import rebue.suc.mo.SucOpLogMo;
 import rebue.suc.svc.SucOpLogSvc;
-
-import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 
 @Service
 /**
@@ -38,5 +35,4 @@ public class SucOpLogSvcImpl extends MybatisBaseSvcImpl<SucOpLogMo, java.lang.Lo
         }
         return super.add(mo);
     }
-
 }

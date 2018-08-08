@@ -1,7 +1,6 @@
 package rebue.suc.svc;
 
 import com.github.pagehelper.PageInfo;
-
 import rebue.robotech.svc.MybatisBaseSvc;
 import rebue.suc.mo.SucUserMo;
 import rebue.suc.ro.BindWxRo;
@@ -24,188 +23,188 @@ import rebue.suc.to.RegByWxTo;
 
 public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
 
-	/**
-	 * 用户注册(通过登录名称)
-	 */
-	UserRegRo regByLoginName(RegByLoginNameTo regTo);
+    /**
+     *  用户注册(通过登录名称)
+     */
+    UserRegRo regByLoginName(RegByLoginNameTo regTo);
 
-	/**
-	 * 用户注册(通过QQ)
-	 */
-	public UserRegRo regByQq(RegByQqTo regTo);
+    /**
+     *  用户注册(通过QQ)
+     */
+    public UserRegRo regByQq(RegByQqTo regTo);
 
-	/**
-	 * 用户注册(通过微信)
-	 */
-	public UserRegRo regByWx(RegByWxTo regTo);
+    /**
+     *  用户注册(通过微信)
+     */
+    public UserRegRo regByWx(RegByWxTo regTo);
 
-	/**
-	 * 用户登录(通过登录名称)
-	 */
-	UserLoginRo loginByLoginName(LoginByLoginNameTo loginTo);
+    /**
+     *  用户登录(通过登录名称)
+     */
+    UserLoginRo loginByLoginName(LoginByLoginNameTo loginTo);
 
-	/**
-	 * 用户登录(通过用户名称登录，按照 邮箱->手机->登录名 的顺序查找用户)
-	 */
-	UserLoginRo loginByUserName(LoginByUserNameTo loginTo);
+    /**
+     *  用户登录(通过用户名称登录，按照 邮箱->手机->登录名 的顺序查找用户)
+     */
+    UserLoginRo loginByUserName(LoginByUserNameTo loginTo);
 
-	/**
-	 * 用户登录(通过QQ登录)
-	 */
-	UserLoginRo loginByQq(LoginByQqTo loginTo);
+    /**
+     *  用户登录(通过QQ登录)
+     */
+    UserLoginRo loginByQq(LoginByQqTo loginTo);
 
-	/**
-	 * 用户登录(通过微信登录)
-	 */
-	UserLoginRo loginByWx(LoginByWxTo loginTo);
+    /**
+     *  用户登录(通过微信登录)
+     */
+    UserLoginRo loginByWx(LoginByWxTo loginTo);
 
-	/**
-	 * 判断支付时是否需要输入密码
-	 * 
-	 * @param userId
-	 *            用户ID
-	 * @param amount
-	 *            金额(判断金额在一定数量下可以免密码输入)
-	 */
-	Boolean requirePayPswd(Long userId, Double amount);
+    /**
+     *  判断支付时是否需要输入密码
+     *
+     *  @param userId
+     *             用户ID
+     *  @param amount
+     *             金额(判断金额在一定数量下可以免密码输入)
+     */
+    Boolean requirePayPswd(Long userId, Double amount);
 
-	/**
-	 * 校验支付密码 TODO 将参数参照verifyLoginPswdByUserName修改
-	 * 
-	 * @param userId
-	 *            用户ID
-	 * @param payPswd
-	 *            支付密码
-	 * @param amount
-	 *            支付金额(判断金额在一定数量下可以免密码输入)
-	 */
-	PayPswdVerifyRo verifyPayPswd(Long userId, String payPswd, Double amount);
+    /**
+     *  校验支付密码 TODO 将参数参照verifyLoginPswdByUserName修改
+     *
+     *  @param userId
+     *             用户ID
+     *  @param payPswd
+     *             支付密码
+     *  @param amount
+     *             支付金额(判断金额在一定数量下可以免密码输入)
+     */
+    PayPswdVerifyRo verifyPayPswd(Long userId, String payPswd, Double amount);
 
-	/**
-	 * 判断用户是否被锁定
-	 */
-	Boolean isLocked(Long id);
+    /**
+     *  判断用户是否被锁定
+     */
+    Boolean isLocked(Long id);
 
-	/**
-	 * 用户绑定微信
-	 */
-	BindWxRo bindWx(BindWxTo to);
+    /**
+     *  用户绑定微信
+     */
+    BindWxRo bindWx(BindWxTo to);
 
-	/**
-	 * 获取用户ID(通过用户名称)
-	 */
-	Long getIdByUserName(String userName);
+    /**
+     *  获取用户ID(通过用户名称)
+     */
+    Long getIdByUserName(String userName);
 
-	/**
-	 * 获取用户ID(通过微信ID)
-	 */
-	Long getIdByWxId(String wxId);
+    /**
+     *  获取用户ID(通过微信ID)
+     */
+    Long getIdByWxId(String wxId);
 
-	/**
-	 * 微信设置登录密码 Title: setLoginPassword Description:
-	 * 
-	 * @param wxId
-	 * @param newLoginPswd
-	 * @return
-	 * @date 2018年5月2日 下午1:10:03
-	 */
-	LoginPswdSetRo setLoginPassword(String wxId, String newLoginPswd);
+    /**
+     *  微信设置登录密码 Title: setLoginPassword Description:
+     *
+     *  @param wxId
+     *  @param newLoginPswd
+     *  @return
+     *  @date 2018年5月2日 下午1:10:03
+     */
+    LoginPswdSetRo setLoginPassword(String wxId, String newLoginPswd);
 
-	/**
-	 * 微信修改登录密码 Title: changeLoginPassword Description:
-	 * 
-	 * @param wxId
-	 * @param oldLoginPswd
-	 * @param newLoginPswd
-	 * @return
-	 * @date 2018年5月2日 下午1:21:46
-	 */
-	LoginPswdModifyRo changeLoginPassword(String wxId, String oldLoginPswd, String newLoginPswd);
+    /**
+     *  微信修改登录密码 Title: changeLoginPassword Description:
+     *
+     *  @param wxId
+     *  @param oldLoginPswd
+     *  @param newLoginPswd
+     *  @return
+     *  @date 2018年5月2日 下午1:21:46
+     */
+    LoginPswdModifyRo changeLoginPassword(String wxId, String oldLoginPswd, String newLoginPswd);
 
-	/**
-	 * 根据微信ID设置登录名称 Title: setLoginName Description:
-	 * 
-	 * @param wxId
-	 * @param loginName
-	 * @return
-	 * @date 2018年5月3日 下午5:38:56
-	 */
-	SetLoginNameRo setLoginName(String wxId, String loginName);
+    /**
+     *  根据微信ID设置登录名称 Title: setLoginName Description:
+     *
+     *  @param wxId
+     *  @param loginName
+     *  @return
+     *  @date 2018年5月3日 下午5:38:56
+     */
+    SetLoginNameRo setLoginName(String wxId, String loginName);
 
-	/**
-	 * 根据微信ID获取用户登录名称 Title: selectLoginNameByWx Description:
-	 * 
-	 * @param wxId
-	 * @return
-	 * @date 2018年5月4日 上午9:04:49
-	 */
-	GetLoginNameRo getLoginNameByWx(String wxId);
+    /**
+     *  根据微信ID获取用户登录名称 Title: selectLoginNameByWx Description:
+     *
+     *  @param wxId
+     *  @return
+     *  @date 2018年5月4日 上午9:04:49
+     */
+    GetLoginNameRo getLoginNameByWx(String wxId);
 
-	/**
-	 * 修改用户信息
-	 * 
-	 * @param mo
-	 * @return
-	 */
-	SucUserRo modifyEx(SucUserMo mo);
+    /**
+     *  修改用户信息
+     *
+     *  @param mo
+     *  @return
+     */
+    SucUserRo modifyEx(SucUserMo mo);
 
-	/**
-	 * 禁用或者解锁用户
-	 * 
-	 * @param id
-	 * @param isLock
-	 * @return
-	 */
-	SucUserRo enable(Long id, Boolean isLock);
+    /**
+     *  禁用或者解锁用户
+     *
+     *  @param id
+     *  @param isLock
+     *  @return
+     */
+    SucUserRo enable(Long id, Boolean isLock);
 
-	/**
-	 * 解除登录密码
-	 * 
-	 * @param id
-	 * @return
-	 */
-	SucUserRo removeLoginPassWord(Long id);
+    /**
+     *  解除登录密码
+     *
+     *  @param id
+     *  @return
+     */
+    SucUserRo removeLoginPassWord(Long id);
 
-	/**
-	 * 解除支付密码
-	 * 
-	 * @param id
-	 * @return
-	 */
-	SucUserRo removePayPassWord(Long id);
+    /**
+     *  解除支付密码
+     *
+     *  @param id
+     *  @return
+     */
+    SucUserRo removePayPassWord(Long id);
 
-	/**
-	 * 解绑微信
-	 * 
-	 * @param id
-	 * @return
-	 */
-	SucUserRo unbindWeChat(Long id);
+    /**
+     *  解绑微信
+     *
+     *  @param id
+     *  @return
+     */
+    SucUserRo unbindWeChat(Long id);
 
-	/**
-	 * 解绑QQ
-	 * 
-	 * @param id
-	 * @return
-	 */
-	SucUserRo unbindQQ(Long id);
+    /**
+     *  解绑QQ
+     *
+     *  @param id
+     *  @return
+     */
+    SucUserRo unbindQQ(Long id);
 
-	/**
-	 * 多条件同时查询
-	 * @param users
-	 * @param pageNum
-	 * @param pageSize
-	 * @return
-	 */
-	PageInfo<SucUserMo> listEx(String users, int pageNum, int pageSize);
+    /**
+     *  多条件同时查询
+     *  @param users
+     *  @param pageNum
+     *  @param pageSize
+     *  @return
+     */
+    PageInfo<SucUserMo> listEx(String users, int pageNum, int pageSize);
 
-	/**
-	 * 根据系统id和角色id查询用户信息
-	 * @param sysId
-	 * @param roleId
-	 * @param pageNum
-	 * @param pageSize
-	 * @return
-	 */
-	PageInfo<SucUserMo> userNameList(String sysId, Long roleId, int pageNum, int pageSize, String users);
+    /**
+     *  根据系统id和角色id查询用户信息
+     *  @param sysId
+     *  @param roleId
+     *  @param pageNum
+     *  @param pageSize
+     *  @return
+     */
+    PageInfo<SucUserMo> userNameList(String sysId, Long roleId, int pageNum, int pageSize, String users);
 }
