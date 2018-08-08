@@ -1,6 +1,7 @@
 package rebue.suc.svc.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+import rebue.pfm.svr.feign.PfmUserRoleSvc;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.sbs.redis.RedisClient;
 import rebue.sbs.redis.RedisSetException;
@@ -64,6 +66,7 @@ import rebue.wheel.DateUtils;
 import rebue.wheel.IdCardValidator;
 import rebue.wheel.RandomEx;
 import rebue.wheel.RegexUtils;
+import rebue.wheel.StrUtils;
 import rebue.wheel.turing.DigestUtils;
 
 @Service
@@ -113,6 +116,9 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 
 	@Resource
 	private SucAddUserDonePub userAddPub;
+
+	@Resource
+	private PfmUserRoleSvc pfmUserRoleSvc;
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -1233,6 +1239,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 
 	/**
 	 * 多条件同时查询
+	 * 
 	 * @param users
 	 * @param pageNum
 	 * @param pageSize
@@ -1242,5 +1249,29 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	public PageInfo<SucUserMo> listEx(String users, int pageNum, int pageSize) {
 		_log.info("list: qo-{}; pageNum-{}; pageSize-{}", users, pageNum, pageSize);
 		return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectMeanwhile(users));
+	}
+
+	/**
+	 * 根据系统id和角色id查询用户信息
+	 * 
+	 * @param sysId
+	 * @param roleId
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	@Override
+	public PageInfo<SucUserMo> userNameList(String sysId, Long roleId, int pageNum, int pageSize, String users) {
+		_log.info("查询用户名称的请求参数为，{}, {}", sysId, roleId);
+		_log.info("根据系统id和角色id查询用户id的参数为：{}，{}", sysId, roleId);
+		// 根据系统id和角色id查询用户id
+		List<Long> useIdList = pfmUserRoleSvc.getUseIdByRoleIdAndSysId(sysId, roleId);
+		_log.info("根据系统id和角色id查询用户id的返回值为：{}", String.valueOf(useIdList));
+		StringBuilder userIds = new StringBuilder();
+		for (Long id : useIdList) {
+			userIds.append(id + ",");
+		}
+		String ids = StringUtils.isBlank(userIds.toString()) ? "-1" : StrUtils.delRight(userIds.toString(), 1);
+		return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectByIds(ids));
 	}
 }

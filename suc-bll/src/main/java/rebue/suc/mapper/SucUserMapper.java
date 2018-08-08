@@ -244,4 +244,11 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 	 * @return
 	 */
 	List<SucUserMo> selectMeanwhile(@Param("users") String users);
+	
+	/**
+	 * 根据用户id批量查询用户名称
+	 * @param ids
+	 * @return
+	 */
+	List<SucUserMo> selectByIds(@Param("ids") String ids);
 }

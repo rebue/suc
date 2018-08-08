@@ -102,6 +102,7 @@ public class SucUserCtrl {
 
 	/**
 	 * 查询用户信息
+	 * 
 	 * @mbg.overrideByMethodName
 	 */
 	@GetMapping("/suc/user")
@@ -218,5 +219,20 @@ public class SucUserCtrl {
 	SucUserRo unbindQQ(@RequestParam("id") Long id) {
 		_log.info("解绑微信的参数为：{}", id);
 		return svc.unbindQQ(id);
+	}
+
+	/**
+	 * 根据系统id和角色id查询用户信息
+	 * @param sysId
+	 * @param roleId
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	@GetMapping("/suc/user/usernamelist")
+	PageInfo<SucUserMo> userNameList(@RequestParam("sysId") String sysId, @RequestParam("roleId") Long roleId,
+			@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize, String users) {
+		_log.info("查询用户名称的请求参数为：sysId={}, roleId={}, pageNum={}, pageSize={}", sysId, roleId, pageNum, pageSize);
+		return svc.userNameList(sysId, roleId, pageNum, pageSize, users);
 	}
 }

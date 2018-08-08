@@ -41,6 +41,13 @@
     IDCARD, IS_VERIFIED_IDCARD, EMAIL, IS_VERIFIED_EMAIL, MOBILE, IS_VERIFIED_MOBILE, 
     QQ_ID, QQ_NICKNAME, QQ_FACE, WX_ID, WX_NICKNAME, WX_FACE, IS_LOCK, MODIFIED_TIMESTAMP
   </sql>
+  <sql id="User_Name_List">
+    <!--
+      用于查询用户的各种名称
+      ２０１８年０８月０６日１１：４７：３７
+    -->
+    ID, LOGIN_NAME, NICKNAME, REALNAME, QQ_NICKNAME, WX_NICKNAME
+  </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
@@ -538,6 +545,16 @@
         OR QQ_NICKNAME 	LIKE '%${users}%' 
         OR WX_NICKNAME 	LIKE '%${users}%'
       </if>
+    </where>
+  </select>
+  
+  <!-- 根据用户id批量查询用户信息 -->
+  <select id="selectByIds" parameterType="String" resultMap="BaseResultMap">
+  	select 
+    <include refid="User_Name_List" />
+    from SUC_USER
+    <where>
+    	and ID in (${ids}) 
     </where>
   </select>
 </mapper>

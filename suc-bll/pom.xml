@@ -45,6 +45,12 @@
 		<!-- </dependency> -->
 
 		<dependency>
+			<groupId>com.github.rebue.pfm</groupId>
+			<artifactId>pfm-svr-feign</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
 		</dependency>
