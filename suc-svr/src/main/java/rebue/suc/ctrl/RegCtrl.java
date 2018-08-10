@@ -116,9 +116,9 @@ public class RegCtrl {
 		regTo.setUserAgent(AgentUtils.getUserAgent(req));
 		regTo.setMac("不再获取MAC地址");
 		UserRegRo ro = svc.regByWx(regTo);
-		if (RegResultDic.SUCCESS.equals(ro.getResult())) {
+		/*if (RegResultDic.SUCCESS.equals(ro.getResult())) {
 			jwtSignWithCookie(ro, resp);
-		}
+		}*/
 		return ro;
 	}
 

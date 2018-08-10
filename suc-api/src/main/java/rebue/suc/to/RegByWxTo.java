@@ -12,40 +12,56 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "注册(微信)", description = "用户通过微信注册的参数")
 @JsonInclude(Include.NON_NULL)
 public class RegByWxTo extends RegBaseTo {
-    @ApiModelProperty(value = "微信的ID", required = true)
-    private String wxId;
-    @ApiModelProperty(value = "微信昵称", required = true)
-    private String wxNickname;
-    @ApiModelProperty(value = "微信头像", required = true)
-    private String wxFace;
+	@ApiModelProperty(value = "微信的ID", required = true)
+	private String wxId;
+	@ApiModelProperty(value = "微信昵称", required = true)
+	private String wxNickname;
+	@ApiModelProperty(value = "微信头像", required = true)
+	/**
+	 * 微信openid
+	 */
+	private String wxOpenid;
+	/**
+	 * 微信头像
+	 */
+	private String wxFace;
 
-    public String getWxId() {
-        return wxId;
-    }
+	public String getWxId() {
+		return wxId;
+	}
 
-    public void setWxId(String wxId) {
-        this.wxId = wxId;
-    }
+	public void setWxId(String wxId) {
+		this.wxId = wxId;
+	}
 
-    public String getWxNickname() {
-        return wxNickname;
-    }
+	public String getWxNickname() {
+		return wxNickname;
+	}
 
-    public void setWxNickname(String wxNickname) {
-        this.wxNickname = wxNickname;
-    }
+	public void setWxNickname(String wxNickname) {
+		this.wxNickname = wxNickname;
+	}
 
-    public String getWxFace() {
-        return wxFace;
-    }
+	public String getWxOpenid() {
+		return wxOpenid;
+	}
 
-    public void setWxFace(String wxFace) {
-        this.wxFace = wxFace;
-    }
+	public void setWxOpenid(String wxOpenid) {
+		this.wxOpenid = wxOpenid;
+	}
 
-    @Override
-    public String toString() {
-        return "RegByWxTo [wxId=" + wxId + ", wxNickname=" + wxNickname + ", wxFace=" + wxFace + "]";
-    }
+	public String getWxFace() {
+		return wxFace;
+	}
+
+	public void setWxFace(String wxFace) {
+		this.wxFace = wxFace;
+	}
+
+	@Override
+	public String toString() {
+		return "RegByWxTo [wxId=" + wxId + ", wxNickname=" + wxNickname + ", wxOpenid=" + wxOpenid + ", wxFace=" + wxFace
+				+ "]";
+	}
 
 }
