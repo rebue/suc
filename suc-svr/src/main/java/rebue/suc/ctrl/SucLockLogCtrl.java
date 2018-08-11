@@ -1,7 +1,7 @@
 package rebue.suc.ctrl;
 
+import com.github.pagehelper.PageInfo;
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -12,19 +12,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.github.pagehelper.PageInfo;
-
 import rebue.suc.mo.SucLockLogMo;
-import rebue.suc.svc.SucLockLogSvc;
 import rebue.suc.ro.SucLockLogRo;
+import rebue.suc.svc.SucLockLogSvc;
 
 @RestController
 public class SucLockLogCtrl {
+
     /**
      * @mbg.generated
      */
-    private final static Logger _log = LoggerFactory.getLogger(SucLockLogCtrl.class);
+    private static final Logger _log = LoggerFactory.getLogger(SucLockLogCtrl.class);
 
     /**
      * @mbg.generated
@@ -107,7 +105,7 @@ public class SucLockLogCtrl {
 
     /**
      * 删除用户锁定日志
-     * 
+     *
      * @mbg.generated
      */
     @DeleteMapping("/suc/locklog")
@@ -132,7 +130,7 @@ public class SucLockLogCtrl {
 
     /**
      * 查询用户锁定日志
-     * 
+     *
      * @mbg.generated
      */
     @GetMapping("/suc/locklog")
@@ -150,7 +148,7 @@ public class SucLockLogCtrl {
 
     /**
      * 获取单个用户锁定日志
-     * 
+     *
      * @mbg.generated
      */
     @GetMapping("/suc/locklog/getbyid")
@@ -174,5 +172,4 @@ public class SucLockLogCtrl {
             return ro;
         }
     }
-
 }

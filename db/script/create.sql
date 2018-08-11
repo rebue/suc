@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/8/8 15:51:36                            */
+/* Created on:     2018/8/11 11:07:48                           */
 /*==============================================================*/
 
 
@@ -15,6 +15,8 @@ drop table if exists SUC_LOCK_LOG;
 drop table if exists SUC_LOGIN_LOG;
 
 drop table if exists SUC_OP_LOG;
+
+drop table if exists SUC_ORG;
 
 drop table if exists SUC_REG;
 
@@ -124,6 +126,19 @@ create table SUC_OP_LOG
 alter table SUC_OP_LOG comment '用户操作日志';
 
 /*==============================================================*/
+/* Table: SUC_ORG                                               */
+/*==============================================================*/
+create table SUC_ORG
+(
+   ID                   bigint not null comment '公司/组织id',
+   NAME                 varchar(200) not null comment '公司/组织名称',
+   REMARK               varchar(500) comment '公司/组织备注',
+   primary key (ID)
+);
+
+alter table SUC_ORG comment '公司/组织信息';
+
+/*==============================================================*/
 /* Table: SUC_REG                                               */
 /*==============================================================*/
 create table SUC_REG
@@ -153,6 +168,7 @@ alter table SUC_REG comment '用户注册';
 create table SUC_USER
 (
    ID                   bigint not null comment '用户ID',
+   ORG_ID               bigint comment '公司/组织id',
    LOGIN_NAME           varchar(30) comment '登录账号',
    LOGIN_PSWD           varchar(32) comment '登录密码
             登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))',
@@ -224,4 +240,7 @@ alter table SUC_REG add constraint FK_Relationship_4 foreign key (ID)
 
 alter table SUC_REG add constraint FK_Relationship_5 foreign key (PROMOTER_ID)
       references SUC_USER (ID) on delete restrict on update restrict;
+
+alter table SUC_USER add constraint FK_Relationship_6 foreign key (ORG_ID)
+      references SUC_ORG (ID) on delete restrict on update restrict;
 

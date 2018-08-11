@@ -1,9 +1,7 @@
 package rebue.suc.ctrl;
 
-import java.util.List;
-
+import com.github.pagehelper.PageInfo;
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -14,19 +12,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.github.pagehelper.PageInfo;
-
 import rebue.suc.mo.SucUserForbiddenWordMo;
-import rebue.suc.svc.SucUserForbiddenWordSvc;
 import rebue.suc.ro.SucUserForbiddenWordRo;
+import rebue.suc.svc.SucUserForbiddenWordSvc;
 
 @RestController
 public class SucUserForbiddenWordCtrl {
+
     /**
      * @mbg.generated
      */
-    private final static Logger _log = LoggerFactory.getLogger(SucUserForbiddenWordCtrl.class);
+    private static final Logger _log = LoggerFactory.getLogger(SucUserForbiddenWordCtrl.class);
 
     /**
      * @mbg.generated
@@ -109,7 +105,7 @@ public class SucUserForbiddenWordCtrl {
 
     /**
      * 删除用户名敏感词
-     * 
+     *
      * @mbg.generated
      */
     @DeleteMapping("/suc/userforbiddenword")
@@ -134,7 +130,7 @@ public class SucUserForbiddenWordCtrl {
 
     /**
      * 查询用户名敏感词
-     * 
+     *
      * @mbg.generated
      */
     @GetMapping("/suc/userforbiddenword")
@@ -152,7 +148,7 @@ public class SucUserForbiddenWordCtrl {
 
     /**
      * 获取单个用户名敏感词
-     * 
+     *
      * @mbg.generated
      */
     @GetMapping("/suc/userforbiddenword/getbyid")
@@ -176,5 +172,4 @@ public class SucUserForbiddenWordCtrl {
             return ro;
         }
     }
-
 }

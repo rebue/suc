@@ -1,7 +1,7 @@
 package rebue.suc.ctrl;
 
+import com.github.pagehelper.PageInfo;
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -12,19 +12,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.github.pagehelper.PageInfo;
-
 import rebue.suc.mo.SucRegMo;
-import rebue.suc.svc.SucRegSvc;
 import rebue.suc.ro.SucRegRo;
+import rebue.suc.svc.SucRegSvc;
 
 @RestController
 public class SucRegCtrl {
+
     /**
      * @mbg.generated
      */
-    private final static Logger _log = LoggerFactory.getLogger(SucRegCtrl.class);
+    private static final Logger _log = LoggerFactory.getLogger(SucRegCtrl.class);
 
     /**
      * @mbg.generated
@@ -107,7 +105,7 @@ public class SucRegCtrl {
 
     /**
      * 删除用户注册
-     * 
+     *
      * @mbg.generated
      */
     @DeleteMapping("/suc/reg")
@@ -132,7 +130,7 @@ public class SucRegCtrl {
 
     /**
      * 查询用户注册
-     * 
+     *
      * @mbg.generated
      */
     @GetMapping("/suc/reg")
@@ -150,7 +148,7 @@ public class SucRegCtrl {
 
     /**
      * 获取单个用户注册
-     * 
+     *
      * @mbg.generated
      */
     @GetMapping("/suc/reg/getbyid")
@@ -174,5 +172,4 @@ public class SucRegCtrl {
             return ro;
         }
     }
-
 }

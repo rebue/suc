@@ -15,6 +15,31 @@ import java.io.Serializable;
 public class SucUserMo implements Serializable {
 
     /**
+     *    数据库字段: SUC_USER.ORG_ID
+     *
+     *    自动生成，如需修改，请删除本行 @mbg.generated
+     */
+    private Long orgId;
+
+    /**
+     *    数据库字段: SUC_USER.ORG_ID
+     *
+     *    自动生成，如需修改，请删除本行 @mbg.generated
+     */
+    public Long getOrgId() {
+        return orgId;
+    }
+
+    /**
+     *    数据库字段: SUC_USER.ORG_ID
+     *
+     *    自动生成，如需修改，请删除本行 @mbg.generated
+     */
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
+
+    /**
      *    用户ID
      *
      *    数据库字段: SUC_USER.ID

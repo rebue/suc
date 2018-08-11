@@ -1,7 +1,7 @@
 package rebue.suc.ctrl;
 
+import com.github.pagehelper.PageInfo;
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -12,19 +12,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.github.pagehelper.PageInfo;
-
 import rebue.suc.mo.SucOpLogMo;
-import rebue.suc.svc.SucOpLogSvc;
 import rebue.suc.ro.SucOpLogRo;
+import rebue.suc.svc.SucOpLogSvc;
 
 @RestController
 public class SucOpLogCtrl {
+
     /**
      * @mbg.generated
      */
-    private final static Logger _log = LoggerFactory.getLogger(SucOpLogCtrl.class);
+    private static final Logger _log = LoggerFactory.getLogger(SucOpLogCtrl.class);
 
     /**
      * @mbg.generated
@@ -107,7 +105,7 @@ public class SucOpLogCtrl {
 
     /**
      * 删除用户操作日志
-     * 
+     *
      * @mbg.generated
      */
     @DeleteMapping("/suc/oplog")
@@ -132,7 +130,7 @@ public class SucOpLogCtrl {
 
     /**
      * 查询用户操作日志
-     * 
+     *
      * @mbg.generated
      */
     @GetMapping("/suc/oplog")
@@ -150,7 +148,7 @@ public class SucOpLogCtrl {
 
     /**
      * 获取单个用户操作日志
-     * 
+     *
      * @mbg.generated
      */
     @GetMapping("/suc/oplog/getbyid")
@@ -174,5 +172,4 @@ public class SucOpLogCtrl {
             return ro;
         }
     }
-
 }
