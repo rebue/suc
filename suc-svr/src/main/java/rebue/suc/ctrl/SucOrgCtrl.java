@@ -1,7 +1,10 @@
 package rebue.suc.ctrl;
 
-import javax.annotation.Resource;
+import com.github.pagehelper.PageInfo;
 
+import java.util.List;
+
+import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -12,19 +15,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.github.pagehelper.PageInfo;
-
 import rebue.suc.mo.SucOrgMo;
-import rebue.suc.svc.SucOrgSvc;
 import rebue.suc.ro.SucOrgRo;
+import rebue.suc.svc.SucOrgSvc;
 
 @RestController
 public class SucOrgCtrl {
+
 	/**
 	 * @mbg.generated
 	 */
-	private final static Logger _log = LoggerFactory.getLogger(SucOrgCtrl.class);
+	private static final Logger _log = LoggerFactory.getLogger(SucOrgCtrl.class);
 
 	/**
 	 * @mbg.generated
@@ -106,33 +107,8 @@ public class SucOrgCtrl {
 	}
 
 	/**
-	 * 删除公司/组织信息
-	 * 
-	 * @mbg.generated
-	 */
-	@DeleteMapping("/suc/org")
-	SucOrgRo del(@RequestParam("id") java.lang.Long id) {
-		_log.info("save SucOrgMo:" + id);
-		int result = svc.del(id);
-		SucOrgRo ro = new SucOrgRo();
-		if (result == 1) {
-			String msg = "删除成功";
-			_log.info("{}: id-{}", msg, id);
-			ro.setMsg(msg);
-			ro.setResult((byte) 1);
-			return ro;
-		} else {
-			String msg = "删除失败，找不到该记录";
-			_log.error("{}: id-{}", msg, id);
-			ro.setMsg(msg);
-			ro.setResult((byte) -1);
-			return ro;
-		}
-	}
-
-	/**
 	 * 查询公司/组织信息
-	 * 
+	 *
 	 * @mbg.generated
 	 */
 	@GetMapping("/suc/org")
@@ -150,7 +126,7 @@ public class SucOrgCtrl {
 
 	/**
 	 * 获取单个公司/组织信息
-	 * 
+	 *
 	 * @mbg.generated
 	 */
 	@GetMapping("/suc/org/getbyid")
@@ -175,4 +151,34 @@ public class SucOrgCtrl {
 		}
 	}
 
+	/**
+	 * 删除公司/组织信息
+	 *
+	 * @mbg.overrideByMethodName
+	 */
+	@DeleteMapping("/suc/org")
+	SucOrgRo del(@RequestParam("id") java.lang.Long id) {
+		_log.info("save SucOrgMo:" + id);
+		SucOrgRo ro = new SucOrgRo();
+		try {
+			return svc.delEx(id);
+		} catch (Exception e) {
+			String msg = "删除失败，找不到该记录";
+			_log.error("{}: id-{}", msg, id);
+			ro.setMsg(msg);
+			ro.setResult((byte) -1);
+			return ro;
+		}
+	}
+
+	/**
+	 * 根据组织名称查询组织信息
+	 * @param name
+	 * @return
+	 */
+	@GetMapping("/suc/org/selectbyname")
+	List<SucOrgMo> selectByName(@RequestParam(value = "name", required = false) String name) {
+		_log.info("查询组织信息的参数为：{}", name);
+		return svc.selectByName(name);
+	}
 }

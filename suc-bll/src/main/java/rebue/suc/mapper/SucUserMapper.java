@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import rebue.robotech.mapper.MybatisBaseMapper;
 import rebue.suc.mo.SucUserMo;
+import rebue.suc.ro.SucUserJonintOrgSelectRo;
 
 @Mapper
 public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
@@ -224,4 +225,36 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      *  @return
      */
     List<SucUserMo> selectByIds(@Param("ids") String ids);
+
+    /**
+     *  根据组织编号删除用户组织
+     *  @param orgId
+     *  @return
+     */
+    @Update("update SUC_USER set ORG_ID=NULL where ORG_ID=#{orgId,jdbcType=BIGINT}")
+    int delUserOrgByOrgId(@Param("orgId") Long orgId);
+    
+    /**
+     * 添加用户组织
+     * @param id
+     * @param orgId
+     * @return
+     */
+    @Update("update SUC_USER set ORG_ID=#{orgId,jdbcType=BIGINT} where ID=#{id,jdbcType=BIGINT}")
+    int insertOrgById(@Param("id") Long id, @Param("orgId") Long orgId);
+    
+    /**
+     * 根据用户id删除用户组织
+     * @param id
+     * @return
+     */
+    @Update("update SUC_USER set ORG_ID=NULL where ID=#{id,jdbcType=BIGINT}")
+    int delUserOrgById(@Param("id") Long id);
+    
+    /**
+     * 联查suc-org
+     * @param record
+     * @return
+     */
+    List<SucUserJonintOrgSelectRo> selectjoint(@Param("users") String users);
 }

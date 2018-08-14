@@ -297,4 +297,43 @@ public class SucUserCtrl {
         _log.info("查询用户名称的请求参数为：sysId={}, roleId={}, pageNum={}, pageSize={}", sysId, roleId, pageNum, pageSize);
         return svc.userNameList(sysId, roleId, pageNum, pageSize, users);
     }
+    
+    /**
+     * 根据组织查询用户信息
+     * @param orgId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/suc/user/listbyorgid")
+    PageInfo<SucUserMo> listByOrgId(@RequestParam("orgId") Long orgId, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+    	_log.info("查询用户信息的参数为：{}, pageNum={}, pageSize={}", orgId, pageNum, pageSize);
+    	SucUserMo mo = new SucUserMo();
+    	mo.setOrgId(orgId);
+    	return svc.list(mo, pageNum, pageSize);
+    }
+    
+    
+    /**
+     * 添加用户组织
+     * @param id
+     * @param orgId
+     * @return
+     */
+    @PutMapping("/suc/user/adduserorg")
+    SucUserRo addUserOrg(@RequestParam("id") Long id, @RequestParam("orgId") Long orgId) {
+    	_log.info("添加用户组织的请求参数为：{}, {}", id, orgId);
+    	return svc.addUserOrg(id, orgId);
+    }
+    
+    /**
+     * 删除用户组织
+     * @param id
+     * @return
+     */
+    @PutMapping("/suc/user/deluserorgbyid")
+    SucUserRo delUserOrgById(@RequestParam("id") Long id) {
+    	_log.info("删除用户组织的参数为：{}", id);
+    	return svc.delUserOrgById(id);
+    }
 }

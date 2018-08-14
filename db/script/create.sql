@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/8/11 11:07:48                           */
+/* Created on:     2018/8/11 15:46:16                           */
 /*==============================================================*/
 
 
@@ -133,6 +133,7 @@ create table SUC_ORG
    ID                   bigint not null comment '公司/组织id',
    NAME                 varchar(200) not null comment '公司/组织名称',
    REMARK               varchar(500) comment '公司/组织备注',
+   CREATE_TIME          bigint not null comment '创建时间',
    primary key (ID)
 );
 

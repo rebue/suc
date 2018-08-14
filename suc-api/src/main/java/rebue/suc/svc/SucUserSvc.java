@@ -207,4 +207,19 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      *  @return
      */
     PageInfo<SucUserMo> userNameList(String sysId, Long roleId, int pageNum, int pageSize, String users);
+
+    /**
+     * 添加用户组织
+     * @param id
+     * @param orgId
+     * @return
+     */
+	SucUserRo addUserOrg(Long id, Long orgId);
+
+	/**
+	 * 删除用户组织
+	 * @param id
+	 * @return
+	 */
+	SucUserRo delUserOrgById(Long id);
 }

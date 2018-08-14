@@ -1,15 +1,19 @@
 package rebue.suc.svc.impl;
 
+import java.util.List;
 
+import javax.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import rebue.suc.mapper.SucOrgMapper;
-import rebue.suc.mo.SucOrgMo;
-import rebue.suc.svc.SucOrgSvc;
-
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
+import rebue.suc.mapper.SucOrgMapper;
+import rebue.suc.mapper.SucUserMapper;
+import rebue.suc.mo.SucOrgMo;
+import rebue.suc.ro.SucOrgRo;
+import rebue.suc.svc.SucOrgSvc;
 
 @Service
 /**
@@ -26,17 +30,61 @@ import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, SucOrgMapper> implements SucOrgSvc {
 
-    /**
-     * @mbg.generated
-     */
-    @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public int add(SucOrgMo mo) {
-        // 如果id为空那么自动生成分布式id
-        if (mo.getId() == null || mo.getId() == 0) {
-            mo.setId(_idWorker.getId());
-        }
-        return super.add(mo);
-    }
+	/**
+	 * @mbg.overrideByMethodName
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int add(SucOrgMo mo) {
+		// 如果id为空那么自动生成分布式id
+		if (mo.getId() == null || mo.getId() == 0) {
+			mo.setId(_idWorker.getId());
+		}
+		if (mo.getCreateTime() == null || mo.getCreateTime() == 0) {
+			mo.setCreateTime(System.currentTimeMillis());
+		}
+		return super.add(mo);
+	}
 
+	private static final Logger _log = LoggerFactory.getLogger(SucOrgSvcImpl.class);
+
+	@Resource
+	private SucUserMapper sucUserMapper;
+
+	/**
+	 * 删除组织
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public SucOrgRo delEx(Long id) {
+		SucOrgRo ro = new SucOrgRo();
+		_log.info("删除组织的参数为：{}", id);
+		// 删除用户组织
+		sucUserMapper.delUserOrgByOrgId(id);
+		int delResult = del(id);
+		_log.info("删除组织的返回值为：{}", delResult);
+		if (delResult != 1) {
+			_log.info("删除组织失败，组织id为：{}", id);
+			throw new RuntimeException("删除失败");
+		}
+		String msg = "删除成功";
+		_log.info("{}: id-{}", msg, id);
+		ro.setMsg(msg);
+		ro.setResult((byte) 1);
+		return ro;
+	}
+	
+	/**
+	 * 根据组织名称查询组织信息
+	 * @param name
+	 * @return
+	 */
+	@Override
+	public List<SucOrgMo> selectByName(String name) {
+		_log.info("根据组织名称查询组织信息的参数为：{}", name);
+		return _mapper.selectByName(name);
+	}
 }

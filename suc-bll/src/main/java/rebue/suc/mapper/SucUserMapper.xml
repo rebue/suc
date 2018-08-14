@@ -34,6 +34,38 @@
     <result column="PROMOTER_ID" jdbcType="BIGINT" property="promoterId" />
     <result column="ORG_ID" jdbcType="BIGINT" property="orgId" />
   </resultMap>
+  
+  <resultMap id="selectjointMap" type="rebue.suc.ro.SucUserJonintOrgSelectRo">
+    <!-- selectjointMap -->
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="LOGIN_NAME" jdbcType="VARCHAR" property="loginName" />
+    <result column="LOGIN_PSWD" jdbcType="VARCHAR" property="loginPswd" />
+    <result column="PAY_PSWD" jdbcType="VARCHAR" property="payPswd" />
+    <result column="SALT" jdbcType="CHAR" property="salt" />
+    <result column="NICKNAME" jdbcType="VARCHAR" property="nickname" />
+    <result column="FACE" jdbcType="VARCHAR" property="face" />
+    <result column="REALNAME" jdbcType="VARCHAR" property="realname" />
+    <result column="IS_VERIFIED_REALNAME" jdbcType="TINYINT" property="isVerifiedRealname" />
+    <result column="IDCARD" jdbcType="VARCHAR" property="idcard" />
+    <result column="IS_VERIFIED_IDCARD" jdbcType="TINYINT" property="isVerifiedIdcard" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+    <result column="IS_VERIFIED_EMAIL" jdbcType="TINYINT" property="isVerifiedEmail" />
+    <result column="MOBILE" jdbcType="VARCHAR" property="mobile" />
+    <result column="IS_VERIFIED_MOBILE" jdbcType="TINYINT" property="isVerifiedMobile" />
+    <result column="QQ_ID" jdbcType="VARCHAR" property="qqId" />
+    <result column="QQ_NICKNAME" jdbcType="VARCHAR" property="qqNickname" />
+    <result column="QQ_FACE" jdbcType="VARCHAR" property="qqFace" />
+    <result column="WX_ID" jdbcType="VARCHAR" property="wxId" />
+    <result column="WX_NICKNAME" jdbcType="VARCHAR" property="wxNickname" />
+    <result column="WX_FACE" jdbcType="VARCHAR" property="wxFace" />
+    <result column="IS_LOCK" jdbcType="TINYINT" property="isLock" />
+    <result column="MODIFIED_TIMESTAMP" jdbcType="BIGINT" property="modifiedTimestamp" />
+    <result column="QQ_OPENID" jdbcType="VARCHAR" property="qqOpenid" />
+    <result column="WX_OPENID" jdbcType="VARCHAR" property="wxOpenid" />
+    <result column="PROMOTER_ID" jdbcType="BIGINT" property="promoterId" />
+    <result column="ORG_ID" jdbcType="BIGINT" property="orgId" />
+    <result column="NAME" jdbcType="VARCHAR" property="orgName" />
+  </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
@@ -617,6 +649,24 @@
     from SUC_USER
     <where>
     	and ID in (${ids}) 
+    </where>
+  </select>
+  
+  <!-- 联查suc-org -->
+  <select id="selectjoint" parameterType="String" resultMap="selectjointMap">
+  	SELECT su.*, so.`NAME` FROM SUC_USER su
+	LEFT JOIN SUC_ORG so ON su.ORG_ID=so.ID
+	<where>
+      <if test="users != null and users != ''">
+        and so.LOGIN_NAME 	LIKE '%${users}%' 
+        OR so.NICKNAME 		LIKE '%${users}%' 
+        OR so.REALNAME 		LIKE '%${users}%' 
+        OR so.IDCARD 		LIKE '%${users}%' 
+        OR so.EMAIL 		LIKE '%${users}%' 
+        OR so.MOBILE 		LIKE '%${users}%' 
+        OR so.QQ_NICKNAME 	LIKE '%${users}%' 
+        OR so.WX_NICKNAME 	LIKE '%${users}%'
+      </if>
     </where>
   </select>
 </mapper>
