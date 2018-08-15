@@ -1,31 +1,26 @@
 package ${modulePackage}.ctrl;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.PageInfo;
 
 import ${moClassFullName};
 import ${modulePackage}.svc.${entityName}Svc;
-import com.github.pagehelper.PageInfo;
+import ${modulePackage}.ro.${entityName}Ro;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-
-@Api(tags = "${entityTitle}")
 @RestController
 public class ${entityName}Ctrl {
     /**
@@ -36,165 +31,189 @@ public class ${entityName}Ctrl {
     /**
      * @mbg.generated
      */
-	@Resource
+    @Resource
     private ${entityName}Svc svc;
 
     /**
+     * 有唯一约束的字段名称
+     *
      * @mbg.generated
      */
-    @ApiOperation("添加${entityTitle}")
+    private String _uniqueFilesName = "某字段内容";
+
+    /**
+     * 添加${entityTitle}
+     *
+     * @mbg.generated
+     */
     @PostMapping("/${strutil.toLowerCase(entityNamePrefix)}/${strutil.toLowerCase(entitySimpleName)}")
-    @ResponseBody
-    Map<String, Object> add(${moClassShortName} vo) throws Exception {
-        _log.info("add ${moClassShortName}:" + vo);
-        svc.add(vo);
-        Map<String, Object> result = new HashMap<>();
-        result.put("success", true);
-        result.put("id", vo.getId());
-        _log.info("add ${moClassShortName} success!");
-        return result;
+    ${entityName}Ro add(@RequestBody ${moClassShortName} mo) throws Exception {
+        _log.info("add ${moClassShortName}:" + mo);
+        ${entityName}Ro ro = new ${entityName}Ro();
+        try {
+            int result = svc.add(mo);
+            if (result == 1) {
+                String msg = "添加成功";
+                _log.info("{}: mo-{}", msg, mo);
+                ro.setMsg(msg);
+                ro.setResult((byte) 1);
+                return ro;
+            } else {
+                String msg = "添加失败";
+                _log.error("{}: mo-{}", msg, mo);
+                ro.setMsg(msg);
+                ro.setResult((byte) -1);
+                return ro;
+            }
+        } catch (DuplicateKeyException e) {
+            String msg = "添加失败，" + _uniqueFilesName + "已存在，不允许出现重复";
+            _log.error("{}: mo-{}", msg, mo);
+            ro.setMsg(msg);
+            ro.setResult((byte) -1);
+            return ro;
+        }
     }
 
     /**
+     * 修改${entityTitle}
+     *
      * @mbg.generated
      */
-    @ApiOperation("修改${entityTitle}")
     @PutMapping("/${strutil.toLowerCase(entityNamePrefix)}/${strutil.toLowerCase(entitySimpleName)}")
-    @ResponseBody
-    Map<String, Object> modify(${moClassShortName} vo) throws Exception {
-        _log.info("modify ${moClassShortName}:" + vo);
-        svc.modify(vo);
-        Map<String, Object> result = new HashMap<>();
-        result.put("success", true);
-        _log.info("modify ${moClassShortName} success!");
-        return result;
+    ${entityName}Ro modify(@RequestBody ${moClassShortName} mo) throws Exception {
+        _log.info("modify ${moClassShortName}:" + mo);
+        ${entityName}Ro ro = new ${entityName}Ro();
+        try {
+            int result = svc.modify(mo);
+            if (result == 1) {
+                String msg = "修改成功";
+                _log.info("{}: mo-{}", msg, mo);
+                ro.setMsg(msg);
+                ro.setResult((byte) 1);
+                return ro;
+            } else {
+                String msg = "修改失败";
+                _log.error("{}: mo-{}", msg, mo);
+                ro.setMsg(msg);
+                ro.setResult((byte) -1);
+                return ro;
+            }
+        } catch (DuplicateKeyException e) {
+            String msg = "修改失败，" + _uniqueFilesName + "已存在，不允许出现重复";
+            _log.error("{}: mo-{}", msg, mo);
+            ro.setMsg(msg);
+            ro.setResult((byte) -1);
+            return ro;
+        }
     }
 
     /**
+     * 删除${entityTitle}
+     * 
      * @mbg.generated
      */
-    @ApiOperation("删除${entityTitle}")
-    <&
-		for(id in ids){
-			if(!idLP.first) {
-				print(', ');
-			}
-			print('    @ApiImplicitParam(name = "');
-		    print(id.key);
-		    print('", value = "要删除的');
-		    print(entityTitle + id.key);
-		    print('", dataType = "');
-		    if(id.value=='java.lang.String')
-		    		print('string');
-		    	else if(id.value=='java.lang.Long')
-		    		print('long');
-		    print('", paramType = "path", required = true)');
-		}
-	&>
-	
-    @DeleteMapping("/${strutil.toLowerCase(entityNamePrefix)}/${strutil.toLowerCase(entitySimpleName)}/{id}")
-    @ResponseBody
-    Map<String, Object> del(<&
-		for(id in ids){
-			if(!idLP.first) {
-				print(', ');
-			}
-			print('@PathVariable("');
-		    print(id.key);
-		    print('") ');
-		    print(id.value);
-		    print(' ');
-		    print(id.key);
-		}
-	&>) {
-
+    @DeleteMapping("/${strutil.toLowerCase(entityNamePrefix)}/${strutil.toLowerCase(entitySimpleName)}")
+    ${entityName}Ro del(<&
+        for(id in ids){
+            if(!idLP.first) {
+                print(', ');
+            }
+            print('@RequestParam("');
+            print(id.key);
+            print('") ');
+            print(id.value);
+            print(' ');
+            print(id.key);
+        }
+    &>) {
         _log.info("save ${moClassShortName}:" + <&
-			for(id in ids){
-				if(!idLP.first) {
-					print(', ');
-				}
-			    print(id.key);
-			}
-		&>);
-        svc.del(<&
-			for(id in ids){
-				if(!idLP.first) {
-					print(', ');
-				}
-			    print(id.key);
-			}
-		&>);
-		
-        Map<String, Object> result = new HashMap<>();
-        result.put("success", true);
-        _log.info("delete ${moClassShortName} success!");
-        return result;
+            for(id in ids){
+                if(!idLP.first) {
+                    print(', ');
+                }
+                print(id.key);
+            }
+        &>);
+        int result = svc.del(<&
+            for(id in ids){
+                if(!idLP.first) {
+                    print(', ');
+                }
+                print(id.key);
+            }
+        &>);
+
+        ${entityName}Ro ro = new ${entityName}Ro();
+        if (result == 1) {
+            String msg = "删除成功";
+            _log.info("{}: id-{}", msg, id);
+            ro.setMsg(msg);
+            ro.setResult((byte) 1);
+            return ro;
+        } else {
+            String msg = "删除失败，找不到该记录";
+            _log.error("{}: id-{}", msg, id);
+            ro.setMsg(msg);
+            ro.setResult((byte) -1);
+            return ro;
+        }
     }
 
     /**
+     * 查询${entityTitle}
+     * 
      * @mbg.generated
      */
-    @ApiOperation("查询${entityTitle}")
-    @ApiImplicitParams({ //
-            @ApiImplicitParam(name = "pageNum", value = "查询第几页", dataType = "int", paramType = "query", required = true), //
-            @ApiImplicitParam(name = "pageSize", value = "分页记录数", dataType = "int", paramType = "query", required = true) })
     @GetMapping("/${strutil.toLowerCase(entityNamePrefix)}/${strutil.toLowerCase(entitySimpleName)}")
-    @ResponseBody
-    PageInfo<${moClassShortName}> list(${moClassShortName} qo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-    		_log.info("list ${moClassShortName}:" + qo+", pageNum = " + pageNum + ", pageSize = " + pageSize);
-
+    PageInfo<${moClassShortName}> list(${moClassShortName} mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+        _log.info("list ${moClassShortName}:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             String msg = "pageSize不能大于50";
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-
-        PageInfo<${moClassShortName}> result = svc.list(qo, pageNum, pageSize);
+        PageInfo<${moClassShortName}> result = svc.list(mo, pageNum, pageSize);
         _log.info("result: " + result);
         return result;
     }
 
     /**
+     * 获取单个${entityTitle}
+     * 
      * @mbg.generated
      */
-    @ApiOperation("获取单个${entityTitle}")
-    <&
-		for(id in ids){
-			if(!idLP.first) {
-				print(', ');
-			}
-			print('    @ApiImplicitParam(name = "');
-		    print(id.key);
-		    print('", value = "要获取');
-		    print(entityTitle + '的' + id.key);
-		    print('", dataType = "');
-		    if(id.value=='java.lang.String')
-		    		print('string');
-		    	else if(id.value=='java.lang.Long')
-		    		print('long');
-		    print('", paramType = "path", required = true)');
-		}
-	&>
-
-    @GetMapping("/${strutil.toLowerCase(entityNamePrefix)}/${strutil.toLowerCase(entitySimpleName)}/{id}")
-    @ResponseBody
-    ${moClassShortName} get(<&
-		for(id in ids){
-			if(!idLP.first) {
-				print(', ');
-			}
-			print('@PathVariable("');
-		    print(id.key);
-		    print('") ');
-		    print(id.value);
-		    print(' ');
-		    print(id.key);
-		}
-	&>) {
+    @GetMapping("/${strutil.toLowerCase(entityNamePrefix)}/${strutil.toLowerCase(entitySimpleName)}/getbyid")
+    ${entityName}Ro getById(<&
+        for(id in ids){
+            if(!idLP.first) {
+                print(', ');
+            }
+            print('@RequestParam("');
+            print(id.key);
+            print('") ');
+            print(id.value);
+            print(' ');
+            print(id.key);
+        }
+    &>) {
         _log.info("get ${moClassShortName} by id: " + id);
         ${moClassShortName} result = svc.getById(id);
         _log.info("get: " + result);
-        return result;
+        ${entityName}Ro ro = new ${entityName}Ro();
+        if (result == null) {
+            String msg = "获取失败，没有找到该条记录";
+            _log.error("{}: id-{}", msg, id);
+            ro.setMsg(msg);
+            ro.setResult((byte) -1);
+            return ro;
+        } else {
+            String msg = "获取成功";
+            _log.info("{}: id-{}", msg, id);
+            ro.setMsg(msg);
+            ro.setResult((byte) 1);
+            ro.setRecord(result);
+            return ro;
+        }
     }
 
 }
