@@ -106,9 +106,9 @@ public class LoginCtrl {
 		loginTo.setUserAgent(AgentUtils.getUserAgent(req));
 		loginTo.setMac("不再获取MAC地址");
 		UserLoginRo ro = svc.loginByWx(loginTo);
-		/*if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
+		if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
 			jwtSignWithCookie(ro, resp);
-		}*/
+		}
 		return ro;
 	}
 
