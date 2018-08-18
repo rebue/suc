@@ -9,41 +9,54 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "登录(QQ)", description = "用户通过QQ登录的参数")
 @JsonInclude(Include.NON_NULL)
 public class LoginByQqTo extends RegAndLoginBaseTo {
-    @ApiModelProperty(value = "QQ的ID")
-    private String qqId;
-    @ApiModelProperty(value = "QQ昵称")
-    private String qqNickname;
-    @ApiModelProperty(value = "QQ头像")
-    private String qqFace;
+	@ApiModelProperty(value = "QQ的ID")
+	private String qqId;
+	/**
+	 * QQopenid
+	 */
+	private String qqOpenid;
+	@ApiModelProperty(value = "QQ昵称")
+	private String qqNickname;
+	@ApiModelProperty(value = "QQ头像")
+	private String qqFace;
 
-    public String getQqId() {
-        return qqId;
-    }
+	public String getQqId() {
+		return qqId;
+	}
 
-    public void setQqId(String qqId) {
-        this.qqId = qqId;
-    }
+	public void setQqId(String qqId) {
+		this.qqId = qqId;
+	}
 
-    public String getQqNickname() {
-        return qqNickname;
-    }
+	public String getQqOpenid() {
+		return qqOpenid;
+	}
 
-    public void setQqNickname(String qqNickname) {
-        this.qqNickname = qqNickname;
-    }
+	public void setQqOpenid(String qqOpenid) {
+		this.qqOpenid = qqOpenid;
+	}
 
-    public String getQqFace() {
-        return qqFace;
-    }
+	public String getQqNickname() {
+		return qqNickname;
+	}
 
-    public void setQqFace(String qqFace) {
-        this.qqFace = qqFace;
-    }
+	public void setQqNickname(String qqNickname) {
+		this.qqNickname = qqNickname;
+	}
 
-    @Override
-    public String toString() {
-        return "LoginByQqTo [qqId=" + qqId + ", qqNickname=" + qqNickname + ", qqFace=" + qqFace + ", getAppId()=" + getAppId() + ", getUserAgent()=" + getUserAgent()
-                + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
-    }
+	public String getQqFace() {
+		return qqFace;
+	}
+
+	public void setQqFace(String qqFace) {
+		this.qqFace = qqFace;
+	}
+
+	@Override
+	public String toString() {
+		return "LoginByQqTo [qqId=" + qqId + ", qqOpenid=" + qqOpenid + ", qqNickname=" + qqNickname + ", qqFace="
+				+ qqFace + ", getAppId()=" + getAppId() + ", getUserAgent()=" + getUserAgent() + ", getMac()="
+				+ getMac() + ", getIp()=" + getIp() + "]";
+	}
 
 }

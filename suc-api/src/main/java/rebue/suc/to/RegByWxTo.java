@@ -26,6 +26,16 @@ public class RegByWxTo extends RegBaseTo {
 	 */
 	private String wxFace;
 
+	/**
+	 * 推广人id
+	 */
+	private Long promoterId;
+
+	/**
+	 * 上线id
+	 */
+	private Long onlineId;
+
 	public String getWxId() {
 		return wxId;
 	}
@@ -58,10 +68,26 @@ public class RegByWxTo extends RegBaseTo {
 		this.wxFace = wxFace;
 	}
 
+	public Long getPromoterId() {
+		return promoterId;
+	}
+
+	public void setPromoterId(Long promoterId) {
+		this.promoterId = promoterId;
+	}
+
+	public Long getOnlineId() {
+		return onlineId;
+	}
+
+	public void setOnlineId(Long onlineId) {
+		this.onlineId = onlineId;
+	}
+
 	@Override
 	public String toString() {
-		return "RegByWxTo [wxId=" + wxId + ", wxNickname=" + wxNickname + ", wxOpenid=" + wxOpenid + ", wxFace=" + wxFace
-				+ "]";
+		return "RegByWxTo [wxId=" + wxId + ", wxNickname=" + wxNickname + ", wxOpenid=" + wxOpenid + ", wxFace="
+				+ wxFace + ", promoterId=" + promoterId + ", onlineId=" + onlineId + "]";
 	}
 
 }

@@ -20,6 +20,16 @@ public class LoginByWxTo extends RegAndLoginBaseTo {
 	 */
 	private String wxOpenid;
 
+	/**
+	 * 推广人id
+	 */
+	private Long promoterId;
+
+	/**
+	 * 上线id
+	 */
+	private Long onlineId;
+
 	public String getWxId() {
 		return wxId;
 	}
@@ -52,10 +62,26 @@ public class LoginByWxTo extends RegAndLoginBaseTo {
 		this.wxOpenid = wxOpenid;
 	}
 
+	public Long getPromoterId() {
+		return promoterId;
+	}
+
+	public void setPromoterId(Long promoterId) {
+		this.promoterId = promoterId;
+	}
+
+	public Long getOnlineId() {
+		return onlineId;
+	}
+
+	public void setOnlineId(Long onlineId) {
+		this.onlineId = onlineId;
+	}
+
 	@Override
 	public String toString() {
 		return "LoginByWxTo [wxId=" + wxId + ", wxNickname=" + wxNickname + ", wxFace=" + wxFace + ", wxOpenid="
-				+ wxOpenid + "]";
+				+ wxOpenid + ", promoterId=" + promoterId + ", onlineId=" + onlineId + "]";
 	}
 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import rebue.jwt.svr.feign.JwtSvc;
+import rebue.sbs.redis.RedisSetException;
 import rebue.scx.jwt.dic.JwtSignResultDic;
 import rebue.scx.jwt.ro.JwtSignRo;
 import rebue.suc.dic.LoginResultDic;
@@ -97,10 +98,11 @@ public class LoginCtrl {
 
 	/**
 	 * 用户登录(微信)
+	 * @throws RedisSetException 
 	 */
 	@ApiOperation("用户通过微信登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-4: 账号被锁定)")
 	@PostMapping("/user/login/by/wx")
-	UserLoginRo loginByWx(@RequestBody LoginByWxTo loginTo, HttpServletRequest req, HttpServletResponse resp) {
+	UserLoginRo loginByWx(@RequestBody LoginByWxTo loginTo, HttpServletRequest req, HttpServletResponse resp) throws RedisSetException {
 		_log.info("login: " + loginTo);
 		loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
 		loginTo.setUserAgent(AgentUtils.getUserAgent(req));
@@ -109,6 +111,7 @@ public class LoginCtrl {
 		if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
 			jwtSignWithCookie(ro, resp);
 		}
+		_log.info("微信登录的返回值为：{}", ro);
 		return ro;
 	}
 

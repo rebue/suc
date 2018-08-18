@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,6 +99,17 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	 * 用户账号的黑名单的前缀 后面跟用户的用户id拼接成Key Value为空值
 	 */
 	private static final String REDIS_KEY_USER_BLACKLIST_PREFIX = "rebue.suc.svc.user.blacklist.";
+	
+	/**
+	 * 用户购买关系的前缀  后面跟用户的id和上线id拼接成key Value为推广人id
+	 */
+	private static final String REDIS_KEY_USER_BUY_BUY_RELATION = "rebue.suc.svc.user.buy_relation.";
+	
+	/**
+	 * 用户购买关系生效时间（以小时计）
+	 */
+	@Value("${suc.buyRelationTime}")
+	private Integer buyRelationTime;
 
 	@Resource
 	private SucLoginLogSvc loginLogSvc;
@@ -400,7 +412,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public UserLoginRo loginByQq(LoginByQqTo to) {
-		if (StringUtils.isAnyBlank(to.getQqId(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getMac(),
+		if (StringUtils.isAnyBlank(to.getQqId(), to.getQqOpenid(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getMac(),
 				to.getIp()) || to.getAppId() == null) {
 			_log.warn("没有填写用户QQ的ID/QQ昵称/QQ头像/应用ID/浏览器类型/MAC/IP: {}", to);
 			UserLoginRo ro = new UserLoginRo();
@@ -409,10 +421,14 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 		}
 		SucUserMo userMo = _mapper.selectByQq(to.getQqId());
 		if (userMo == null) {
-			_log.warn("找不到此用户: {}", to);
-			UserLoginRo ro = new UserLoginRo();
-			ro.setResult(LoginResultDic.NOT_FOUND_USER);
-			return ro;
+			_log.warn("根据QQId找不到此用户: {}", to);
+			userMo = _mapper.selectByQqopenId(to.getQqOpenid());
+			if (userMo == null) {
+				_log.warn("根据QQopenid找不到此用户: {}", to);
+				UserLoginRo ro = new UserLoginRo();
+				ro.setResult(LoginResultDic.NOT_FOUND_USER);
+				return ro;
+			}
 		}
 		UserLoginRo ro = verifyLogin(userMo, null);
 		if (ro != null)
@@ -499,6 +515,15 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 				opLogSvc.add(opLogMo);
 			}
 		}
+		if (to.getOnlineId() != null && to.getOnlineId() != 0) {
+			try {
+				redisClient.set(REDIS_KEY_USER_BUY_BUY_RELATION + userMo.getId() + to.getOnlineId(), to.getPromoterId().toString(), 60 * 60 * buyRelationTime);
+			} catch (RedisSetException e) {
+				_log.info("微信用户登录添加购买关系时出错，用户id为：{}", userMo.getId());
+				e.printStackTrace();
+			}
+		}
+		
 		return returnSuccessLogin(to, RegAndLoginTypeDic.WX, userMo);
 	}
 
@@ -511,6 +536,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	 * @return
 	 */
 	private UserLoginRo returnSuccessLogin(RegAndLoginBaseTo loginTo, RegAndLoginTypeDic loginType, SucUserMo userMo) {
+		_log.info("成功登录获取到的登录参数为：{}", loginTo);
 		SucLoginLogMo loginLogMo = dozerMapper.map(loginTo, SucLoginLogMo.class);
 		loginLogMo.setUserId(userMo.getId());
 		loginLogMo.setOpTime(new Date());
