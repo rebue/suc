@@ -15,6 +15,56 @@ import java.io.Serializable;
 public class SucOrgMo implements Serializable {
 
     /**
+     *    数据库字段: SUC_ORG.CREATE_TIMESTAMP
+     *
+     *    自动生成，如需修改，请删除本行 @mbg.generated
+     */
+    private Long createTimestamp;
+
+    /**
+     *    数据库字段: SUC_ORG.CREATE_TIMESTAMP
+     *
+     *    自动生成，如需修改，请删除本行 @mbg.generated
+     */
+    public Long getCreateTimestamp() {
+        return createTimestamp;
+    }
+
+    /**
+     *    数据库字段: SUC_ORG.CREATE_TIMESTAMP
+     *
+     *    自动生成，如需修改，请删除本行 @mbg.generated
+     */
+    public void setCreateTimestamp(Long createTimestamp) {
+        this.createTimestamp = createTimestamp;
+    }
+
+    /**
+     *    数据库字段: SUC_ORG.IS_ENABLED
+     *
+     *    自动生成，如需修改，请删除本行 @mbg.generated
+     */
+    private Boolean isEnabled;
+
+    /**
+     *    数据库字段: SUC_ORG.IS_ENABLED
+     *
+     *    自动生成，如需修改，请删除本行 @mbg.generated
+     */
+    public Boolean getIsEnabled() {
+        return isEnabled;
+    }
+
+    /**
+     *    数据库字段: SUC_ORG.IS_ENABLED
+     *
+     *    自动生成，如需修改，请删除本行 @mbg.generated
+     */
+    public void setIsEnabled(Boolean isEnabled) {
+        this.isEnabled = isEnabled;
+    }
+
+    /**
      *    创建时间
      *
      *    数据库字段: SUC_ORG.CREATE_TIME

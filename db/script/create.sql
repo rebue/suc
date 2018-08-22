@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/8/11 15:46:16                           */
+/* Created on:     2018/8/22 13:11:58                           */
 /*==============================================================*/
 
 
@@ -92,11 +92,12 @@ create table SUC_LOGIN_LOG
             3: 手机
             4: QQ
             5: 微信',
-   APP_ID               tinyint not null comment '应用ID
+   APP_ID               tinyint comment '应用ID
             标记是通过哪个应用系统登录的编码，要与注册的应用ID意义一致',
    USER_AGENT           varchar(500) not null comment '浏览器类型',
    IP                   varchar(150) not null comment 'IP地址',
    MAC                  varchar(30) not null comment 'MAC地址',
+   SYS_ID               varchar(20) not null comment '系统id',
    primary key (ID)
 );
 
@@ -115,10 +116,11 @@ create table SUC_OP_LOG
             3:绑定QQ登录;
             4:绑定微信登录;',
    OP_TIME              datetime not null comment '操作时间',
-   APP_ID               tinyint not null comment '应用ID
+   APP_ID               tinyint comment '应用ID
             标记是哪个应用系统来注册的编码，要与登录应用ID意义一致',
    USER_AGENT           varchar(500) not null comment '浏览器类型',
    MAC                  varchar(30) not null comment 'MAC地址',
+   SYS_ID               varchar(20) not null comment '系统id',
    IP                   varchar(150) not null comment 'IP地址',
    primary key (ID)
 );
@@ -133,7 +135,8 @@ create table SUC_ORG
    ID                   bigint not null comment '公司/组织id',
    NAME                 varchar(200) not null comment '公司/组织名称',
    REMARK               varchar(500) comment '公司/组织备注',
-   CREATE_TIME          bigint not null comment '创建时间',
+   CREATE_TIMESTAMP     bigint not null comment '创建时间戳',
+   IS_ENABLED           bool not null default 1 comment '是否启用',
    primary key (ID)
 );
 
@@ -153,11 +156,12 @@ create table SUC_REG
                         4: QQ
                         5: 微信',
    PROMOTER_ID          bigint comment '推广者ID',
-   APP_ID               tinyint not null comment '应用ID
+   APP_ID               tinyint comment '应用ID
             标记是哪个应用系统来注册的编码，要与登录应用ID意义一致',
    USER_AGENT           varchar(500) not null comment '浏览器类型',
    MAC                  varchar(30) not null comment 'MAC地址',
    IP                   varchar(150) not null comment 'IP地址',
+   SYS_ID               varchar(20) not null comment '系统id',
    primary key (ID)
 );
 

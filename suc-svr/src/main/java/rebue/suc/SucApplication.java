@@ -18,7 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringCloudApplication
 @EnableSwagger2
 @ServletComponentScan("rebue")
-@EnableFeignClients(basePackages = { "rebue.jwt.svr.feign", "rebue.pfm.svr.feign" })
+@EnableFeignClients(basePackages = { "rebue.jwt.svr.feign" })
 public class SucApplication {
 
     public static void main(String[] args) {

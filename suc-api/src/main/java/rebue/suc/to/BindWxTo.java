@@ -55,7 +55,7 @@ public class BindWxTo extends RegAndLoginBaseTo {
 
     @Override
     public String toString() {
-        return "BindWxTo [userId=" + userId + ", wxId=" + wxId + ", wxNickname=" + wxNickname + ", wxFace=" + wxFace + ", getAppId()=" + getAppId() + ", getUserAgent()="
+        return "BindWxTo [userId=" + userId + ", wxId=" + wxId + ", wxNickname=" + wxNickname + ", wxFace=" + wxFace + ", getSysId()=" + getSysId() + ", getUserAgent()="
                 + getUserAgent() + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
     }
 

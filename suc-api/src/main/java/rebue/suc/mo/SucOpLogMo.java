@@ -18,6 +18,31 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class SucOpLogMo implements Serializable {
 
     /**
+     *    数据库字段: SUC_OP_LOG.SYS_ID
+     *
+     *    自动生成，如需修改，请删除本行 @mbg.generated
+     */
+    private String sysId;
+
+    /**
+     *    数据库字段: SUC_OP_LOG.SYS_ID
+     *
+     *    自动生成，如需修改，请删除本行 @mbg.generated
+     */
+    public String getSysId() {
+        return sysId;
+    }
+
+    /**
+     *    数据库字段: SUC_OP_LOG.SYS_ID
+     *
+     *    自动生成，如需修改，请删除本行 @mbg.generated
+     */
+    public void setSysId(String sysId) {
+        this.sysId = sysId;
+    }
+
+    /**
      *    用户操作日志ID
      *
      *    数据库字段: SUC_OP_LOG.ID

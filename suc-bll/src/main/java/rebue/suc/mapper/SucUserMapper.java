@@ -85,7 +85,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      */
     @Select("select ID, NICKNAME, QQ_NICKNAME, QQ_FACE, IS_LOCK from SUC_USER where QQ_ID = #{qqId,jdbcType=VARCHAR}")
     SucUserMo selectByQq(String qqId);
-    
+
     /**
      *  根据QQ的id获取用户信息
      */
@@ -239,7 +239,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      */
     @Update("update SUC_USER set ORG_ID=NULL where ORG_ID=#{orgId,jdbcType=BIGINT}")
     int delUserOrgByOrgId(@Param("orgId") Long orgId);
-    
+
     /**
      * 添加用户组织
      * @param id
@@ -248,7 +248,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      */
     @Update("update SUC_USER set ORG_ID=#{orgId,jdbcType=BIGINT} where ID=#{id,jdbcType=BIGINT}")
     int insertOrgById(@Param("id") Long id, @Param("orgId") Long orgId);
-    
+
     /**
      * 根据用户id删除用户组织
      * @param id
@@ -256,7 +256,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      */
     @Update("update SUC_USER set ORG_ID=NULL where ID=#{id,jdbcType=BIGINT}")
     int delUserOrgById(@Param("id") Long id);
-    
+
     /**
      * 联查suc-org
      * @param record

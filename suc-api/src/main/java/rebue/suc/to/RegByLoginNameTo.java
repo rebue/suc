@@ -86,7 +86,7 @@ public class RegByLoginNameTo extends RegBaseTo {
     @Override
     public String toString() {
         return "RegByLoginNameTo [loginName=" + loginName + ", loginPswd=" + loginPswd + ", email=" + email + ", mobile=" + mobile + ", nickname=" + nickname + ", realname="
-                + realname + ", idcard=" + idcard + ", getAppId()=" + getAppId() + ", getUserAgent()=" + getUserAgent() + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
+                + realname + ", idcard=" + idcard + ", getSysId()=" + getSysId() + ", getUserAgent()=" + getUserAgent() + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
     }
 
 }

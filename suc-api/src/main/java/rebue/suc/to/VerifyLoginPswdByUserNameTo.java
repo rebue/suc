@@ -32,7 +32,7 @@ public class VerifyLoginPswdByUserNameTo extends RegAndLoginBaseTo {
 
     @Override
     public String toString() {
-        return "VerifyLoginPswdByUserNameTo [userName=" + userName + ", loginPswd=" + loginPswd + ", getAppId()=" + getAppId() + ", getUserAgent()=" + getUserAgent()
+        return "VerifyLoginPswdByUserNameTo [userName=" + userName + ", loginPswd=" + loginPswd + ", getSysId()=" + getSysId() + ", getUserAgent()=" + getUserAgent()
                 + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
     }
 

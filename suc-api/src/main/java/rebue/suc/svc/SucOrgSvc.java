@@ -1,7 +1,6 @@
 package rebue.suc.svc;
 
 import java.util.List;
-
 import rebue.robotech.svc.MybatisBaseSvc;
 import rebue.suc.mo.SucOrgMo;
 import rebue.suc.ro.SucOrgRo;
@@ -20,5 +19,13 @@ public interface SucOrgSvc extends MybatisBaseSvc<SucOrgMo, java.lang.Long> {
      * @param name
      * @return
      */
-	List<SucOrgMo> selectByName(String name);
+    List<SucOrgMo> selectByName(String name);
+
+    /**
+     * 设置禁用或者启用组织
+     * @param id
+     * @param isEnabled
+     * @return
+     */
+	SucOrgRo enable(Long id, Boolean isEnabled);
 }

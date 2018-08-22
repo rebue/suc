@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
  * 注册与登录的基础传输对象
  */
 public abstract class RegAndLoginBaseTo {
-    @ApiModelProperty(value = "应用ID", required = true)
-    private Byte   appId;
+    @ApiModelProperty(value = "系统ID", required = true)
+    private String   sysId;
     @ApiModelProperty(value = "用户的浏览器类型", required = true)
     private String userAgent;
     @ApiModelProperty(value = "用户的网卡的MAC地址", required = true)
@@ -15,12 +15,12 @@ public abstract class RegAndLoginBaseTo {
     @ApiModelProperty(value = "用户的网卡的IP地址", required = true)
     private String ip;
 
-    public Byte getAppId() {
-        return appId;
+    public String getSysId() {
+        return sysId;
     }
 
-    public void setAppId(Byte appId) {
-        this.appId = appId;
+    public void setSysId(String appId) {
+        this.sysId = appId;
     }
 
     public String getUserAgent() {

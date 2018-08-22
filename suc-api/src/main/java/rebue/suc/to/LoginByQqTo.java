@@ -55,7 +55,7 @@ public class LoginByQqTo extends RegAndLoginBaseTo {
 	@Override
 	public String toString() {
 		return "LoginByQqTo [qqId=" + qqId + ", qqOpenid=" + qqOpenid + ", qqNickname=" + qqNickname + ", qqFace="
-				+ qqFace + ", getAppId()=" + getAppId() + ", getUserAgent()=" + getUserAgent() + ", getMac()="
+				+ qqFace + ", getSysId()=" + getSysId() + ", getUserAgent()=" + getUserAgent() + ", getMac()="
 				+ getMac() + ", getIp()=" + getIp() + "]";
 	}
 

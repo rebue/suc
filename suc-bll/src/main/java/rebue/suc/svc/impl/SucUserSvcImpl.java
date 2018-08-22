@@ -3,7 +3,6 @@ package rebue.suc.svc.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import java.util.Date;
-import java.util.List;
 import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.Mapper;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import rebue.pfm.svr.feign.PfmUserRoleSvc;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.sbs.redis.RedisClient;
 import rebue.sbs.redis.RedisSetException;
@@ -63,7 +61,6 @@ import rebue.wheel.DateUtils;
 import rebue.wheel.IdCardValidator;
 import rebue.wheel.RandomEx;
 import rebue.wheel.RegexUtils;
-import rebue.wheel.StrUtils;
 import rebue.wheel.turing.DigestUtils;
 
 @Service
@@ -99,12 +96,12 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	 * 用户账号的黑名单的前缀 后面跟用户的用户id拼接成Key Value为空值
 	 */
 	private static final String REDIS_KEY_USER_BLACKLIST_PREFIX = "rebue.suc.svc.user.blacklist.";
-	
+
 	/**
-	 * 用户购买关系的前缀  后面跟用户的id和上线id拼接成key Value为推广人id
+	 * 用户购买关系的前缀 后面跟用户的id和上线id拼接成key Value为推广人id
 	 */
 	private static final String REDIS_KEY_USER_BUY_BUY_RELATION = "rebue.suc.svc.user.buy_relation.";
-	
+
 	/**
 	 * 用户购买关系生效时间（以小时计）
 	 */
@@ -132,9 +129,6 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	@Resource
 	private SucAddUserDonePub userAddPub;
 
-	@Resource
-	private PfmUserRoleSvc pfmUserRoleSvc;
-
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public int add(SucUserMo mo) {
@@ -159,7 +153,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public UserRegRo regByLoginName(RegByLoginNameTo to) {
 		if (StringUtils.isAnyBlank(to.getLoginName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
-				|| to.getAppId() == null) {
+				|| to.getSysId() == null) {
 			_log.warn("没有填写用户登录名称/登录密码/应用ID/浏览器类型/MAC/IP: {}", to);
 			UserRegRo regRo = new UserRegRo();
 			regRo.setResult(RegResultDic.PARAM_ERROR);
@@ -250,7 +244,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public UserRegRo regByQq(RegByQqTo to) {
 		if (StringUtils.isAnyBlank(to.getQqId(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getMac(),
-				to.getIp()) || to.getAppId() == null) {
+				to.getIp()) || to.getSysId() == null) {
 			_log.warn("没有填写用户QQ的ID/QQ昵称/QQ头像/应用ID/浏览器类型/MAC/IP: {}", to);
 			UserRegRo regRo = new UserRegRo();
 			regRo.setResult(RegResultDic.PARAM_ERROR);
@@ -276,7 +270,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public UserRegRo regByWx(RegByWxTo to) {
 		if (StringUtils.isAnyBlank(to.getWxId(), to.getWxOpenid(), to.getWxNickname(), to.getUserAgent(), to.getMac(),
-				to.getIp()) || to.getAppId() == null) {
+				to.getIp()) || to.getSysId() == null) {
 			_log.warn("没有填写用户微信的ID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
 			UserRegRo regRo = new UserRegRo();
 			regRo.setResult(RegResultDic.PARAM_ERROR);
@@ -331,7 +325,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public UserLoginRo loginByLoginName(LoginByLoginNameTo to) {
 		if (StringUtils.isAnyBlank(to.getLoginName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
-				|| to.getAppId() == null) {
+				|| to.getSysId() == null) {
 			_log.warn("没有填写用户登录名称/密码/应用ID/浏览器类型/MAC/IP: {}", to);
 			UserLoginRo ro = new UserLoginRo();
 			ro.setResult(LoginResultDic.PARAM_ERROR);
@@ -357,7 +351,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public UserLoginRo loginByUserName(LoginByUserNameTo to) {
 		if (StringUtils.isAnyBlank(to.getUserName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
-				|| to.getAppId() == null) {
+				|| to.getSysId() == null) {
 			_log.warn("没有填写用户名/密码/应用ID/浏览器类型/MAC/IP: {}", to);
 			UserLoginRo ro = new UserLoginRo();
 			ro.setResult(LoginResultDic.PARAM_ERROR);
@@ -412,8 +406,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public UserLoginRo loginByQq(LoginByQqTo to) {
-		if (StringUtils.isAnyBlank(to.getQqId(), to.getQqOpenid(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getMac(),
-				to.getIp()) || to.getAppId() == null) {
+		if (StringUtils.isAnyBlank(to.getQqId(), to.getQqOpenid(), to.getQqNickname(), to.getQqFace(),
+				to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
 			_log.warn("没有填写用户QQ的ID/QQ昵称/QQ头像/应用ID/浏览器类型/MAC/IP: {}", to);
 			UserLoginRo ro = new UserLoginRo();
 			ro.setResult(LoginResultDic.PARAM_ERROR);
@@ -452,7 +446,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 				//
 				opLogMo.setOpDetail(userMo.getQqNickname() + " " + userMo.getQqFace() + " ---> " + to.getQqNickname()
 						+ to.getQqFace());
-				opLogMo.setAppId(to.getAppId());
+				opLogMo.setSysId(to.getSysId());
 				opLogMo.setUserAgent(to.getUserAgent());
 				opLogMo.setMac(to.getMac());
 				opLogMo.setIp(to.getIp());
@@ -469,7 +463,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public UserLoginRo loginByWx(LoginByWxTo to) {
 		if (StringUtils.isAnyBlank(to.getWxId(), to.getWxOpenid(), to.getWxNickname(), to.getUserAgent(), to.getMac(),
-				to.getIp()) || to.getAppId() == null) {
+				to.getIp()) || to.getSysId() == null) {
 			_log.warn("没有填写用户微信的ID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
 			UserLoginRo ro = new UserLoginRo();
 			ro.setResult(LoginResultDic.PARAM_ERROR);
@@ -508,7 +502,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 				//
 				opLogMo.setOpDetail(userMo.getWxNickname() + " " + userMo.getWxFace() + " ---> " + to.getWxNickname()
 						+ to.getWxFace());
-				opLogMo.setAppId(to.getAppId());
+				opLogMo.setSysId(to.getSysId());
 				opLogMo.setUserAgent(to.getUserAgent());
 				opLogMo.setMac(to.getMac());
 				opLogMo.setIp(to.getIp());
@@ -517,13 +511,13 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 		}
 		if (to.getOnlineId() != null && to.getOnlineId() != 0) {
 			try {
-				redisClient.set(REDIS_KEY_USER_BUY_BUY_RELATION + userMo.getId() + to.getOnlineId(), to.getPromoterId().toString(), 60 * 60 * buyRelationTime);
+				redisClient.set(REDIS_KEY_USER_BUY_BUY_RELATION + userMo.getId() + to.getOnlineId(),
+						to.getPromoterId().toString(), 60 * 60 * buyRelationTime);
 			} catch (RedisSetException e) {
 				_log.info("微信用户登录添加购买关系时出错，用户id为：{}", userMo.getId());
 				e.printStackTrace();
 			}
 		}
-		
 		return returnSuccessLogin(to, RegAndLoginTypeDic.WX, userMo);
 	}
 
@@ -765,7 +759,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	 */
 	@Override
 	public BindWxRo bindWx(BindWxTo to) {
-		if (to.getUserId() == null || to.getAppId() == null || StringUtils.isAnyBlank(to.getWxId(), to.getWxNickname(),
+		if (to.getUserId() == null || to.getSysId() == null || StringUtils.isAnyBlank(to.getWxId(), to.getWxNickname(),
 				to.getUserAgent(), to.getMac(), to.getIp())) {
 			_log.warn("没有填写用户ID/微信ID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
 			BindWxRo ro = new BindWxRo();
@@ -811,7 +805,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 		//
 		opLogMo.setOpDetail(
 				userMo.getWxNickname() + " " + userMo.getWxFace() + " ---> " + to.getWxNickname() + to.getWxFace());
-		opLogMo.setAppId(to.getAppId());
+		opLogMo.setSysId(to.getSysId());
 		opLogMo.setUserAgent(to.getUserAgent());
 		opLogMo.setMac(to.getMac());
 		opLogMo.setIp(to.getIp());
@@ -1257,31 +1251,20 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	}
 
 	/**
-	 * 根据系统id和角色id查询用户信息
-	 *
-	 * @param sysId
-	 * @param roleId
+	 * 根据用户id查询用户分页信息
 	 * @param pageNum
 	 * @param pageSize
+	 * @param ids
 	 * @return
 	 */
 	@Override
-	public PageInfo<SucUserMo> userNameList(String sysId, Long roleId, int pageNum, int pageSize, String users) {
-		_log.info("查询用户名称的请求参数为，{}, {}", sysId, roleId);
-		_log.info("根据系统id和角色id查询用户id的参数为：{}，{}", sysId, roleId);
-		// 根据系统id和角色id查询用户id
-		List<Long> useIdList = pfmUserRoleSvc.getUseIdByRoleIdAndSysId(sysId, roleId);
-		_log.info("根据系统id和角色id查询用户id的返回值为：{}", String.valueOf(useIdList));
-		StringBuilder userIds = new StringBuilder();
-		for (Long id : useIdList) {
-			userIds.append(id + ",");
-		}
-		String ids = StringUtils.isBlank(userIds.toString()) ? "-1" : StrUtils.delRight(userIds.toString(), 1);
+	public PageInfo<SucUserMo> listUserByIds(int pageNum, int pageSize, String ids) {
 		return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectByIds(ids));
 	}
 
 	/**
 	 * 添加用户组织
+	 * 
 	 * @param id
 	 * @param orgId
 	 * @return
@@ -1317,9 +1300,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 		ro.setMsg("添加成功");
 		return ro;
 	}
-	
+
 	/**
 	 * 删除用户组织
+	 * 
 	 * @param id
 	 * @return
 	 */

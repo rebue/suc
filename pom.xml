@@ -40,11 +40,6 @@
 				<artifactId>jwt-svr-feign</artifactId>
 				<version>1.0.8</version>
 			</dependency>
-			<dependency>
-				<groupId>com.github.rebue.pfm</groupId>
-				<artifactId>pfm-svr-feign</artifactId>
-				<version>1.0.0</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

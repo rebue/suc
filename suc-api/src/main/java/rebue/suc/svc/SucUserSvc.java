@@ -199,27 +199,26 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
     PageInfo<SucUserMo> listEx(String users, int pageNum, int pageSize);
 
     /**
-     *  根据系统id和角色id查询用户信息
-     *  @param sysId
-     *  @param roleId
-     *  @param pageNum
-     *  @param pageSize
-     *  @return
-     */
-    PageInfo<SucUserMo> userNameList(String sysId, Long roleId, int pageNum, int pageSize, String users);
-
-    /**
      * 添加用户组织
      * @param id
      * @param orgId
      * @return
      */
-	SucUserRo addUserOrg(Long id, Long orgId);
+    SucUserRo addUserOrg(Long id, Long orgId);
 
-	/**
-	 * 删除用户组织
-	 * @param id
-	 * @return
-	 */
-	SucUserRo delUserOrgById(Long id);
+    /**
+     *  删除用户组织
+     *  @param id
+     *  @return
+     */
+    SucUserRo delUserOrgById(Long id);
+
+    /**
+     * 根据用户id查询用户分页信息
+     * @param pageNum
+     * @param pageSize
+     * @param ids
+     * @return
+     */
+	PageInfo<SucUserMo> listUserByIds(int pageNum, int pageSize, String ids);
 }

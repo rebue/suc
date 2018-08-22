@@ -32,7 +32,7 @@ public class LoginByUserNameTo extends RegAndLoginBaseTo {
 
     @Override
     public String toString() {
-        return "LoginByUserNameTo [userName=" + userName + ", loginPswd=" + loginPswd + ", getAppId()=" + getAppId() + ", getUserAgent()=" + getUserAgent() + ", getMac()="
+        return "LoginByUserNameTo [userName=" + userName + ", loginPswd=" + loginPswd + ", getSysId()=" + getSysId() + ", getUserAgent()=" + getUserAgent() + ", getMac()="
                 + getMac() + ", getIp()=" + getIp() + "]";
     }
 

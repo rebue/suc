@@ -4,6 +4,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.github.pagehelper.PageInfo;
+
 import rebue.sbs.feign.FeignConfig;
 import rebue.suc.mo.SucUserMo;
 import rebue.suc.ro.PayPswdVerifyRo;
@@ -60,4 +62,13 @@ public interface SucUserSvc {
     PayPswdVerifyRo verifyPayPswd(@RequestParam("userId") Long userId, @RequestParam("payPswd") String payPswd,
             @RequestParam("amount") Double amount);
 
+    /**
+     * 根据id查询用户分页信息
+     * @param pageNum
+     * @param pageSize
+     * @param ids
+     * @return
+     */
+    @GetMapping("/suc/user/listuserbyids")
+    PageInfo<SucUserMo> listUserByIds(@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize, @RequestParam("ids") String ids);
 }
