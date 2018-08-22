@@ -27,5 +27,5 @@ public interface SucOrgSvc extends MybatisBaseSvc<SucOrgMo, java.lang.Long> {
      * @param isEnabled
      * @return
      */
-	SucOrgRo enable(Long id, Boolean isEnabled);
+    SucOrgRo enable(Long id, Boolean isEnabled);
 }

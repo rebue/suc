@@ -9,52 +9,52 @@ import rebue.suc.mo.SucLoginLogMo;
 public interface SucLoginLogMapper extends MybatisBaseMapper<SucLoginLogMo, Long> {
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     int deleteByPrimaryKey(Long id);
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     int insert(SucLoginLogMo record);
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     int insertSelective(SucLoginLogMo record);
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     SucLoginLogMo selectByPrimaryKey(Long id);
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     int updateByPrimaryKeySelective(SucLoginLogMo record);
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     int updateByPrimaryKey(SucLoginLogMo record);
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     List<SucLoginLogMo> selectAll();
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     List<SucLoginLogMo> selectSelective(SucLoginLogMo record);
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     boolean existByPrimaryKey(Long id);
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     boolean existSelective(SucLoginLogMo record);
 }

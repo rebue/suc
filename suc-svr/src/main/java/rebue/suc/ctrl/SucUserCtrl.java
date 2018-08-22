@@ -283,7 +283,7 @@ public class SucUserCtrl {
         _log.info("解绑微信的参数为：{}", id);
         return svc.unbindQQ(id);
     }
-    
+
     /**
      * 根据id查询用户分页信息
      * @param pageNum
@@ -293,8 +293,8 @@ public class SucUserCtrl {
      */
     @GetMapping("/suc/user/listuserbyids")
     PageInfo<SucUserMo> listUserByIds(@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize, @RequestParam("ids") String ids) {
-    	_log.info("查询用户信息的参数为：pageNum={}, pageSize={}, ids={}", pageNum, pageSize, ids);
-    	return svc.listUserByIds(pageNum, pageSize, ids);
+        _log.info("查询用户信息的参数为：pageNum={}, pageSize={}, ids={}", pageNum, pageSize, ids);
+        return svc.listUserByIds(pageNum, pageSize, ids);
     }
 
     /**

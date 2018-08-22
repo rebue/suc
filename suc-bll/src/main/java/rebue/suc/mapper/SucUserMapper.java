@@ -13,52 +13,52 @@ import rebue.suc.ro.SucUserJonintOrgSelectRo;
 public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
-     *  自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     int deleteByPrimaryKey(Long id);
 
     /**
-     *  自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     int insert(SucUserMo record);
 
     /**
-     *  自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     int insertSelective(SucUserMo record);
 
     /**
-     *  自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     SucUserMo selectByPrimaryKey(Long id);
 
     /**
-     *  自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     int updateByPrimaryKeySelective(SucUserMo record);
 
     /**
-     *  自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     int updateByPrimaryKey(SucUserMo record);
 
     /**
-     *  自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     List<SucUserMo> selectAll();
 
     /**
-     *  自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     List<SucUserMo> selectSelective(SucUserMo record);
 
     /**
-     *  自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     boolean existByPrimaryKey(Long id);
 
     /**
-     *  自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     boolean existSelective(SucUserMo record);
 

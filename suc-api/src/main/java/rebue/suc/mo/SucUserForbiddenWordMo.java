@@ -10,7 +10,7 @@ import java.io.Serializable;
  *
  * 数据库表: SUC_USER_FORBIDDEN_WORD
  *
- * 自动生成，如需修改，请删除本行 @mbg.generated
+ * @mbg.generated 自动生成，如需修改，请删除本行
  */
 @JsonInclude(Include.NON_NULL)
 public class SucUserForbiddenWordMo implements Serializable {
@@ -20,7 +20,7 @@ public class SucUserForbiddenWordMo implements Serializable {
      *
      *    数据库字段: SUC_USER_FORBIDDEN_WORD.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Long id;
 
@@ -29,12 +29,12 @@ public class SucUserForbiddenWordMo implements Serializable {
      *
      *    数据库字段: SUC_USER_FORBIDDEN_WORD.KEYWORD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String keyword;
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private static final long serialVersionUID = 1L;
 
@@ -43,7 +43,7 @@ public class SucUserForbiddenWordMo implements Serializable {
      *
      *    数据库字段: SUC_USER_FORBIDDEN_WORD.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Long getId() {
         return id;
@@ -54,7 +54,7 @@ public class SucUserForbiddenWordMo implements Serializable {
      *
      *    数据库字段: SUC_USER_FORBIDDEN_WORD.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setId(Long id) {
         this.id = id;
@@ -65,7 +65,7 @@ public class SucUserForbiddenWordMo implements Serializable {
      *
      *    数据库字段: SUC_USER_FORBIDDEN_WORD.KEYWORD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getKeyword() {
         return keyword;
@@ -76,14 +76,14 @@ public class SucUserForbiddenWordMo implements Serializable {
      *
      *    数据库字段: SUC_USER_FORBIDDEN_WORD.KEYWORD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setKeyword(String keyword) {
         this.keyword = keyword;
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public String toString() {
@@ -99,7 +99,7 @@ public class SucUserForbiddenWordMo implements Serializable {
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public boolean equals(Object that) {
@@ -117,7 +117,7 @@ public class SucUserForbiddenWordMo implements Serializable {
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public int hashCode() {

@@ -12,42 +12,17 @@ import org.springframework.format.annotation.DateTimeFormat;
  *
  * 数据库表: SUC_REG
  *
- * 自动生成，如需修改，请删除本行 @mbg.generated
+ * @mbg.generated 自动生成，如需修改，请删除本行
  */
 @JsonInclude(Include.NON_NULL)
 public class SucRegMo implements Serializable {
-
-    /**
-     *    数据库字段: SUC_REG.SYS_ID
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    private String sysId;
-
-    /**
-     *    数据库字段: SUC_REG.SYS_ID
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    public String getSysId() {
-        return sysId;
-    }
-
-    /**
-     *    数据库字段: SUC_REG.SYS_ID
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    public void setSysId(String sysId) {
-        this.sysId = sysId;
-    }
 
     /**
      *    用户ID
      *
      *    数据库字段: SUC_REG.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Long id;
 
@@ -56,7 +31,7 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.REG_TIME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -64,15 +39,15 @@ public class SucRegMo implements Serializable {
 
     /**
      *    注册类型(与登录类型一致)
-     *                            1: 用户登录名
-     *                            2: 电子邮箱
-     *                            3: 手机
-     *                            4: QQ
-     *                            5: 微信
+     *                        1: 用户登录名
+     *                        2: 电子邮箱
+     *                        3: 手机
+     *                        4: QQ
+     *                        5: 微信
      *
      *    数据库字段: SUC_REG.REG_TYPE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Byte regType;
 
@@ -81,17 +56,14 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.PROMOTER_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Long promoterId;
 
     /**
-     *    应用ID
-     *                标记是哪个应用系统来注册的编码，要与登录应用ID意义一致
-     *
      *    数据库字段: SUC_REG.APP_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Byte appId;
 
@@ -100,7 +72,7 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.USER_AGENT
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String userAgent;
 
@@ -109,7 +81,7 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.MAC
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String mac;
 
@@ -118,12 +90,19 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.IP
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String ip;
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    数据库字段: SUC_REG.SYS_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private String sysId;
+
+    /**
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private static final long serialVersionUID = 1L;
 
@@ -132,7 +111,7 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Long getId() {
         return id;
@@ -143,7 +122,7 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setId(Long id) {
         this.id = id;
@@ -154,7 +133,7 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.REG_TIME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Date getRegTime() {
         return regTime;
@@ -165,7 +144,7 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.REG_TIME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setRegTime(Date regTime) {
         this.regTime = regTime;
@@ -173,15 +152,15 @@ public class SucRegMo implements Serializable {
 
     /**
      *    注册类型(与登录类型一致)
-     *                            1: 用户登录名
-     *                            2: 电子邮箱
-     *                            3: 手机
-     *                            4: QQ
-     *                            5: 微信
+     *                        1: 用户登录名
+     *                        2: 电子邮箱
+     *                        3: 手机
+     *                        4: QQ
+     *                        5: 微信
      *
      *    数据库字段: SUC_REG.REG_TYPE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Byte getRegType() {
         return regType;
@@ -189,15 +168,15 @@ public class SucRegMo implements Serializable {
 
     /**
      *    注册类型(与登录类型一致)
-     *                            1: 用户登录名
-     *                            2: 电子邮箱
-     *                            3: 手机
-     *                            4: QQ
-     *                            5: 微信
+     *                        1: 用户登录名
+     *                        2: 电子邮箱
+     *                        3: 手机
+     *                        4: QQ
+     *                        5: 微信
      *
      *    数据库字段: SUC_REG.REG_TYPE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setRegType(Byte regType) {
         this.regType = regType;
@@ -208,7 +187,7 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.PROMOTER_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Long getPromoterId() {
         return promoterId;
@@ -219,31 +198,25 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.PROMOTER_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setPromoterId(Long promoterId) {
         this.promoterId = promoterId;
     }
 
     /**
-     *    应用ID
-     *                标记是哪个应用系统来注册的编码，要与登录应用ID意义一致
-     *
      *    数据库字段: SUC_REG.APP_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Byte getAppId() {
         return appId;
     }
 
     /**
-     *    应用ID
-     *                标记是哪个应用系统来注册的编码，要与登录应用ID意义一致
-     *
      *    数据库字段: SUC_REG.APP_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setAppId(Byte appId) {
         this.appId = appId;
@@ -254,7 +227,7 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.USER_AGENT
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getUserAgent() {
         return userAgent;
@@ -265,7 +238,7 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.USER_AGENT
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
@@ -276,7 +249,7 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.MAC
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getMac() {
         return mac;
@@ -287,7 +260,7 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.MAC
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setMac(String mac) {
         this.mac = mac;
@@ -298,7 +271,7 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.IP
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getIp() {
         return ip;
@@ -309,14 +282,32 @@ public class SucRegMo implements Serializable {
      *
      *    数据库字段: SUC_REG.IP
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setIp(String ip) {
         this.ip = ip;
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    数据库字段: SUC_REG.SYS_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public String getSysId() {
+        return sysId;
+    }
+
+    /**
+     *    数据库字段: SUC_REG.SYS_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setSysId(String sysId) {
+        this.sysId = sysId;
+    }
+
+    /**
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public String toString() {
@@ -332,13 +323,14 @@ public class SucRegMo implements Serializable {
         sb.append(", userAgent=").append(userAgent);
         sb.append(", mac=").append(mac);
         sb.append(", ip=").append(ip);
+        sb.append(", sysId=").append(sysId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public boolean equals(Object that) {
@@ -356,7 +348,7 @@ public class SucRegMo implements Serializable {
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public int hashCode() {

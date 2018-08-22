@@ -179,7 +179,7 @@ public class SucOrgCtrl {
         _log.info("查询组织信息的参数为：{}", name);
         return svc.selectByName(name);
     }
-    
+
     /**
      * 设置启用或者禁用组织
      * @param id
@@ -188,7 +188,7 @@ public class SucOrgCtrl {
      */
     @PutMapping("/suc/org/enable")
     SucOrgRo enable(@RequestParam("id") Long id, @RequestParam("isEnabled") Boolean isEnabled) {
-    	_log.info("禁用或者启用组织的参数为：id={}, isEnabled={}", id, isEnabled);
-    	return svc.enable(id, isEnabled);
+        _log.info("禁用或者启用组织的参数为：id={}, isEnabled={}", id, isEnabled);
+        return svc.enable(id, isEnabled);
     }
 }

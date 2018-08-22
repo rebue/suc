@@ -86,7 +86,7 @@ public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, 
         _log.info("根据组织名称查询组织信息的参数为：{}", name);
         return _mapper.selectByName(name);
     }
-    
+
     /**
      * 设置禁用或者启用组织
      * @param id
@@ -96,19 +96,19 @@ public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public SucOrgRo enable(Long id, Boolean isEnabled) {
-    	SucOrgRo ro = new SucOrgRo();
-    	_log.info("禁用或者启用组织的参数为：id={}, isEnabled={}", id, isEnabled);
-    	int enableResult = _mapper.enable(id, isEnabled);
-    	_log.info("禁用或者启用组织的返回值为：{}", enableResult);
-    	if (enableResult != 1) {
-			_log.error("禁用或者启用组织失败，id为：{}", id);
-			ro.setResult((byte) -1);
-			ro.setMsg("设置失败");
-			return ro;
-		}
-    	_log.info("禁用或者启用组织成功，id为：{}", id);
-    	ro.setResult((byte) 1);
-    	ro.setMsg("设置成功");
-    	return ro;
+        SucOrgRo ro = new SucOrgRo();
+        _log.info("禁用或者启用组织的参数为：id={}, isEnabled={}", id, isEnabled);
+        int enableResult = _mapper.enable(id, isEnabled);
+        _log.info("禁用或者启用组织的返回值为：{}", enableResult);
+        if (enableResult != 1) {
+            _log.error("禁用或者启用组织失败，id为：{}", id);
+            ro.setResult((byte) -1);
+            ro.setMsg("设置失败");
+            return ro;
+        }
+        _log.info("禁用或者启用组织成功，id为：{}", id);
+        ro.setResult((byte) 1);
+        ro.setMsg("设置成功");
+        return ro;
     }
 }

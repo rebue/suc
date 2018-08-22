@@ -9,42 +9,17 @@ import java.io.Serializable;
  *
  * 数据库表: SUC_USER
  *
- * 自动生成，如需修改，请删除本行 @mbg.generated
+ * @mbg.generated 自动生成，如需修改，请删除本行
  */
 @JsonInclude(Include.NON_NULL)
 public class SucUserMo implements Serializable {
-
-    /**
-     *    数据库字段: SUC_USER.ORG_ID
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    private Long orgId;
-
-    /**
-     *    数据库字段: SUC_USER.ORG_ID
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    public Long getOrgId() {
-        return orgId;
-    }
-
-    /**
-     *    数据库字段: SUC_USER.ORG_ID
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    public void setOrgId(Long orgId) {
-        this.orgId = orgId;
-    }
 
     /**
      *    用户ID
      *
      *    数据库字段: SUC_USER.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Long id;
 
@@ -53,40 +28,40 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.LOGIN_NAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String loginName;
 
     /**
      *    登录密码
-     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.LOGIN_PSWD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String loginPswd;
 
     /**
      *    支付密码
-     *                用户的支付密码默认和登录密码一致
-     *                保存在字段的计算方法如下：
-     *                MD5(数据库存储的已加密的登陆密码)
+     *            用户的支付密码默认和登录密码一致
+     *            保存在字段的计算方法如下：
+     *            MD5(数据库存储的已加密的登陆密码)
      *
      *    数据库字段: SUC_USER.PAY_PSWD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String payPswd;
 
     /**
      *    密码组合码
-     *                与密码组合加密用
-     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *            与密码组合加密用
+     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.SALT
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String salt;
 
@@ -95,7 +70,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.NICKNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String nickname;
 
@@ -104,7 +79,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.FACE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String face;
 
@@ -113,7 +88,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.REALNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String realname;
 
@@ -122,7 +97,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_VERIFIED_REALNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Boolean isVerifiedRealname;
 
@@ -131,7 +106,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IDCARD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String idcard;
 
@@ -140,7 +115,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_VERIFIED_IDCARD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Boolean isVerifiedIdcard;
 
@@ -149,7 +124,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.EMAIL
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String email;
 
@@ -158,7 +133,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_VERIFIED_EMAIL
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Boolean isVerifiedEmail;
 
@@ -167,7 +142,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.MOBILE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String mobile;
 
@@ -176,7 +151,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_VERIFIED_MOBILE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Boolean isVerifiedMobile;
 
@@ -185,7 +160,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.QQ_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String qqId;
 
@@ -194,7 +169,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.QQ_NICKNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String qqNickname;
 
@@ -203,7 +178,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.QQ_FACE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String qqFace;
 
@@ -212,7 +187,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.WX_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String wxId;
 
@@ -221,7 +196,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.WX_NICKNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String wxNickname;
 
@@ -230,7 +205,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.WX_FACE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String wxFace;
 
@@ -239,7 +214,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_LOCK
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Boolean isLock;
 
@@ -248,33 +223,40 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.MODIFIED_TIMESTAMP
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Long modifiedTimestamp;
 
     /**
      *    数据库字段: SUC_USER.QQ_OPENID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String qqOpenid;
 
     /**
      *    数据库字段: SUC_USER.WX_OPENID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String wxOpenid;
 
     /**
      *    数据库字段: SUC_USER.PROMOTER_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Long promoterId;
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    数据库字段: SUC_USER.ORG_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private Long orgId;
+
+    /**
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private static final long serialVersionUID = 1L;
 
@@ -283,7 +265,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Long getId() {
         return id;
@@ -294,7 +276,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setId(Long id) {
         this.id = id;
@@ -305,7 +287,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.LOGIN_NAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getLoginName() {
         return loginName;
@@ -316,7 +298,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.LOGIN_NAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setLoginName(String loginName) {
         this.loginName = loginName;
@@ -324,11 +306,11 @@ public class SucUserMo implements Serializable {
 
     /**
      *    登录密码
-     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.LOGIN_PSWD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getLoginPswd() {
         return loginPswd;
@@ -336,11 +318,11 @@ public class SucUserMo implements Serializable {
 
     /**
      *    登录密码
-     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.LOGIN_PSWD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setLoginPswd(String loginPswd) {
         this.loginPswd = loginPswd;
@@ -348,13 +330,13 @@ public class SucUserMo implements Serializable {
 
     /**
      *    支付密码
-     *                用户的支付密码默认和登录密码一致
-     *                保存在字段的计算方法如下：
-     *                MD5(数据库存储的已加密的登陆密码)
+     *            用户的支付密码默认和登录密码一致
+     *            保存在字段的计算方法如下：
+     *            MD5(数据库存储的已加密的登陆密码)
      *
      *    数据库字段: SUC_USER.PAY_PSWD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getPayPswd() {
         return payPswd;
@@ -362,13 +344,13 @@ public class SucUserMo implements Serializable {
 
     /**
      *    支付密码
-     *                用户的支付密码默认和登录密码一致
-     *                保存在字段的计算方法如下：
-     *                MD5(数据库存储的已加密的登陆密码)
+     *            用户的支付密码默认和登录密码一致
+     *            保存在字段的计算方法如下：
+     *            MD5(数据库存储的已加密的登陆密码)
      *
      *    数据库字段: SUC_USER.PAY_PSWD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setPayPswd(String payPswd) {
         this.payPswd = payPswd;
@@ -376,12 +358,12 @@ public class SucUserMo implements Serializable {
 
     /**
      *    密码组合码
-     *                与密码组合加密用
-     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *            与密码组合加密用
+     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.SALT
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getSalt() {
         return salt;
@@ -389,12 +371,12 @@ public class SucUserMo implements Serializable {
 
     /**
      *    密码组合码
-     *                与密码组合加密用
-     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *            与密码组合加密用
+     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.SALT
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setSalt(String salt) {
         this.salt = salt;
@@ -405,7 +387,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.NICKNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getNickname() {
         return nickname;
@@ -416,7 +398,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.NICKNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setNickname(String nickname) {
         this.nickname = nickname;
@@ -427,7 +409,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.FACE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getFace() {
         return face;
@@ -438,7 +420,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.FACE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setFace(String face) {
         this.face = face;
@@ -449,7 +431,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.REALNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getRealname() {
         return realname;
@@ -460,7 +442,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.REALNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setRealname(String realname) {
         this.realname = realname;
@@ -471,7 +453,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_VERIFIED_REALNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Boolean getIsVerifiedRealname() {
         return isVerifiedRealname;
@@ -482,7 +464,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_VERIFIED_REALNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setIsVerifiedRealname(Boolean isVerifiedRealname) {
         this.isVerifiedRealname = isVerifiedRealname;
@@ -493,7 +475,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IDCARD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getIdcard() {
         return idcard;
@@ -504,7 +486,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IDCARD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setIdcard(String idcard) {
         this.idcard = idcard;
@@ -515,7 +497,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_VERIFIED_IDCARD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Boolean getIsVerifiedIdcard() {
         return isVerifiedIdcard;
@@ -526,7 +508,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_VERIFIED_IDCARD
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setIsVerifiedIdcard(Boolean isVerifiedIdcard) {
         this.isVerifiedIdcard = isVerifiedIdcard;
@@ -537,7 +519,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.EMAIL
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getEmail() {
         return email;
@@ -548,7 +530,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.EMAIL
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setEmail(String email) {
         this.email = email;
@@ -559,7 +541,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_VERIFIED_EMAIL
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Boolean getIsVerifiedEmail() {
         return isVerifiedEmail;
@@ -570,7 +552,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_VERIFIED_EMAIL
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setIsVerifiedEmail(Boolean isVerifiedEmail) {
         this.isVerifiedEmail = isVerifiedEmail;
@@ -581,7 +563,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.MOBILE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getMobile() {
         return mobile;
@@ -592,7 +574,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.MOBILE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setMobile(String mobile) {
         this.mobile = mobile;
@@ -603,7 +585,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_VERIFIED_MOBILE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Boolean getIsVerifiedMobile() {
         return isVerifiedMobile;
@@ -614,7 +596,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_VERIFIED_MOBILE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setIsVerifiedMobile(Boolean isVerifiedMobile) {
         this.isVerifiedMobile = isVerifiedMobile;
@@ -625,7 +607,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.QQ_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getQqId() {
         return qqId;
@@ -636,7 +618,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.QQ_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setQqId(String qqId) {
         this.qqId = qqId;
@@ -647,7 +629,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.QQ_NICKNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getQqNickname() {
         return qqNickname;
@@ -658,7 +640,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.QQ_NICKNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setQqNickname(String qqNickname) {
         this.qqNickname = qqNickname;
@@ -669,7 +651,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.QQ_FACE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getQqFace() {
         return qqFace;
@@ -680,7 +662,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.QQ_FACE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setQqFace(String qqFace) {
         this.qqFace = qqFace;
@@ -691,7 +673,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.WX_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getWxId() {
         return wxId;
@@ -702,7 +684,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.WX_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setWxId(String wxId) {
         this.wxId = wxId;
@@ -713,7 +695,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.WX_NICKNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getWxNickname() {
         return wxNickname;
@@ -724,7 +706,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.WX_NICKNAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setWxNickname(String wxNickname) {
         this.wxNickname = wxNickname;
@@ -735,7 +717,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.WX_FACE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getWxFace() {
         return wxFace;
@@ -746,7 +728,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.WX_FACE
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setWxFace(String wxFace) {
         this.wxFace = wxFace;
@@ -757,7 +739,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_LOCK
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Boolean getIsLock() {
         return isLock;
@@ -768,7 +750,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.IS_LOCK
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setIsLock(Boolean isLock) {
         this.isLock = isLock;
@@ -779,7 +761,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.MODIFIED_TIMESTAMP
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Long getModifiedTimestamp() {
         return modifiedTimestamp;
@@ -790,7 +772,7 @@ public class SucUserMo implements Serializable {
      *
      *    数据库字段: SUC_USER.MODIFIED_TIMESTAMP
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setModifiedTimestamp(Long modifiedTimestamp) {
         this.modifiedTimestamp = modifiedTimestamp;
@@ -799,7 +781,7 @@ public class SucUserMo implements Serializable {
     /**
      *    数据库字段: SUC_USER.QQ_OPENID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getQqOpenid() {
         return qqOpenid;
@@ -808,7 +790,7 @@ public class SucUserMo implements Serializable {
     /**
      *    数据库字段: SUC_USER.QQ_OPENID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setQqOpenid(String qqOpenid) {
         this.qqOpenid = qqOpenid;
@@ -817,7 +799,7 @@ public class SucUserMo implements Serializable {
     /**
      *    数据库字段: SUC_USER.WX_OPENID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getWxOpenid() {
         return wxOpenid;
@@ -826,7 +808,7 @@ public class SucUserMo implements Serializable {
     /**
      *    数据库字段: SUC_USER.WX_OPENID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setWxOpenid(String wxOpenid) {
         this.wxOpenid = wxOpenid;
@@ -835,7 +817,7 @@ public class SucUserMo implements Serializable {
     /**
      *    数据库字段: SUC_USER.PROMOTER_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Long getPromoterId() {
         return promoterId;
@@ -844,14 +826,32 @@ public class SucUserMo implements Serializable {
     /**
      *    数据库字段: SUC_USER.PROMOTER_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setPromoterId(Long promoterId) {
         this.promoterId = promoterId;
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    数据库字段: SUC_USER.ORG_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public Long getOrgId() {
+        return orgId;
+    }
+
+    /**
+     *    数据库字段: SUC_USER.ORG_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
+
+    /**
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public String toString() {
@@ -885,13 +885,14 @@ public class SucUserMo implements Serializable {
         sb.append(", qqOpenid=").append(qqOpenid);
         sb.append(", wxOpenid=").append(wxOpenid);
         sb.append(", promoterId=").append(promoterId);
+        sb.append(", orgId=").append(orgId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public boolean equals(Object that) {
@@ -909,7 +910,7 @@ public class SucUserMo implements Serializable {
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public int hashCode() {

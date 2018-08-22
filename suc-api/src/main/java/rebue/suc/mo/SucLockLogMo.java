@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *
  * 数据库表: SUC_LOCK_LOG
  *
- * 自动生成，如需修改，请删除本行 @mbg.generated
+ * @mbg.generated 自动生成，如需修改，请删除本行
  */
 @JsonInclude(Include.NON_NULL)
 public class SucLockLogMo implements Serializable {
@@ -22,7 +22,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Long id;
 
@@ -31,7 +31,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.USER_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Long userId;
 
@@ -40,7 +40,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.LOCK_REASON
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String lockReason;
 
@@ -49,7 +49,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.LOCK_TIME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -60,7 +60,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.LOCK_OP_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Long lockOpId;
 
@@ -69,7 +69,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.UNLOCK_REASON
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String unlockReason;
 
@@ -78,7 +78,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.UNLOCK_TIME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -89,12 +89,12 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.UNLOCK_OP_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Long unlockOpId;
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private static final long serialVersionUID = 1L;
 
@@ -103,7 +103,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Long getId() {
         return id;
@@ -114,7 +114,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setId(Long id) {
         this.id = id;
@@ -125,7 +125,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.USER_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Long getUserId() {
         return userId;
@@ -136,7 +136,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.USER_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setUserId(Long userId) {
         this.userId = userId;
@@ -147,7 +147,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.LOCK_REASON
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getLockReason() {
         return lockReason;
@@ -158,7 +158,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.LOCK_REASON
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setLockReason(String lockReason) {
         this.lockReason = lockReason;
@@ -169,7 +169,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.LOCK_TIME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Date getLockTime() {
         return lockTime;
@@ -180,7 +180,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.LOCK_TIME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setLockTime(Date lockTime) {
         this.lockTime = lockTime;
@@ -191,7 +191,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.LOCK_OP_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Long getLockOpId() {
         return lockOpId;
@@ -202,7 +202,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.LOCK_OP_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setLockOpId(Long lockOpId) {
         this.lockOpId = lockOpId;
@@ -213,7 +213,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.UNLOCK_REASON
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getUnlockReason() {
         return unlockReason;
@@ -224,7 +224,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.UNLOCK_REASON
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setUnlockReason(String unlockReason) {
         this.unlockReason = unlockReason;
@@ -235,7 +235,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.UNLOCK_TIME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Date getUnlockTime() {
         return unlockTime;
@@ -246,7 +246,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.UNLOCK_TIME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setUnlockTime(Date unlockTime) {
         this.unlockTime = unlockTime;
@@ -257,7 +257,7 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.UNLOCK_OP_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Long getUnlockOpId() {
         return unlockOpId;
@@ -268,14 +268,14 @@ public class SucLockLogMo implements Serializable {
      *
      *    数据库字段: SUC_LOCK_LOG.UNLOCK_OP_ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setUnlockOpId(Long unlockOpId) {
         this.unlockOpId = unlockOpId;
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public String toString() {
@@ -297,7 +297,7 @@ public class SucLockLogMo implements Serializable {
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public boolean equals(Object that) {
@@ -315,7 +315,7 @@ public class SucLockLogMo implements Serializable {
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public int hashCode() {

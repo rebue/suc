@@ -220,5 +220,5 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * @param ids
      * @return
      */
-	PageInfo<SucUserMo> listUserByIds(int pageNum, int pageSize, String ids);
+    PageInfo<SucUserMo> listUserByIds(int pageNum, int pageSize, String ids);
 }

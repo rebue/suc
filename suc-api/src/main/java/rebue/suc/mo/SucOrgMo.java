@@ -9,98 +9,17 @@ import java.io.Serializable;
  *
  * 数据库表: SUC_ORG
  *
- * 自动生成，如需修改，请删除本行 @mbg.generated
+ * @mbg.generated 自动生成，如需修改，请删除本行
  */
 @JsonInclude(Include.NON_NULL)
 public class SucOrgMo implements Serializable {
-
-    /**
-     *    数据库字段: SUC_ORG.CREATE_TIMESTAMP
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    private Long createTimestamp;
-
-    /**
-     *    数据库字段: SUC_ORG.CREATE_TIMESTAMP
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    public Long getCreateTimestamp() {
-        return createTimestamp;
-    }
-
-    /**
-     *    数据库字段: SUC_ORG.CREATE_TIMESTAMP
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    public void setCreateTimestamp(Long createTimestamp) {
-        this.createTimestamp = createTimestamp;
-    }
-
-    /**
-     *    数据库字段: SUC_ORG.IS_ENABLED
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    private Boolean isEnabled;
-
-    /**
-     *    数据库字段: SUC_ORG.IS_ENABLED
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    public Boolean getIsEnabled() {
-        return isEnabled;
-    }
-
-    /**
-     *    数据库字段: SUC_ORG.IS_ENABLED
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    public void setIsEnabled(Boolean isEnabled) {
-        this.isEnabled = isEnabled;
-    }
-
-    /**
-     *    创建时间
-     *
-     *    数据库字段: SUC_ORG.CREATE_TIME
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    private Long createTime;
-
-    /**
-     *    创建时间
-     *
-     *    数据库字段: SUC_ORG.CREATE_TIME
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    public Long getCreateTime() {
-        return createTime;
-    }
-
-    /**
-     *    创建时间
-     *
-     *    数据库字段: SUC_ORG.CREATE_TIME
-     *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
-     */
-    public void setCreateTime(Long createTime) {
-        this.createTime = createTime;
-    }
 
     /**
      *    公司/组织id
      *
      *    数据库字段: SUC_ORG.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Long id;
 
@@ -109,7 +28,7 @@ public class SucOrgMo implements Serializable {
      *
      *    数据库字段: SUC_ORG.NAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String name;
 
@@ -118,12 +37,26 @@ public class SucOrgMo implements Serializable {
      *
      *    数据库字段: SUC_ORG.REMARK
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String remark;
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    数据库字段: SUC_ORG.CREATE_TIMESTAMP
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private Long createTimestamp;
+
+    /**
+     *    数据库字段: SUC_ORG.IS_ENABLED
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private Boolean isEnabled;
+
+    /**
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private static final long serialVersionUID = 1L;
 
@@ -132,7 +65,7 @@ public class SucOrgMo implements Serializable {
      *
      *    数据库字段: SUC_ORG.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public Long getId() {
         return id;
@@ -143,7 +76,7 @@ public class SucOrgMo implements Serializable {
      *
      *    数据库字段: SUC_ORG.ID
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setId(Long id) {
         this.id = id;
@@ -154,7 +87,7 @@ public class SucOrgMo implements Serializable {
      *
      *    数据库字段: SUC_ORG.NAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getName() {
         return name;
@@ -165,7 +98,7 @@ public class SucOrgMo implements Serializable {
      *
      *    数据库字段: SUC_ORG.NAME
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setName(String name) {
         this.name = name;
@@ -176,7 +109,7 @@ public class SucOrgMo implements Serializable {
      *
      *    数据库字段: SUC_ORG.REMARK
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public String getRemark() {
         return remark;
@@ -187,14 +120,50 @@ public class SucOrgMo implements Serializable {
      *
      *    数据库字段: SUC_ORG.REMARK
      *
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     public void setRemark(String remark) {
         this.remark = remark;
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    数据库字段: SUC_ORG.CREATE_TIMESTAMP
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public Long getCreateTimestamp() {
+        return createTimestamp;
+    }
+
+    /**
+     *    数据库字段: SUC_ORG.CREATE_TIMESTAMP
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setCreateTimestamp(Long createTimestamp) {
+        this.createTimestamp = createTimestamp;
+    }
+
+    /**
+     *    数据库字段: SUC_ORG.IS_ENABLED
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public Boolean getIsEnabled() {
+        return isEnabled;
+    }
+
+    /**
+     *    数据库字段: SUC_ORG.IS_ENABLED
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setIsEnabled(Boolean isEnabled) {
+        this.isEnabled = isEnabled;
+    }
+
+    /**
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public String toString() {
@@ -205,13 +174,15 @@ public class SucOrgMo implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", name=").append(name);
         sb.append(", remark=").append(remark);
+        sb.append(", createTimestamp=").append(createTimestamp);
+        sb.append(", isEnabled=").append(isEnabled);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public boolean equals(Object that) {
@@ -229,7 +200,7 @@ public class SucOrgMo implements Serializable {
     }
 
     /**
-     *    自动生成，如需修改，请删除本行 @mbg.generated
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
     public int hashCode() {
