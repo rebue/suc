@@ -1,9 +1,9 @@
 package rebue.suc.svc.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import java.util.Date;
+
 import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
@@ -12,6 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.sbs.redis.RedisClient;
 import rebue.sbs.redis.RedisSetException;
@@ -80,7 +84,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 
     /**
      */
-    private static final Logger _log = LoggerFactory.getLogger(SucUserSvcImpl.class);
+    private static final Logger _log                                = LoggerFactory.getLogger(SucUserSvcImpl.class);
 
     /**
      * 缓存当天连续输入登录密码错误的次数的Key的前缀 后面跟用户的用户id拼接成Key Value为失败次数
@@ -90,44 +94,44 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     /**
      * 缓存当天连续输入支付密码错误的次数的Key的前缀 后面跟用户的用户id拼接成Key Value为失败次数
      */
-    private static final String REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX = "rebue.suc.svc.user.paypswd.errcount.";
+    private static final String REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX   = "rebue.suc.svc.user.paypswd.errcount.";
 
     /**
      * 用户账号的黑名单的前缀 后面跟用户的用户id拼接成Key Value为空值
      */
-    private static final String REDIS_KEY_USER_BLACKLIST_PREFIX = "rebue.suc.svc.user.blacklist.";
+    private static final String REDIS_KEY_USER_BLACKLIST_PREFIX     = "rebue.suc.svc.user.blacklist.";
 
     /**
      * 用户购买关系的前缀 后面跟用户的id和上线id拼接成key Value为推广人id
      */
-    private static final String REDIS_KEY_USER_BUY_BUY_RELATION = "rebue.suc.svc.user.buy_relation.";
+    private static final String REDIS_KEY_USER_BUY_BUY_RELATION     = "rebue.suc.svc.user.buy_relation.";
 
     /**
      * 用户购买关系生效时间（以小时计）
      */
     @Value("${suc.buyRelationHoldHours}")
-    private Integer buyRelationHoldHours;
+    private Integer             buyRelationHoldHours;
 
     @Resource
-    private SucLoginLogSvc loginLogSvc;
+    private SucLoginLogSvc      loginLogSvc;
 
     @Resource
-    private SucLockLogSvc lockLogSvc;
+    private SucLockLogSvc       lockLogSvc;
 
     @Resource
-    private SucRegSvc regSvc;
+    private SucRegSvc           regSvc;
 
     @Resource
-    private SucOpLogSvc opLogSvc;
+    private SucOpLogSvc         opLogSvc;
 
     @Resource
-    private RedisClient redisClient;
+    private RedisClient         redisClient;
 
     @Resource
-    private Mapper dozerMapper;
+    private Mapper              dozerMapper;
 
     @Resource
-    private SucAddUserDonePub userAddPub;
+    private SucAddUserDonePub   userAddPub;
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -156,36 +160,42 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             _log.warn("没有填写用户登录名称/登录密码/应用ID/浏览器类型/MAC/IP: {}", to);
             UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.PARAM_ERROR);
+            regRo.setMsg("参数不正确");
             return regRo;
         }
         if (to.getLoginName().length() < 3 || to.getLoginName().length() > 20 || RegexUtils.matchEmail(to.getLoginName()) || RegexUtils.matchMobile(to.getLoginName())) {
             _log.warn("登录名称格式不正确: {}", to);
             UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.PARAM_ERROR);
+            regRo.setMsg("登录名称格式不正确");
             return regRo;
         }
         if (to.getLoginPswd().length() != 32) {
             _log.warn("登录密码经过MD5后应该为32个字符: {}", to);
             UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.PARAM_ERROR);
+            regRo.setMsg("参数不正确");
             return regRo;
         }
         if (!StringUtils.isBlank(to.getEmail()) && !RegexUtils.matchEmail(to.getEmail())) {
             _log.warn("电子邮箱格式不正确: {}", to);
             UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.PARAM_ERROR);
+            regRo.setMsg("电子邮箱格式不正确");
             return regRo;
         }
         if (!StringUtils.isBlank(to.getMobile()) && !RegexUtils.matchMobile(to.getMobile())) {
             _log.warn("手机号码格式不正确: {}", to);
             UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.PARAM_ERROR);
+            regRo.setMsg("手机号码格式不正确");
             return regRo;
         }
         if (!StringUtils.isBlank(to.getIdcard()) && !IdCardValidator.validate(to.getIdcard())) {
             _log.warn("身份证号码格式不正确: {}", to);
             UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.PARAM_ERROR);
+            regRo.setMsg("身份证号码格式不正确");
             return regRo;
         }
         SucUserMo condition = new SucUserMo();
@@ -194,6 +204,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             _log.warn("用户登录名称已存在: {}", to);
             UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.LOGIN_NAME_EXIST);
+            regRo.setMsg("用户登录名称已存在");
             return regRo;
         }
         if (!StringUtils.isBlank(to.getEmail())) {
@@ -203,6 +214,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 _log.warn("电子邮箱已存在: {}", to);
                 UserRegRo regRo = new UserRegRo();
                 regRo.setResult(RegResultDic.EMAIL_EXIST);
+                regRo.setMsg("电子邮箱已存在");
                 return regRo;
             }
         }
@@ -213,6 +225,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 _log.warn("手机号码已存在: {}", to);
                 UserRegRo regRo = new UserRegRo();
                 regRo.setResult(RegResultDic.MOBILE_EXIST);
+                regRo.setMsg("手机号码已存在");
                 return regRo;
             }
         }
@@ -223,6 +236,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 _log.warn("身份证号码已存在: {}", to);
                 UserRegRo regRo = new UserRegRo();
                 regRo.setResult(RegResultDic.IDCARD_EXIST);
+                regRo.setMsg("身份证号码已存在");
                 return regRo;
             }
         }
@@ -310,11 +324,12 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         regMo.setRegTime(new Date(userMo.getModifiedTimestamp()));
         regMo.setRegType((byte) regType.getCode());
         regSvc.add(regMo);
-        UserRegRo regRs = new UserRegRo();
-        regRs.setUserId(userMo.getId());
-        regRs.setResult(RegResultDic.SUCCESS);
+        UserRegRo regRo = new UserRegRo();
+        regRo.setUserId(userMo.getId());
+        regRo.setResult(RegResultDic.SUCCESS);
+        regRo.setMsg("用户注册成功");
         _log.info("用户注册成功: {} {} {}", regTo, regType, userMo);
-        return regRs;
+        return regRo;
     }
 
     /**
@@ -327,6 +342,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             _log.warn("没有填写用户登录名称/密码/应用ID/浏览器类型/MAC/IP: {}", to);
             UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.PARAM_ERROR);
+            ro.setMsg("参数错误");
             return ro;
         }
         SucUserMo userMo = _mapper.selectByLoginName(to.getLoginName());
@@ -334,12 +350,14 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             _log.warn("找不到此用户: {}", to);
             UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.NOT_FOUND_USER);
+            ro.setMsg("找不到此用户");
             return ro;
         }
         if (userMo.getLoginPswd() == null) {
             UserLoginRo ro = new UserLoginRo();
             ro.setMsg("该用户没有设置登录密码，请设置好登录密码才能登录");
             ro.setResult(LoginResultDic.PASSWORD_ERROR);
+            ro.setMsg("该用户没有设置登录密码，请设置好登录密码才能登录");
             return ro;
         }
         UserLoginRo ro = verifyLogin(userMo, to.getLoginPswd());
@@ -369,8 +387,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 if (!userMo.getIsVerifiedEmail()) {
                     _log.warn("用户用邮箱登录，但邮箱尚未通过验证: {}", to);
                     UserLoginRo ro = new UserLoginRo();
-                    ro.setMsg("该邮箱未认证");
                     ro.setResult(LoginResultDic.NO_VERITY_EMAIL);
+                    ro.setMsg("该邮箱未认证");
                     return ro;
                 }
                 loginType = RegAndLoginTypeDic.EMAIL;
@@ -403,8 +421,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         }
         if (userMo.getLoginPswd() == null) {
             UserLoginRo ro = new UserLoginRo();
-            ro.setMsg("该用户没有设置登录密码，请设置好登录密码才能登录");
             ro.setResult(LoginResultDic.PASSWORD_ERROR);
+            ro.setMsg("该用户没有设置登录密码，请设置好登录密码才能登录");
             return ro;
         }
         UserLoginRo ro = verifyLogin(userMo, to.getLoginPswd());
@@ -455,7 +473,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 opLogMo.setUserId(userMo.getId());
                 opLogMo.setOpType((byte) SucOpTypeDic.MODIFY_QQ_INFO.getCode());
                 opLogMo.setOpTime(now);
-                // 
+                //
                 opLogMo.setOpDetail(userMo.getQqNickname() + " " + userMo.getQqFace() + " ---> " + to.getQqNickname() + to.getQqFace());
                 opLogMo.setSysId(to.getSysId());
                 opLogMo.setUserAgent(to.getUserAgent());
@@ -508,7 +526,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 opLogMo.setUserId(userMo.getId());
                 opLogMo.setOpType((byte) SucOpTypeDic.MODIFY_WX_INFO.getCode());
                 opLogMo.setOpTime(now);
-                // 
+                //
                 opLogMo.setOpDetail(userMo.getWxNickname() + " " + userMo.getWxFace() + " ---> " + to.getWxNickname() + to.getWxFace());
                 opLogMo.setSysId(to.getSysId());
                 opLogMo.setUserAgent(to.getUserAgent());
@@ -549,6 +567,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         UserLoginRo ro = new UserLoginRo();
         ro.setUserId(userMo.getId());
         ro.setResult(LoginResultDic.SUCCESS);
+        ro.setMsg("用户登录成功");
         if (loginType == RegAndLoginTypeDic.EMAIL || loginType == RegAndLoginTypeDic.MOBILE || loginType == RegAndLoginTypeDic.LOGIN_NAME) {
             if (!StringUtils.isBlank(userMo.getNickname())) {
                 ro.setNickname(userMo.getNickname());
@@ -565,8 +584,6 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 ro.setFace(userMo.getQqFace());
             }
         }
-        ro.setMsg("登录成功");
-        _log.info("用户登录成功: {} {} {}", loginTo, loginType, userMo);
         return ro;
     }
 
@@ -600,8 +617,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 } catch (RedisSetException e) {
                     _log.error("操作当天连续输入登录密码错误的次数的缓存失败: {}", userMo);
                     UserLoginRo ro = new UserLoginRo();
-                    ro.setMsg("缓存失败");
                     ro.setResult(LoginResultDic.CACHE_FAIL);
+                    ro.setMsg("缓存失败");
                     return ro;
                 }
                 if (errorCount >= 5) {
@@ -822,7 +839,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         opLogMo.setUserId(to.getUserId());
         opLogMo.setOpType((byte) SucOpTypeDic.BIND_WX.getCode());
         opLogMo.setOpTime(now);
-        // 
+        //
         opLogMo.setOpDetail(userMo.getWxNickname() + " " + userMo.getWxFace() + " ---> " + to.getWxNickname() + to.getWxFace());
         opLogMo.setSysId(to.getSysId());
         opLogMo.setUserAgent(to.getUserAgent());

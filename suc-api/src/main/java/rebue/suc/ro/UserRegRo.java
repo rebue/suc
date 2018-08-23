@@ -23,6 +23,10 @@ public class UserRegRo {
     private Long         userId;
     @ApiModelProperty(value = "注册返回结果代码", example = "1", required = true)
     private RegResultDic result;
+    /**
+     * 返回的结果
+     */
+    private String       msg;
     @ApiModelProperty(value = "签名(成功后可将签名放入Cookie中)")
     private String       sign;
     @ApiModelProperty(value = "签名过期时间(成功后可将签名过期时间放入Cookie中)")
@@ -45,6 +49,14 @@ public class UserRegRo {
         this.result = result;
     }
 
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     public String getSign() {
         return sign;
     }
@@ -63,7 +75,7 @@ public class UserRegRo {
 
     @Override
     public String toString() {
-        return "UserRegRo [userId=" + userId + ", result=" + result + ", sign=" + sign + ", expirationTime=" + expirationTime + "]";
+        return "UserRegRo [userId=" + userId + ", result=" + result + ", msg=" + msg + ", sign=" + sign + ", expirationTime=" + expirationTime + "]";
     }
 
 }
