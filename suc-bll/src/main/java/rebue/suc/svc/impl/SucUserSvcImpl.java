@@ -599,14 +599,14 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             _log.warn("发现尝试使用黑名单中的用户: {}", userMo);
             UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.LOCKED);
-            ro.setMsg("该用户为黑名单用户，登录失败");
+            ro.setMsg("该用户已列入黑名单");
             return ro;
         }
         if (userMo.getIsLock()) {
-            _log.warn("账号已被锁定，不允许使用: {}", userMo);
+            _log.warn("用户已被锁定，不允许使用: {}", userMo);
             UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.LOCKED);
-            ro.setMsg("该账号已被锁定");
+            ro.setMsg("该用户已被锁定");
             return ro;
         }
         if (loginPswd != null) {
