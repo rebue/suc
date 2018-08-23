@@ -1,9 +1,9 @@
 package rebue.suc.svc.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import java.util.Date;
+
 import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
@@ -12,6 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.sbs.redis.RedisClient;
 import rebue.sbs.redis.RedisSetException;
@@ -80,54 +84,54 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 
     /**
      */
-    private static final Logger _log = LoggerFactory.getLogger(SucUserSvcImpl.class);
+    private static final Logger _log                                = LoggerFactory.getLogger(SucUserSvcImpl.class);
 
     /**
-     *  缓存当天连续输入登录密码错误的次数的Key的前缀 后面跟用户的用户id拼接成Key Value为失败次数
+     * 缓存当天连续输入登录密码错误的次数的Key的前缀 后面跟用户的用户id拼接成Key Value为失败次数
      */
     private static final String REDIS_KEY_LOGINPSWD_ERRCOUNT_PREFIX = "rebue.suc.svc.user.loginpswd.errcount.";
 
     /**
-     *  缓存当天连续输入支付密码错误的次数的Key的前缀 后面跟用户的用户id拼接成Key Value为失败次数
+     * 缓存当天连续输入支付密码错误的次数的Key的前缀 后面跟用户的用户id拼接成Key Value为失败次数
      */
-    private static final String REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX = "rebue.suc.svc.user.paypswd.errcount.";
+    private static final String REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX   = "rebue.suc.svc.user.paypswd.errcount.";
 
     /**
-     *  用户账号的黑名单的前缀 后面跟用户的用户id拼接成Key Value为空值
+     * 用户账号的黑名单的前缀 后面跟用户的用户id拼接成Key Value为空值
      */
-    private static final String REDIS_KEY_USER_BLACKLIST_PREFIX = "rebue.suc.svc.user.blacklist.";
+    private static final String REDIS_KEY_USER_BLACKLIST_PREFIX     = "rebue.suc.svc.user.blacklist.";
 
     /**
-     *  用户购买关系的前缀 后面跟用户的id和上线id拼接成key Value为推广人id
+     * 用户购买关系的前缀 后面跟用户的id和上线id拼接成key Value为推广人id
      */
-    private static final String REDIS_KEY_USER_BUY_BUY_RELATION = "rebue.suc.svc.user.buy_relation.";
+    private static final String REDIS_KEY_USER_BUY_BUY_RELATION     = "rebue.suc.svc.user.buy_relation.";
 
     /**
-     *  用户购买关系生效时间（以小时计）
+     * 用户购买关系生效时间（以小时计）
      */
-    @Value("${suc.buyRelationTime}")
-    private Integer buyRelationTime;
+    @Value("${suc.buyRelationHoldHours}")
+    private Integer             buyRelationHoldHours;
 
     @Resource
-    private SucLoginLogSvc loginLogSvc;
+    private SucLoginLogSvc      loginLogSvc;
 
     @Resource
-    private SucLockLogSvc lockLogSvc;
+    private SucLockLogSvc       lockLogSvc;
 
     @Resource
-    private SucRegSvc regSvc;
+    private SucRegSvc           regSvc;
 
     @Resource
-    private SucOpLogSvc opLogSvc;
+    private SucOpLogSvc         opLogSvc;
 
     @Resource
-    private RedisClient redisClient;
+    private RedisClient         redisClient;
 
     @Resource
-    private Mapper dozerMapper;
+    private Mapper              dozerMapper;
 
     @Resource
-    private SucAddUserDonePub userAddPub;
+    private SucAddUserDonePub   userAddPub;
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -147,7 +151,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  用户注册(通过登录名称) TODO SUC : 用户注册(通过Email/Mobile)
+     * 用户注册(通过登录名称) TODO SUC : 用户注册(通过Email/Mobile)
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -236,7 +240,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  用户注册(通过QQ)
+     * 用户注册(通过QQ)
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -261,7 +265,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  用户注册(通过微信)
+     * 用户注册(通过微信)
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -294,12 +298,15 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  返回成功注册
+     * 返回成功注册
      *
-     *  @param regTo   登录参数
-     *  @param regType 登录类型
-     *  @param userMo  获取到的用户信息
-     *  @return
+     * @param regTo
+     *            登录参数
+     * @param regType
+     *            登录类型
+     * @param userMo
+     *            获取到的用户信息
+     * @return
      */
     private UserRegRo returnSuccessReg(RegBaseTo regTo, RegAndLoginTypeDic regType, SucUserMo userMo) {
         SucRegMo regMo = dozerMapper.map(regTo, SucRegMo.class);
@@ -315,7 +322,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  用户登录(通过登录名称)
+     * 用户登录(通过登录名称)
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -340,7 +347,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  用户登录(通过用户名称登录，按照 邮箱->手机->登录名 的顺序查找用户)
+     * 用户登录(通过用户名称登录，按照 邮箱->手机->登录名 的顺序查找用户)
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -399,7 +406,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  用户登录(通过QQ)
+     * 用户登录(通过QQ)
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -440,7 +447,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 opLogMo.setUserId(userMo.getId());
                 opLogMo.setOpType((byte) SucOpTypeDic.MODIFY_QQ_INFO.getCode());
                 opLogMo.setOpTime(now);
-                // 
+                //
                 opLogMo.setOpDetail(userMo.getQqNickname() + " " + userMo.getQqFace() + " ---> " + to.getQqNickname() + to.getQqFace());
                 opLogMo.setSysId(to.getSysId());
                 opLogMo.setUserAgent(to.getUserAgent());
@@ -453,7 +460,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  用户登录(通过微信)
+     * 用户登录(通过微信)
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -493,7 +500,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 opLogMo.setUserId(userMo.getId());
                 opLogMo.setOpType((byte) SucOpTypeDic.MODIFY_WX_INFO.getCode());
                 opLogMo.setOpTime(now);
-                // 
+                //
                 opLogMo.setOpDetail(userMo.getWxNickname() + " " + userMo.getWxFace() + " ---> " + to.getWxNickname() + to.getWxFace());
                 opLogMo.setSysId(to.getSysId());
                 opLogMo.setUserAgent(to.getUserAgent());
@@ -504,7 +511,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         }
         if (to.getOnlineId() != null && to.getOnlineId() != 0) {
             try {
-                redisClient.set(REDIS_KEY_USER_BUY_BUY_RELATION + userMo.getId() + to.getOnlineId(), to.getPromoterId().toString(), 60 * 60 * buyRelationTime);
+                redisClient.set(REDIS_KEY_USER_BUY_BUY_RELATION + userMo.getId() + to.getOnlineId(), to.getPromoterId().toString(), 60 * 60 * buyRelationHoldHours);
             } catch (RedisSetException e) {
                 _log.info("微信用户登录添加购买关系时出错，用户id为：{}", userMo.getId());
                 e.printStackTrace();
@@ -514,12 +521,15 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  返回成功登录
+     * 返回成功登录
      *
-     *  @param loginTo   登录参数
-     *  @param loginType 登录类型
-     *  @param userMo    获取到的用户信息
-     *  @return
+     * @param loginTo
+     *            登录参数
+     * @param loginType
+     *            登录类型
+     * @param userMo
+     *            获取到的用户信息
+     * @return
      */
     private UserLoginRo returnSuccessLogin(RegAndLoginBaseTo loginTo, RegAndLoginTypeDic loginType, SucUserMo userMo) {
         _log.info("成功登录获取到的登录参数为：{}", loginTo);
@@ -553,10 +563,11 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  找到用户后，校验用户是否允许登录
+     * 找到用户后，校验用户是否允许登录
      *
-     *  @param userMo 查找到的用户
-     *  @return 如果允许，返回null；值不为null，表示不允许
+     * @param userMo
+     *            查找到的用户
+     * @return 如果允许，返回null；值不为null，表示不允许
      */
     private UserLoginRo verifyLogin(SucUserMo userMo, String loginPswd) {
         if (existBlacklist(userMo.getId())) {
@@ -609,32 +620,34 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  加盐摘要密码
+     * 加盐摘要密码
      *
-     *  @param pswd 登录密码(不是明文，而是将明文MD5传过来)
-     *  @param salt 盐值
-     *  @return
+     * @param pswd
+     *            登录密码(不是明文，而是将明文MD5传过来)
+     * @param salt
+     *            盐值
+     * @return
      */
     private String saltPswd(String pswd, String salt) {
         return DigestUtils.md5AsHexStr((pswd + salt).toLowerCase().getBytes());
     }
 
     /**
-     *  检查用户是否存在黑名单中
+     * 检查用户是否存在黑名单中
      */
     private Boolean existBlacklist(Long userId) {
         return redisClient.exists(REDIS_KEY_USER_BLACKLIST_PREFIX + userId);
     }
 
     /**
-     *  将用户ID加入黑名单，直到明天
+     * 将用户ID加入黑名单，直到明天
      */
     private void addBlacklistUtilTomorrow(Long userId) throws RedisSetException {
         redisClient.set(REDIS_KEY_USER_BLACKLIST_PREFIX + userId, "", DateUtils.getSecondUtilTomorrow());
     }
 
     /**
-     *  添加锁定日志(加入黑名单后等操作后)
+     * 添加锁定日志(加入黑名单后等操作后)
      */
     private void appendLockLog(Long userId, String lockReason) {
         SucLockLogMo lockMo = new SucLockLogMo();
@@ -646,10 +659,12 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  判断支付时是否需要输入密码
+     * 判断支付时是否需要输入密码
      *
-     *  @param userId 用户ID
-     *  @param amount 金额
+     * @param userId
+     *            用户ID
+     * @param amount
+     *            金额
      */
     @Override
     public Boolean requirePayPswd(Long userId, Double amount) {
@@ -657,11 +672,14 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  校验支付密码
+     * 校验支付密码
      *
-     *  @param userId  用户ID
-     *  @param payPswd 支付密码
-     *  @param amount  支付金额(判断金额在一定数量下可以免密码输入)
+     * @param userId
+     *            用户ID
+     * @param payPswd
+     *            支付密码
+     * @param amount
+     *            支付金额(判断金额在一定数量下可以免密码输入)
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -739,7 +757,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  判断用户是否被锁定
+     * 判断用户是否被锁定
      */
     @Override
     public Boolean isLocked(Long id) {
@@ -750,7 +768,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  用户绑定微信
+     * 用户绑定微信
      */
     @Override
     public BindWxRo bindWx(BindWxTo to) {
@@ -796,7 +814,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         opLogMo.setUserId(to.getUserId());
         opLogMo.setOpType((byte) SucOpTypeDic.BIND_WX.getCode());
         opLogMo.setOpTime(now);
-        // 
+        //
         opLogMo.setOpDetail(userMo.getWxNickname() + " " + userMo.getWxFace() + " ---> " + to.getWxNickname() + to.getWxFace());
         opLogMo.setSysId(to.getSysId());
         opLogMo.setUserAgent(to.getUserAgent());
@@ -811,7 +829,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  获取用户ID(通过用户名称)
+     * 获取用户ID(通过用户名称)
      */
     @Override
     public Long getIdByUserName(String userName) {
@@ -847,7 +865,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  获取用户ID(通过微信ID)
+     * 获取用户ID(通过微信ID)
      */
     @Override
     public Long getIdByWxId(String wxId) {
@@ -863,13 +881,13 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  微信设置登录密码 Title: setLoginPassword Description:
+     * 微信设置登录密码 Title: setLoginPassword Description:
      *
-     *  @param wxId
-     *  @param newLoginPswd
-     *  @return
-     *  @date 2018年5月2日 下午12:57:25 1、判断参数是否为空 2、查询用户信息并判断该用户是否存在 3、判断登录密码是否为空
-     *        4、添加登录密码
+     * @param wxId
+     * @param newLoginPswd
+     * @return
+     * @date 2018年5月2日 下午12:57:25 1、判断参数是否为空 2、查询用户信息并判断该用户是否存在 3、判断登录密码是否为空
+     *       4、添加登录密码
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -921,14 +939,14 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  微信修改登录密码 Title: changeLoginPassword Description:
+     * 微信修改登录密码 Title: changeLoginPassword Description:
      *
-     *  @param wxId
-     *  @param oldLoginPswd
-     *  @param newLoginPswd
-     *  @return
-     *  @date 2018年5月2日 下午1:21:06 1、判断参数是否为空 2、查询用户信息并判断用户是否存在 3、判断用户是否已设置登录密码
-     *        4、判断输入的登录密码是否正确 5、修改登录密码
+     * @param wxId
+     * @param oldLoginPswd
+     * @param newLoginPswd
+     * @return
+     * @date 2018年5月2日 下午1:21:06 1、判断参数是否为空 2、查询用户信息并判断用户是否存在 3、判断用户是否已设置登录密码
+     *       4、判断输入的登录密码是否正确 5、修改登录密码
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -997,13 +1015,13 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  通过微信ID设置登录名称 Title: setLoginName Description:
+     * 通过微信ID设置登录名称 Title: setLoginName Description:
      *
-     *  @param wxId
-     *  @param loginName
-     *  @return
-     *  @date 2018年5月3日 下午5:05:38 1、判断参数是否正确 2、根据微信ID判断该用户是否存在 3、判断登录名称是否已存在
-     *        4、设置或修改登录名称
+     * @param wxId
+     * @param loginName
+     * @return
+     * @date 2018年5月3日 下午5:05:38 1、判断参数是否正确 2、根据微信ID判断该用户是否存在 3、判断登录名称是否已存在
+     *       4、设置或修改登录名称
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -1059,11 +1077,11 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  根据微信ID获取用户登录名称 Title: selectLoginNameByWx Description:
+     * 根据微信ID获取用户登录名称 Title: selectLoginNameByWx Description:
      *
-     *  @param wxId
-     *  @return
-     *  @date 2018年5月4日 上午9:04:08
+     * @param wxId
+     * @return
+     * @date 2018年5月4日 上午9:04:08
      */
     @Override
     public GetLoginNameRo getLoginNameByWx(String wxId) {
@@ -1082,7 +1100,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  修改用户信息
+     * 修改用户信息
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -1104,11 +1122,11 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  禁用或者解锁用户
+     * 禁用或者解锁用户
      *
-     *  @param id
-     *  @param isLock
-     *  @return
+     * @param id
+     * @param isLock
+     * @return
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -1129,10 +1147,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  解除登录密码
+     * 解除登录密码
      *
-     *  @param id
-     *  @return
+     * @param id
+     * @return
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -1154,10 +1172,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  解除支付密码
+     * 解除支付密码
      *
-     *  @param id
-     *  @return
+     * @param id
+     * @return
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -1179,10 +1197,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  解绑微信
+     * 解绑微信
      *
-     *  @param id
-     *  @return
+     * @param id
+     * @return
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -1204,10 +1222,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  解绑QQ
+     * 解绑QQ
      *
-     *  @param id
-     *  @return
+     * @param id
+     * @return
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -1229,12 +1247,12 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  多条件同时查询
+     * 多条件同时查询
      *
-     *  @param users
-     *  @param pageNum
-     *  @param pageSize
-     *  @return
+     * @param users
+     * @param pageNum
+     * @param pageSize
+     * @return
      */
     @Override
     public PageInfo<SucUserMo> listEx(String users, int pageNum, int pageSize) {
@@ -1243,11 +1261,12 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  根据用户id查询用户分页信息
-     *  @param pageNum
-     *  @param pageSize
-     *  @param ids
-     *  @return
+     * 根据用户id查询用户分页信息
+     * 
+     * @param pageNum
+     * @param pageSize
+     * @param ids
+     * @return
      */
     @Override
     public PageInfo<SucUserMo> listUserByIds(int pageNum, int pageSize, String ids) {
@@ -1255,11 +1274,11 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  添加用户组织
+     * 添加用户组织
      *
-     *  @param id
-     *  @param orgId
-     *  @return
+     * @param id
+     * @param orgId
+     * @return
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -1294,10 +1313,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     *  删除用户组织
+     * 删除用户组织
      *
-     *  @param id
-     *  @return
+     * @param id
+     * @return
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)

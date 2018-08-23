@@ -1,0 +1,3 @@
+suc:
+  # 购买关系保留小时数
+  buyRelationHoldHours: 72
