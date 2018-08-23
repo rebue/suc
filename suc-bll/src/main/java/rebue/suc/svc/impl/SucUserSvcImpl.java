@@ -1,9 +1,9 @@
 package rebue.suc.svc.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import java.util.Date;
-
 import javax.annotation.Resource;
-
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
@@ -12,10 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.sbs.redis.RedisClient;
 import rebue.sbs.redis.RedisSetException;
@@ -84,7 +80,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 
     /**
      */
-    private static final Logger _log                                = LoggerFactory.getLogger(SucUserSvcImpl.class);
+    private static final Logger _log = LoggerFactory.getLogger(SucUserSvcImpl.class);
 
     /**
      * 缓存当天连续输入登录密码错误的次数的Key的前缀 后面跟用户的用户id拼接成Key Value为失败次数
@@ -94,44 +90,44 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     /**
      * 缓存当天连续输入支付密码错误的次数的Key的前缀 后面跟用户的用户id拼接成Key Value为失败次数
      */
-    private static final String REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX   = "rebue.suc.svc.user.paypswd.errcount.";
+    private static final String REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX = "rebue.suc.svc.user.paypswd.errcount.";
 
     /**
      * 用户账号的黑名单的前缀 后面跟用户的用户id拼接成Key Value为空值
      */
-    private static final String REDIS_KEY_USER_BLACKLIST_PREFIX     = "rebue.suc.svc.user.blacklist.";
+    private static final String REDIS_KEY_USER_BLACKLIST_PREFIX = "rebue.suc.svc.user.blacklist.";
 
     /**
      * 用户购买关系的前缀 后面跟用户的id和上线id拼接成key Value为推广人id
      */
-    private static final String REDIS_KEY_USER_BUY_BUY_RELATION     = "rebue.suc.svc.user.buy_relation.";
+    private static final String REDIS_KEY_USER_BUY_BUY_RELATION = "rebue.suc.svc.user.buy_relation.";
 
     /**
      * 用户购买关系生效时间（以小时计）
      */
     @Value("${suc.buyRelationHoldHours}")
-    private Integer             buyRelationHoldHours;
+    private Integer buyRelationHoldHours;
 
     @Resource
-    private SucLoginLogSvc      loginLogSvc;
+    private SucLoginLogSvc loginLogSvc;
 
     @Resource
-    private SucLockLogSvc       lockLogSvc;
+    private SucLockLogSvc lockLogSvc;
 
     @Resource
-    private SucRegSvc           regSvc;
+    private SucRegSvc regSvc;
 
     @Resource
-    private SucOpLogSvc         opLogSvc;
+    private SucOpLogSvc opLogSvc;
 
     @Resource
-    private RedisClient         redisClient;
+    private RedisClient redisClient;
 
     @Resource
-    private Mapper              dozerMapper;
+    private Mapper dozerMapper;
 
     @Resource
-    private SucAddUserDonePub   userAddPub;
+    private SucAddUserDonePub userAddPub;
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -340,6 +336,12 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             ro.setResult(LoginResultDic.NOT_FOUND_USER);
             return ro;
         }
+        if (userMo.getLoginPswd() == null) {
+            UserLoginRo ro = new UserLoginRo();
+            ro.setMsg("该用户没有设置登录密码，请设置好登录密码才能登录");
+            ro.setResult(LoginResultDic.PASSWORD_ERROR);
+            return ro;
+        }
         UserLoginRo ro = verifyLogin(userMo, to.getLoginPswd());
         if (ro != null)
             return ro;
@@ -399,6 +401,12 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             ro.setMsg("找不到此用户");
             return ro;
         }
+        if (userMo.getLoginPswd() == null) {
+            UserLoginRo ro = new UserLoginRo();
+            ro.setMsg("该用户没有设置登录密码，请设置好登录密码才能登录");
+            ro.setResult(LoginResultDic.PASSWORD_ERROR);
+            return ro;
+        }
         UserLoginRo ro = verifyLogin(userMo, to.getLoginPswd());
         if (ro != null)
             return ro;
@@ -447,7 +455,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 opLogMo.setUserId(userMo.getId());
                 opLogMo.setOpType((byte) SucOpTypeDic.MODIFY_QQ_INFO.getCode());
                 opLogMo.setOpTime(now);
-                //
+                // 
                 opLogMo.setOpDetail(userMo.getQqNickname() + " " + userMo.getQqFace() + " ---> " + to.getQqNickname() + to.getQqFace());
                 opLogMo.setSysId(to.getSysId());
                 opLogMo.setUserAgent(to.getUserAgent());
@@ -500,7 +508,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 opLogMo.setUserId(userMo.getId());
                 opLogMo.setOpType((byte) SucOpTypeDic.MODIFY_WX_INFO.getCode());
                 opLogMo.setOpTime(now);
-                //
+                // 
                 opLogMo.setOpDetail(userMo.getWxNickname() + " " + userMo.getWxFace() + " ---> " + to.getWxNickname() + to.getWxFace());
                 opLogMo.setSysId(to.getSysId());
                 opLogMo.setUserAgent(to.getUserAgent());
@@ -814,7 +822,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         opLogMo.setUserId(to.getUserId());
         opLogMo.setOpType((byte) SucOpTypeDic.BIND_WX.getCode());
         opLogMo.setOpTime(now);
-        //
+        // 
         opLogMo.setOpDetail(userMo.getWxNickname() + " " + userMo.getWxFace() + " ---> " + to.getWxNickname() + to.getWxFace());
         opLogMo.setSysId(to.getSysId());
         opLogMo.setUserAgent(to.getUserAgent());
@@ -1262,7 +1270,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 
     /**
      * 根据用户id查询用户分页信息
-     * 
+     *
      * @param pageNum
      * @param pageSize
      * @param ids

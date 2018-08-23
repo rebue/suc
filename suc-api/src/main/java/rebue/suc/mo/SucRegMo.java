@@ -39,11 +39,11 @@ public class SucRegMo implements Serializable {
 
     /**
      *    注册类型(与登录类型一致)
-     *                        1: 用户登录名
-     *                        2: 电子邮箱
-     *                        3: 手机
-     *                        4: QQ
-     *                        5: 微信
+     *                            1: 用户登录名
+     *                            2: 电子邮箱
+     *                            3: 手机
+     *                            4: QQ
+     *                            5: 微信
      *
      *    数据库字段: SUC_REG.REG_TYPE
      *
@@ -61,6 +61,9 @@ public class SucRegMo implements Serializable {
     private Long promoterId;
 
     /**
+     *    应用ID
+     *                标记是哪个应用系统来注册的编码，要与登录应用ID意义一致
+     *
      *    数据库字段: SUC_REG.APP_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -95,6 +98,8 @@ public class SucRegMo implements Serializable {
     private String ip;
 
     /**
+     *    系统id
+     *
      *    数据库字段: SUC_REG.SYS_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -152,11 +157,11 @@ public class SucRegMo implements Serializable {
 
     /**
      *    注册类型(与登录类型一致)
-     *                        1: 用户登录名
-     *                        2: 电子邮箱
-     *                        3: 手机
-     *                        4: QQ
-     *                        5: 微信
+     *                            1: 用户登录名
+     *                            2: 电子邮箱
+     *                            3: 手机
+     *                            4: QQ
+     *                            5: 微信
      *
      *    数据库字段: SUC_REG.REG_TYPE
      *
@@ -168,11 +173,11 @@ public class SucRegMo implements Serializable {
 
     /**
      *    注册类型(与登录类型一致)
-     *                        1: 用户登录名
-     *                        2: 电子邮箱
-     *                        3: 手机
-     *                        4: QQ
-     *                        5: 微信
+     *                            1: 用户登录名
+     *                            2: 电子邮箱
+     *                            3: 手机
+     *                            4: QQ
+     *                            5: 微信
      *
      *    数据库字段: SUC_REG.REG_TYPE
      *
@@ -205,6 +210,9 @@ public class SucRegMo implements Serializable {
     }
 
     /**
+     *    应用ID
+     *                标记是哪个应用系统来注册的编码，要与登录应用ID意义一致
+     *
      *    数据库字段: SUC_REG.APP_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -214,6 +222,9 @@ public class SucRegMo implements Serializable {
     }
 
     /**
+     *    应用ID
+     *                标记是哪个应用系统来注册的编码，要与登录应用ID意义一致
+     *
      *    数据库字段: SUC_REG.APP_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -289,6 +300,8 @@ public class SucRegMo implements Serializable {
     }
 
     /**
+     *    系统id
+     *
      *    数据库字段: SUC_REG.SYS_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -298,6 +311,8 @@ public class SucRegMo implements Serializable {
     }
 
     /**
+     *    系统id
+     *
      *    数据库字段: SUC_REG.SYS_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行

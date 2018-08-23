@@ -24,6 +24,15 @@ public class SucUserMo implements Serializable {
     private Long id;
 
     /**
+     *    公司/组织id
+     *
+     *    数据库字段: SUC_USER.ORG_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private Long orgId;
+
+    /**
      *    登录账号
      *
      *    数据库字段: SUC_USER.LOGIN_NAME
@@ -34,7 +43,7 @@ public class SucUserMo implements Serializable {
 
     /**
      *    登录密码
-     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.LOGIN_PSWD
      *
@@ -44,9 +53,9 @@ public class SucUserMo implements Serializable {
 
     /**
      *    支付密码
-     *            用户的支付密码默认和登录密码一致
-     *            保存在字段的计算方法如下：
-     *            MD5(数据库存储的已加密的登陆密码)
+     *                用户的支付密码默认和登录密码一致
+     *                保存在字段的计算方法如下：
+     *                MD5(数据库存储的已加密的登陆密码)
      *
      *    数据库字段: SUC_USER.PAY_PSWD
      *
@@ -56,8 +65,8 @@ public class SucUserMo implements Serializable {
 
     /**
      *    密码组合码
-     *            与密码组合加密用
-     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *                与密码组合加密用
+     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.SALT
      *
@@ -165,6 +174,15 @@ public class SucUserMo implements Serializable {
     private String qqId;
 
     /**
+     *    QQ的openid
+     *
+     *    数据库字段: SUC_USER.QQ_OPENID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private String qqOpenid;
+
+    /**
      *    QQ昵称
      *
      *    数据库字段: SUC_USER.QQ_NICKNAME
@@ -190,6 +208,15 @@ public class SucUserMo implements Serializable {
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String wxId;
+
+    /**
+     *    微信openid
+     *
+     *    数据库字段: SUC_USER.WX_OPENID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private String wxOpenid;
 
     /**
      *    微信昵称
@@ -219,29 +246,8 @@ public class SucUserMo implements Serializable {
     private Boolean isLock;
 
     /**
-     *    修改时间戳(添加或更新本条记录时的时间戳)
+     *    推广者ID
      *
-     *    数据库字段: SUC_USER.MODIFIED_TIMESTAMP
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    private Long modifiedTimestamp;
-
-    /**
-     *    数据库字段: SUC_USER.QQ_OPENID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    private String qqOpenid;
-
-    /**
-     *    数据库字段: SUC_USER.WX_OPENID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    private String wxOpenid;
-
-    /**
      *    数据库字段: SUC_USER.PROMOTER_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -249,11 +255,13 @@ public class SucUserMo implements Serializable {
     private Long promoterId;
 
     /**
-     *    数据库字段: SUC_USER.ORG_ID
+     *    修改时间戳
+     *
+     *    数据库字段: SUC_USER.MODIFIED_TIMESTAMP
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    private Long orgId;
+    private Long modifiedTimestamp;
 
     /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -283,6 +291,28 @@ public class SucUserMo implements Serializable {
     }
 
     /**
+     *    公司/组织id
+     *
+     *    数据库字段: SUC_USER.ORG_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public Long getOrgId() {
+        return orgId;
+    }
+
+    /**
+     *    公司/组织id
+     *
+     *    数据库字段: SUC_USER.ORG_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
+
+    /**
      *    登录账号
      *
      *    数据库字段: SUC_USER.LOGIN_NAME
@@ -306,7 +336,7 @@ public class SucUserMo implements Serializable {
 
     /**
      *    登录密码
-     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.LOGIN_PSWD
      *
@@ -318,7 +348,7 @@ public class SucUserMo implements Serializable {
 
     /**
      *    登录密码
-     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.LOGIN_PSWD
      *
@@ -330,9 +360,9 @@ public class SucUserMo implements Serializable {
 
     /**
      *    支付密码
-     *            用户的支付密码默认和登录密码一致
-     *            保存在字段的计算方法如下：
-     *            MD5(数据库存储的已加密的登陆密码)
+     *                用户的支付密码默认和登录密码一致
+     *                保存在字段的计算方法如下：
+     *                MD5(数据库存储的已加密的登陆密码)
      *
      *    数据库字段: SUC_USER.PAY_PSWD
      *
@@ -344,9 +374,9 @@ public class SucUserMo implements Serializable {
 
     /**
      *    支付密码
-     *            用户的支付密码默认和登录密码一致
-     *            保存在字段的计算方法如下：
-     *            MD5(数据库存储的已加密的登陆密码)
+     *                用户的支付密码默认和登录密码一致
+     *                保存在字段的计算方法如下：
+     *                MD5(数据库存储的已加密的登陆密码)
      *
      *    数据库字段: SUC_USER.PAY_PSWD
      *
@@ -358,8 +388,8 @@ public class SucUserMo implements Serializable {
 
     /**
      *    密码组合码
-     *            与密码组合加密用
-     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *                与密码组合加密用
+     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.SALT
      *
@@ -371,8 +401,8 @@ public class SucUserMo implements Serializable {
 
     /**
      *    密码组合码
-     *            与密码组合加密用
-     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *                与密码组合加密用
+     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.SALT
      *
@@ -625,6 +655,28 @@ public class SucUserMo implements Serializable {
     }
 
     /**
+     *    QQ的openid
+     *
+     *    数据库字段: SUC_USER.QQ_OPENID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public String getQqOpenid() {
+        return qqOpenid;
+    }
+
+    /**
+     *    QQ的openid
+     *
+     *    数据库字段: SUC_USER.QQ_OPENID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setQqOpenid(String qqOpenid) {
+        this.qqOpenid = qqOpenid;
+    }
+
+    /**
      *    QQ昵称
      *
      *    数据库字段: SUC_USER.QQ_NICKNAME
@@ -688,6 +740,28 @@ public class SucUserMo implements Serializable {
      */
     public void setWxId(String wxId) {
         this.wxId = wxId;
+    }
+
+    /**
+     *    微信openid
+     *
+     *    数据库字段: SUC_USER.WX_OPENID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public String getWxOpenid() {
+        return wxOpenid;
+    }
+
+    /**
+     *    微信openid
+     *
+     *    数据库字段: SUC_USER.WX_OPENID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setWxOpenid(String wxOpenid) {
+        this.wxOpenid = wxOpenid;
     }
 
     /**
@@ -757,7 +831,29 @@ public class SucUserMo implements Serializable {
     }
 
     /**
-     *    修改时间戳(添加或更新本条记录时的时间戳)
+     *    推广者ID
+     *
+     *    数据库字段: SUC_USER.PROMOTER_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public Long getPromoterId() {
+        return promoterId;
+    }
+
+    /**
+     *    推广者ID
+     *
+     *    数据库字段: SUC_USER.PROMOTER_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setPromoterId(Long promoterId) {
+        this.promoterId = promoterId;
+    }
+
+    /**
+     *    修改时间戳
      *
      *    数据库字段: SUC_USER.MODIFIED_TIMESTAMP
      *
@@ -768,7 +864,7 @@ public class SucUserMo implements Serializable {
     }
 
     /**
-     *    修改时间戳(添加或更新本条记录时的时间戳)
+     *    修改时间戳
      *
      *    数据库字段: SUC_USER.MODIFIED_TIMESTAMP
      *
@@ -776,78 +872,6 @@ public class SucUserMo implements Serializable {
      */
     public void setModifiedTimestamp(Long modifiedTimestamp) {
         this.modifiedTimestamp = modifiedTimestamp;
-    }
-
-    /**
-     *    数据库字段: SUC_USER.QQ_OPENID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public String getQqOpenid() {
-        return qqOpenid;
-    }
-
-    /**
-     *    数据库字段: SUC_USER.QQ_OPENID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public void setQqOpenid(String qqOpenid) {
-        this.qqOpenid = qqOpenid;
-    }
-
-    /**
-     *    数据库字段: SUC_USER.WX_OPENID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public String getWxOpenid() {
-        return wxOpenid;
-    }
-
-    /**
-     *    数据库字段: SUC_USER.WX_OPENID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public void setWxOpenid(String wxOpenid) {
-        this.wxOpenid = wxOpenid;
-    }
-
-    /**
-     *    数据库字段: SUC_USER.PROMOTER_ID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public Long getPromoterId() {
-        return promoterId;
-    }
-
-    /**
-     *    数据库字段: SUC_USER.PROMOTER_ID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public void setPromoterId(Long promoterId) {
-        this.promoterId = promoterId;
-    }
-
-    /**
-     *    数据库字段: SUC_USER.ORG_ID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public Long getOrgId() {
-        return orgId;
-    }
-
-    /**
-     *    数据库字段: SUC_USER.ORG_ID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public void setOrgId(Long orgId) {
-        this.orgId = orgId;
     }
 
     /**
@@ -860,6 +884,7 @@ public class SucUserMo implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
+        sb.append(", orgId=").append(orgId);
         sb.append(", loginName=").append(loginName);
         sb.append(", loginPswd=").append(loginPswd);
         sb.append(", payPswd=").append(payPswd);
@@ -875,17 +900,16 @@ public class SucUserMo implements Serializable {
         sb.append(", mobile=").append(mobile);
         sb.append(", isVerifiedMobile=").append(isVerifiedMobile);
         sb.append(", qqId=").append(qqId);
+        sb.append(", qqOpenid=").append(qqOpenid);
         sb.append(", qqNickname=").append(qqNickname);
         sb.append(", qqFace=").append(qqFace);
         sb.append(", wxId=").append(wxId);
+        sb.append(", wxOpenid=").append(wxOpenid);
         sb.append(", wxNickname=").append(wxNickname);
         sb.append(", wxFace=").append(wxFace);
         sb.append(", isLock=").append(isLock);
-        sb.append(", modifiedTimestamp=").append(modifiedTimestamp);
-        sb.append(", qqOpenid=").append(qqOpenid);
-        sb.append(", wxOpenid=").append(wxOpenid);
         sb.append(", promoterId=").append(promoterId);
-        sb.append(", orgId=").append(orgId);
+        sb.append(", modifiedTimestamp=").append(modifiedTimestamp);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

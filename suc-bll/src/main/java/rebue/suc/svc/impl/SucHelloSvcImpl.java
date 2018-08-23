@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
-import rebue.suc.mapper.SucUserForbiddenWordMapper;
-import rebue.suc.mo.SucUserForbiddenWordMo;
-import rebue.suc.svc.SucUserForbiddenWordSvc;
+import rebue.suc.mapper.SucHelloMapper;
+import rebue.suc.mo.SucHelloMo;
+import rebue.suc.svc.SucHelloSvc;
 
 @Service
 /**
@@ -21,14 +21,14 @@ import rebue.suc.svc.SucUserForbiddenWordSvc;
  * </pre>
  */
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-public class SucUserForbiddenWordSvcImpl extends MybatisBaseSvcImpl<SucUserForbiddenWordMo, java.lang.Long, SucUserForbiddenWordMapper> implements SucUserForbiddenWordSvc {
+public class SucHelloSvcImpl extends MybatisBaseSvcImpl<SucHelloMo, java.lang.Long, SucHelloMapper> implements SucHelloSvc {
 
     /**
      * @mbg.generated
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public int add(SucUserForbiddenWordMo mo) {
+    public int add(SucHelloMo mo) {
         // 如果id为空那么自动生成分布式id
         if (mo.getId() == null || mo.getId() == 0) {
             mo.setId(_idWorker.getId());

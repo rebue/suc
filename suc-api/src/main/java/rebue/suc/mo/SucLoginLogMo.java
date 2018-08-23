@@ -48,11 +48,11 @@ public class SucLoginLogMo implements Serializable {
 
     /**
      *    登录类型(与注册类型一致)
-     *            1: 用户登录名
-     *            2: 电子邮箱
-     *            3: 手机
-     *            4: QQ
-     *            5: 微信
+     *                1: 用户登录名
+     *                2: 电子邮箱
+     *                3: 手机
+     *                4: QQ
+     *                5: 微信
      *
      *    数据库字段: SUC_LOGIN_LOG.LOGIN_TYPE
      *
@@ -61,6 +61,9 @@ public class SucLoginLogMo implements Serializable {
     private Byte loginType;
 
     /**
+     *    应用ID
+     *                标记是通过哪个应用系统登录的编码，要与注册的应用ID意义一致
+     *
      *    数据库字段: SUC_LOGIN_LOG.APP_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -95,6 +98,8 @@ public class SucLoginLogMo implements Serializable {
     private String mac;
 
     /**
+     *    系统id
+     *
      *    数据库字段: SUC_LOGIN_LOG.SYS_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -174,11 +179,11 @@ public class SucLoginLogMo implements Serializable {
 
     /**
      *    登录类型(与注册类型一致)
-     *            1: 用户登录名
-     *            2: 电子邮箱
-     *            3: 手机
-     *            4: QQ
-     *            5: 微信
+     *                1: 用户登录名
+     *                2: 电子邮箱
+     *                3: 手机
+     *                4: QQ
+     *                5: 微信
      *
      *    数据库字段: SUC_LOGIN_LOG.LOGIN_TYPE
      *
@@ -190,11 +195,11 @@ public class SucLoginLogMo implements Serializable {
 
     /**
      *    登录类型(与注册类型一致)
-     *            1: 用户登录名
-     *            2: 电子邮箱
-     *            3: 手机
-     *            4: QQ
-     *            5: 微信
+     *                1: 用户登录名
+     *                2: 电子邮箱
+     *                3: 手机
+     *                4: QQ
+     *                5: 微信
      *
      *    数据库字段: SUC_LOGIN_LOG.LOGIN_TYPE
      *
@@ -205,6 +210,9 @@ public class SucLoginLogMo implements Serializable {
     }
 
     /**
+     *    应用ID
+     *                标记是通过哪个应用系统登录的编码，要与注册的应用ID意义一致
+     *
      *    数据库字段: SUC_LOGIN_LOG.APP_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -214,6 +222,9 @@ public class SucLoginLogMo implements Serializable {
     }
 
     /**
+     *    应用ID
+     *                标记是通过哪个应用系统登录的编码，要与注册的应用ID意义一致
+     *
      *    数据库字段: SUC_LOGIN_LOG.APP_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -289,6 +300,8 @@ public class SucLoginLogMo implements Serializable {
     }
 
     /**
+     *    系统id
+     *
      *    数据库字段: SUC_LOGIN_LOG.SYS_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -298,6 +311,8 @@ public class SucLoginLogMo implements Serializable {
     }
 
     /**
+     *    系统id
+     *
      *    数据库字段: SUC_LOGIN_LOG.SYS_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行

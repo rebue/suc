@@ -37,16 +37,25 @@ public class SucOpLogMo implements Serializable {
 
     /**
      *    操作类型
-     *            1:修改登录密码;
-     *            2:修改支付密码;
-     *            3:绑定QQ登录;
-     *            4:绑定微信登录;
+     *                1:修改登录密码;
+     *                2:修改支付密码;
+     *                3:绑定QQ登录;
+     *                4:绑定微信登录;
      *
      *    数据库字段: SUC_OP_LOG.OP_TYPE
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Byte opType;
+
+    /**
+     *    操作详情
+     *
+     *    数据库字段: SUC_OP_LOG.OP_DETAIL
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private String opDetail;
 
     /**
      *    操作时间
@@ -60,15 +69,9 @@ public class SucOpLogMo implements Serializable {
     private Date opTime;
 
     /**
-     *    操作详情
+     *    应用ID
+     *                标记是哪个应用系统来注册的编码，要与登录应用ID意义一致
      *
-     *    数据库字段: SUC_OP_LOG.OP_DETAIL
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    private String opDetail;
-
-    /**
      *    数据库字段: SUC_OP_LOG.APP_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -94,6 +97,15 @@ public class SucOpLogMo implements Serializable {
     private String mac;
 
     /**
+     *    系统id
+     *
+     *    数据库字段: SUC_OP_LOG.SYS_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private String sysId;
+
+    /**
      *    IP地址
      *
      *    数据库字段: SUC_OP_LOG.IP
@@ -101,13 +113,6 @@ public class SucOpLogMo implements Serializable {
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private String ip;
-
-    /**
-     *    数据库字段: SUC_OP_LOG.SYS_ID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    private String sysId;
 
     /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -160,10 +165,10 @@ public class SucOpLogMo implements Serializable {
 
     /**
      *    操作类型
-     *            1:修改登录密码;
-     *            2:修改支付密码;
-     *            3:绑定QQ登录;
-     *            4:绑定微信登录;
+     *                1:修改登录密码;
+     *                2:修改支付密码;
+     *                3:绑定QQ登录;
+     *                4:绑定微信登录;
      *
      *    数据库字段: SUC_OP_LOG.OP_TYPE
      *
@@ -175,10 +180,10 @@ public class SucOpLogMo implements Serializable {
 
     /**
      *    操作类型
-     *            1:修改登录密码;
-     *            2:修改支付密码;
-     *            3:绑定QQ登录;
-     *            4:绑定微信登录;
+     *                1:修改登录密码;
+     *                2:修改支付密码;
+     *                3:绑定QQ登录;
+     *                4:绑定微信登录;
      *
      *    数据库字段: SUC_OP_LOG.OP_TYPE
      *
@@ -186,28 +191,6 @@ public class SucOpLogMo implements Serializable {
      */
     public void setOpType(Byte opType) {
         this.opType = opType;
-    }
-
-    /**
-     *    操作时间
-     *
-     *    数据库字段: SUC_OP_LOG.OP_TIME
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public Date getOpTime() {
-        return opTime;
-    }
-
-    /**
-     *    操作时间
-     *
-     *    数据库字段: SUC_OP_LOG.OP_TIME
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public void setOpTime(Date opTime) {
-        this.opTime = opTime;
     }
 
     /**
@@ -233,6 +216,31 @@ public class SucOpLogMo implements Serializable {
     }
 
     /**
+     *    操作时间
+     *
+     *    数据库字段: SUC_OP_LOG.OP_TIME
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public Date getOpTime() {
+        return opTime;
+    }
+
+    /**
+     *    操作时间
+     *
+     *    数据库字段: SUC_OP_LOG.OP_TIME
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setOpTime(Date opTime) {
+        this.opTime = opTime;
+    }
+
+    /**
+     *    应用ID
+     *                标记是哪个应用系统来注册的编码，要与登录应用ID意义一致
+     *
      *    数据库字段: SUC_OP_LOG.APP_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -242,6 +250,9 @@ public class SucOpLogMo implements Serializable {
     }
 
     /**
+     *    应用ID
+     *                标记是哪个应用系统来注册的编码，要与登录应用ID意义一致
+     *
      *    数据库字段: SUC_OP_LOG.APP_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -295,6 +306,28 @@ public class SucOpLogMo implements Serializable {
     }
 
     /**
+     *    系统id
+     *
+     *    数据库字段: SUC_OP_LOG.SYS_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public String getSysId() {
+        return sysId;
+    }
+
+    /**
+     *    系统id
+     *
+     *    数据库字段: SUC_OP_LOG.SYS_ID
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setSysId(String sysId) {
+        this.sysId = sysId;
+    }
+
+    /**
      *    IP地址
      *
      *    数据库字段: SUC_OP_LOG.IP
@@ -317,24 +350,6 @@ public class SucOpLogMo implements Serializable {
     }
 
     /**
-     *    数据库字段: SUC_OP_LOG.SYS_ID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public String getSysId() {
-        return sysId;
-    }
-
-    /**
-     *    数据库字段: SUC_OP_LOG.SYS_ID
-     *
-     *    @mbg.generated 自动生成，如需修改，请删除本行
-     */
-    public void setSysId(String sysId) {
-        this.sysId = sysId;
-    }
-
-    /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
@@ -346,13 +361,13 @@ public class SucOpLogMo implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
         sb.append(", opType=").append(opType);
-        sb.append(", opTime=").append(opTime);
         sb.append(", opDetail=").append(opDetail);
+        sb.append(", opTime=").append(opTime);
         sb.append(", appId=").append(appId);
         sb.append(", userAgent=").append(userAgent);
         sb.append(", mac=").append(mac);
-        sb.append(", ip=").append(ip);
         sb.append(", sysId=").append(sysId);
+        sb.append(", ip=").append(ip);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/8/22 13:11:58                           */
+/* Created on:     2018/8/23 17:56:43                           */
 /*==============================================================*/
 
 
@@ -16,11 +16,11 @@ drop table if exists SUC_LOGIN_LOG;
 
 drop table if exists SUC_OP_LOG;
 
-drop table if exists SUC_ORG;
-
 drop table if exists SUC_REG;
 
 drop table if exists SUC_USER;
+
+drop table if exists SUC_ORG;
 
 drop table if exists SUC_USER_FORBIDDEN_WORD;
 
@@ -115,6 +115,7 @@ create table SUC_OP_LOG
             2:修改支付密码;
             3:绑定QQ登录;
             4:绑定微信登录;',
+   OP_DETAIL            varchar(300) not null comment '操作详情',
    OP_TIME              datetime not null comment '操作时间',
    APP_ID               tinyint comment '应用ID
             标记是哪个应用系统来注册的编码，要与登录应用ID意义一致',
@@ -136,7 +137,7 @@ create table SUC_ORG
    NAME                 varchar(200) not null comment '公司/组织名称',
    REMARK               varchar(500) comment '公司/组织备注',
    CREATE_TIMESTAMP     bigint not null comment '创建时间戳',
-   IS_ENABLED           bool not null default 1 comment '是否启用',
+   IS_ENABLED           bool not null default true comment '是否启用',
    primary key (ID)
 );
 
@@ -204,6 +205,7 @@ create table SUC_USER
    WX_FACE              varchar(500) comment '微信头像',
    IS_LOCK              bool not null default false comment '是否锁定',
    PROMOTER_ID          bigint comment '推广者ID',
+   MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳',
    primary key (ID),
    unique key AK_USER_LOGIN_NAME (LOGIN_NAME),
    unique key AK_USER_IDCARD (IDCARD),

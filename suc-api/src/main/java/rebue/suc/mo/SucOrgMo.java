@@ -42,6 +42,8 @@ public class SucOrgMo implements Serializable {
     private String remark;
 
     /**
+     *    创建时间戳
+     *
      *    数据库字段: SUC_ORG.CREATE_TIMESTAMP
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -49,6 +51,8 @@ public class SucOrgMo implements Serializable {
     private Long createTimestamp;
 
     /**
+     *    是否启用
+     *
      *    数据库字段: SUC_ORG.IS_ENABLED
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -127,6 +131,8 @@ public class SucOrgMo implements Serializable {
     }
 
     /**
+     *    创建时间戳
+     *
      *    数据库字段: SUC_ORG.CREATE_TIMESTAMP
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -136,6 +142,8 @@ public class SucOrgMo implements Serializable {
     }
 
     /**
+     *    创建时间戳
+     *
      *    数据库字段: SUC_ORG.CREATE_TIMESTAMP
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -145,6 +153,8 @@ public class SucOrgMo implements Serializable {
     }
 
     /**
+     *    是否启用
+     *
      *    数据库字段: SUC_ORG.IS_ENABLED
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -154,6 +164,8 @@ public class SucOrgMo implements Serializable {
     }
 
     /**
+     *    是否启用
+     *
      *    数据库字段: SUC_ORG.IS_ENABLED
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行

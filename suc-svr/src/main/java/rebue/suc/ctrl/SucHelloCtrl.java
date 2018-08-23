@@ -12,23 +12,23 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import rebue.suc.mo.SucOpLogMo;
-import rebue.suc.ro.SucOpLogRo;
-import rebue.suc.svc.SucOpLogSvc;
+import rebue.suc.mo.SucHelloMo;
+import rebue.suc.ro.SucHelloRo;
+import rebue.suc.svc.SucHelloSvc;
 
 @RestController
-public class SucOpLogCtrl {
+public class SucHelloCtrl {
 
     /**
      * @mbg.generated
      */
-    private static final Logger _log = LoggerFactory.getLogger(SucOpLogCtrl.class);
+    private static final Logger _log = LoggerFactory.getLogger(SucHelloCtrl.class);
 
     /**
      * @mbg.generated
      */
     @Resource
-    private SucOpLogSvc svc;
+    private SucHelloSvc svc;
 
     /**
      * 有唯一约束的字段名称
@@ -38,14 +38,14 @@ public class SucOpLogCtrl {
     private String _uniqueFilesName = "某字段内容";
 
     /**
-     * 添加用户操作日志
+     * 添加
      *
      * @mbg.generated
      */
-    @PostMapping("/suc/oplog")
-    SucOpLogRo add(@RequestBody SucOpLogMo mo) throws Exception {
-        _log.info("add SucOpLogMo:" + mo);
-        SucOpLogRo ro = new SucOpLogRo();
+    @PostMapping("/suc/hello")
+    SucHelloRo add(@RequestBody SucHelloMo mo) throws Exception {
+        _log.info("add SucHelloMo:" + mo);
+        SucHelloRo ro = new SucHelloRo();
         try {
             int result = svc.add(mo);
             if (result == 1) {
@@ -71,14 +71,14 @@ public class SucOpLogCtrl {
     }
 
     /**
-     * 修改用户操作日志
+     * 修改
      *
      * @mbg.generated
      */
-    @PutMapping("/suc/oplog")
-    SucOpLogRo modify(@RequestBody SucOpLogMo mo) throws Exception {
-        _log.info("modify SucOpLogMo:" + mo);
-        SucOpLogRo ro = new SucOpLogRo();
+    @PutMapping("/suc/hello")
+    SucHelloRo modify(@RequestBody SucHelloMo mo) throws Exception {
+        _log.info("modify SucHelloMo:" + mo);
+        SucHelloRo ro = new SucHelloRo();
         try {
             int result = svc.modify(mo);
             if (result == 1) {
@@ -104,15 +104,15 @@ public class SucOpLogCtrl {
     }
 
     /**
-     * 删除用户操作日志
+     * 删除
      *
      * @mbg.generated
      */
-    @DeleteMapping("/suc/oplog")
-    SucOpLogRo del(@RequestParam("id") java.lang.Long id) {
-        _log.info("save SucOpLogMo:" + id);
+    @DeleteMapping("/suc/hello")
+    SucHelloRo del(@RequestParam("id") java.lang.Long id) {
+        _log.info("save SucHelloMo:" + id);
         int result = svc.del(id);
-        SucOpLogRo ro = new SucOpLogRo();
+        SucHelloRo ro = new SucHelloRo();
         if (result == 1) {
             String msg = "删除成功";
             _log.info("{}: id-{}", msg, id);
@@ -129,34 +129,34 @@ public class SucOpLogCtrl {
     }
 
     /**
-     * 查询用户操作日志
+     * 查询
      *
      * @mbg.generated
      */
-    @GetMapping("/suc/oplog")
-    PageInfo<SucOpLogMo> list(SucOpLogMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        _log.info("list SucOpLogMo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+    @GetMapping("/suc/hello")
+    PageInfo<SucHelloMo> list(SucHelloMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+        _log.info("list SucHelloMo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             String msg = "pageSize不能大于50";
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<SucOpLogMo> result = svc.list(mo, pageNum, pageSize);
+        PageInfo<SucHelloMo> result = svc.list(mo, pageNum, pageSize);
         _log.info("result: " + result);
         return result;
     }
 
     /**
-     * 获取单个用户操作日志
+     * 获取单个
      *
      * @mbg.generated
      */
-    @GetMapping("/suc/oplog/getbyid")
-    SucOpLogRo getById(@RequestParam("id") java.lang.Long id) {
-        _log.info("get SucOpLogMo by id: " + id);
-        SucOpLogMo result = svc.getById(id);
+    @GetMapping("/suc/hello/getbyid")
+    SucHelloRo getById(@RequestParam("id") java.lang.Long id) {
+        _log.info("get SucHelloMo by id: " + id);
+        SucHelloMo result = svc.getById(id);
         _log.info("get: " + result);
-        SucOpLogRo ro = new SucOpLogRo();
+        SucHelloRo ro = new SucHelloRo();
         if (result == null) {
             String msg = "获取失败，没有找到该条记录";
             _log.error("{}: id-{}", msg, id);
