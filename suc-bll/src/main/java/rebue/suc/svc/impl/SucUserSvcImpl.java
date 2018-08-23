@@ -349,6 +349,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             _log.warn("没有填写用户名/密码/应用ID/浏览器类型/MAC/IP: {}", to);
             UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.PARAM_ERROR);
+            ro.setMsg("参数错误");
             return ro;
         }
         RegAndLoginTypeDic loginType = null;
@@ -359,6 +360,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 if (!userMo.getIsVerifiedEmail()) {
                     _log.warn("用户用邮箱登录，但邮箱尚未通过验证: {}", to);
                     UserLoginRo ro = new UserLoginRo();
+                    ro.setMsg("该邮箱未认证");
                     ro.setResult(LoginResultDic.NO_VERITY_EMAIL);
                     return ro;
                 }
@@ -371,6 +373,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                     _log.warn("用户用手机号登录，但手机号尚未通过验证: {}", to);
                     UserLoginRo ro = new UserLoginRo();
                     ro.setResult(LoginResultDic.NO_VERITY_MOBILE);
+                    ro.setMsg("该手机号码未认证");
                     return ro;
                 }
                 loginType = RegAndLoginTypeDic.MOBILE;
@@ -386,6 +389,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             _log.warn("找不到此用户:" + to);
             UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.NOT_FOUND_USER);
+            ro.setMsg("找不到此用户");
             return ro;
         }
         UserLoginRo ro = verifyLogin(userMo, to.getLoginPswd());
@@ -543,6 +547,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 ro.setFace(userMo.getQqFace());
             }
         }
+        ro.setMsg("登录成功");
         _log.info("用户登录成功: {} {} {}", loginTo, loginType, userMo);
         return ro;
     }
@@ -558,12 +563,14 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             _log.warn("发现尝试使用黑名单中的用户: {}", userMo);
             UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.LOCKED);
+            ro.setMsg("该用户为黑名单用户，登录失败");
             return ro;
         }
         if (userMo.getIsLock()) {
             _log.warn("账号已被锁定，不允许使用: {}", userMo);
             UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.LOCKED);
+            ro.setMsg("该账号已被锁定");
             return ro;
         }
         if (loginPswd != null) {
@@ -574,6 +581,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 } catch (RedisSetException e) {
                     _log.error("操作当天连续输入登录密码错误的次数的缓存失败: {}", userMo);
                     UserLoginRo ro = new UserLoginRo();
+                    ro.setMsg("缓存失败");
                     ro.setResult(LoginResultDic.CACHE_FAIL);
                     return ro;
                 }
@@ -585,12 +593,14 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                         _log.error("添加黑名单缓存失败:{}", userMo);
                         UserLoginRo ro = new UserLoginRo();
                         ro.setResult(LoginResultDic.CACHE_FAIL);
+                        ro.setMsg("缓存失败");
                         return ro;
                     }
                 }
                 _log.warn("密码错误: {}", loginPswd);
                 UserLoginRo ro = new UserLoginRo();
                 ro.setResult(LoginResultDic.PASSWORD_ERROR);
+                ro.setMsg("密码错误");
                 return ro;
             }
             redisClient.del(REDIS_KEY_LOGINPSWD_ERRCOUNT_PREFIX + userMo.getId());

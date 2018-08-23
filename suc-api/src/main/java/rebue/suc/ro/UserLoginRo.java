@@ -22,6 +22,10 @@ public class UserLoginRo {
 	private Long userId;
 	@ApiModelProperty(value = "登录返回结果代码", example = "1", required = true)
 	private LoginResultDic result;
+	/**
+	 * 登录返回值
+	 */
+	private String msg;
 	@ApiModelProperty(value = "用户昵称")
 	private String nickname;
 	@ApiModelProperty(value = "用户头像")
@@ -92,10 +96,18 @@ public class UserLoginRo {
 		this.expirationTime = expirationTime;
 	}
 
+	public String getMsg() {
+		return msg;
+	}
+
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+
 	@Override
 	public String toString() {
-		return "UserLoginRo [userId=" + userId + ", result=" + result + ", nickname=" + nickname + ", face=" + face
-				+ ", orgId=" + orgId + ", sign=" + sign + ", expirationTime=" + expirationTime + "]";
+		return "UserLoginRo [userId=" + userId + ", result=" + result + ", msg=" + msg + ", nickname=" + nickname
+				+ ", face=" + face + ", orgId=" + orgId + ", sign=" + sign + ", expirationTime=" + expirationTime + "]";
 	}
 
 }
