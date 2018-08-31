@@ -1,7 +1,10 @@
 package rebue.suc.ctrl;
 
-import com.github.pagehelper.PageInfo;
+import java.text.ParseException;
+
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -12,11 +15,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.PageInfo;
+
 import rebue.suc.mo.SucUserMo;
+import rebue.suc.ro.CurrentUserRo;
 import rebue.suc.ro.GetLoginNameRo;
 import rebue.suc.ro.SetLoginNameRo;
 import rebue.suc.ro.SucUserRo;
 import rebue.suc.svc.SucUserSvc;
+import rebue.wheel.turing.JwtUtils;
 
 @RestController
 public class SucUserCtrl {
@@ -89,11 +97,12 @@ public class SucUserCtrl {
     private static final Logger _log = LoggerFactory.getLogger(SucUserCtrl.class);
 
     @Resource
-    private SucUserSvc svc;
+    private SucUserSvc          svc;
 
     /**
-     *  获取用户信息（通过用户ID）
-     *  @mbg.overrideByMethodName
+     * 获取用户信息（通过用户ID）
+     * 
+     * @mbg.overrideByMethodName
      */
     @GetMapping("/user/")
     SucUserMo getById(@RequestParam("id") Long id) {
@@ -102,7 +111,7 @@ public class SucUserCtrl {
     }
 
     /**
-     *  判断用户是否存在
+     * 判断用户是否存在
      */
     @GetMapping("/user/exist")
     Boolean exist(@RequestParam("id") Long id) {
@@ -111,7 +120,7 @@ public class SucUserCtrl {
     }
 
     /**
-     *  判断用户是否被锁定
+     * 判断用户是否被锁定
      */
     @GetMapping("/user/islocked")
     Boolean isLocked(@RequestParam("id") Long id) {
@@ -120,7 +129,7 @@ public class SucUserCtrl {
     }
 
     /**
-     *  获取用户ID(通过用户名称)
+     * 获取用户ID(通过用户名称)
      */
     @GetMapping("/user/id/byusername")
     Long getIdByUserName(@RequestParam("userName") String userName) {
@@ -129,7 +138,7 @@ public class SucUserCtrl {
     }
 
     /**
-     *  获取用户ID(通过微信ID)
+     * 获取用户ID(通过微信ID)
      */
     @GetMapping("/user/id/bywxid")
     Long getIdByWxId(@RequestParam("wxId") String wxId) {
@@ -138,12 +147,12 @@ public class SucUserCtrl {
     }
 
     /**
-     *  通过微信ID设置登录名称 Title: setLoginName Description:
+     * 通过微信ID设置登录名称 Title: setLoginName Description:
      *
-     *  @param wxId
-     *  @param loginName
-     *  @return
-     *  @date 2018年5月3日 下午6:09:55
+     * @param wxId
+     * @param loginName
+     * @return
+     * @date 2018年5月3日 下午6:09:55
      */
     @PostMapping("/user/setloginname/bywxid")
     SetLoginNameRo setLoginName(@RequestParam("wxId") String wxId, @RequestParam("loginName") String loginName) {
@@ -152,11 +161,11 @@ public class SucUserCtrl {
     }
 
     /**
-     *  根据微信ID获取用户登录名称
+     * 根据微信ID获取用户登录名称
      *
-     *  @param wxId
-     *  @return
-     *  @date 2018年5月4日 上午9:06:34
+     * @param wxId
+     * @return
+     * @date 2018年5月4日 上午9:06:34
      */
     @GetMapping("/user/loginName/bywxid")
     GetLoginNameRo getLoginNameByWx(@RequestParam("wxId") String wxId) {
@@ -165,9 +174,9 @@ public class SucUserCtrl {
     }
 
     /**
-     *  查询用户信息
+     * 查询用户信息
      *
-     *  @mbg.overrideByMethodName
+     * @mbg.overrideByMethodName
      */
     @GetMapping("/suc/user")
     PageInfo<SucUserMo> list(@RequestParam(value = "users", required = false) String users, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
@@ -183,11 +192,11 @@ public class SucUserCtrl {
     }
 
     /**
-     *  蚂蚁根据ｉｄ获取单条记录的方式
+     * 蚂蚁根据ｉｄ获取单条记录的方式
      *
-     *  @param id
-     *  @return
-     *  @mbg.overrideByMethodName
+     * @param id
+     * @return
+     * @mbg.overrideByMethodName
      */
     @GetMapping("/suc/user/getbyid")
     SucUserRo getByIdEx(@RequestParam("id") java.lang.Long id) {
@@ -211,11 +220,11 @@ public class SucUserCtrl {
     }
 
     /**
-     *  修改用户信息
+     * 修改用户信息
      *
-     *  @param mo
-     *  @return
-     *  @mbg.overrideByMethodName
+     * @param mo
+     * @return
+     * @mbg.overrideByMethodName
      */
     @PutMapping("/suc/user")
     SucUserRo modify(@RequestBody SucUserMo mo) {
@@ -224,11 +233,11 @@ public class SucUserCtrl {
     }
 
     /**
-     *  设置禁用或解锁用户
+     * 设置禁用或解锁用户
      *
-     *  @param id
-     *  @param isLock
-     *  @return
+     * @param id
+     * @param isLock
+     * @return
      */
     @PutMapping("/suc/user/enable")
     SucUserRo enable(@RequestBody SucUserMo mo) {
@@ -237,10 +246,10 @@ public class SucUserCtrl {
     }
 
     /**
-     *  解除登录密码
+     * 解除登录密码
      *
-     *  @param id
-     *  @return
+     * @param id
+     * @return
      */
     @PutMapping("/suc/user/del/loginpassword")
     SucUserRo removeLoginPassWord(@RequestParam("id") Long id) {
@@ -249,10 +258,10 @@ public class SucUserCtrl {
     }
 
     /**
-     *  解除支付密码
+     * 解除支付密码
      *
-     *  @param id
-     *  @return
+     * @param id
+     * @return
      */
     @PutMapping("/suc/user/del/paypassword")
     SucUserRo removePayPassWord(@RequestParam("id") Long id) {
@@ -261,10 +270,10 @@ public class SucUserCtrl {
     }
 
     /**
-     *  解绑微信
+     * 解绑微信
      *
-     *  @param mo
-     *  @return
+     * @param mo
+     * @return
      */
     @PutMapping("/suc/user/unbindwechat")
     SucUserRo unbindWeChat(@RequestParam("id") Long id) {
@@ -273,10 +282,10 @@ public class SucUserCtrl {
     }
 
     /**
-     *  解绑QQ
+     * 解绑QQ
      *
-     *  @param mo
-     *  @return
+     * @param mo
+     * @return
      */
     @PutMapping("/suc/user/unbindqq")
     SucUserRo unbindQQ(@RequestParam("id") Long id) {
@@ -286,6 +295,7 @@ public class SucUserCtrl {
 
     /**
      * 根据id查询用户分页信息
+     * 
      * @param pageNum
      * @param pageSize
      * @param ids
@@ -299,10 +309,6 @@ public class SucUserCtrl {
 
     /**
      * 根据组织查询用户信息
-     * @param orgId
-     * @param pageNum
-     * @param pageSize
-     * @return
      */
     @GetMapping("/suc/user/listbyorgid")
     PageInfo<SucUserMo> listByOrgId(@RequestParam("orgId") Long orgId, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
@@ -314,9 +320,6 @@ public class SucUserCtrl {
 
     /**
      * 添加用户组织
-     * @param id
-     * @param orgId
-     * @return
      */
     @PutMapping("/suc/user/adduserorg")
     SucUserRo addUserOrg(@RequestParam("id") Long id, @RequestParam("orgId") Long orgId) {
@@ -326,12 +329,24 @@ public class SucUserCtrl {
 
     /**
      * 删除用户组织
-     * @param id
-     * @return
      */
     @PutMapping("/suc/user/deluserorgbyid")
     SucUserRo delUserOrgById(@RequestParam("id") Long id) {
         _log.info("删除用户组织的参数为：{}", id);
         return svc.delUserOrgById(id);
+    }
+
+    /**
+     * 获取当前用户信息
+     * 
+     * @throws ParseException
+     */
+    @GetMapping("/user/currentuser")
+    CurrentUserRo getCurrentUser(HttpServletRequest req) throws ParseException {
+        _log.info("获取当前用户信息");
+        // 从签名中获取用户ID
+        Long userId = JwtUtils.getJwtUserIdInCookie(req);
+        // 通过用户ID获取用户信息
+        return svc.getCurrentUser(userId);
     }
 }

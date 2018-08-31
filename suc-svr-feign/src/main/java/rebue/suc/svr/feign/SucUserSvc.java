@@ -2,13 +2,18 @@ package rebue.suc.svr.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.pagehelper.PageInfo;
 
 import rebue.sbs.feign.FeignConfig;
 import rebue.suc.mo.SucUserMo;
+import rebue.suc.ro.CurrentUserRo;
 import rebue.suc.ro.PayPswdVerifyRo;
+import rebue.suc.ro.UserLoginRo;
+import rebue.suc.to.LoginByUserNameTo;
 
 @FeignClient(name = "suc-svr", configuration = FeignConfig.class)
 public interface SucUserSvc {
@@ -18,6 +23,18 @@ public interface SucUserSvc {
      */
     @GetMapping("/user/")
     SucUserMo getById(@RequestParam("id") Long id);
+
+    /**
+     * 用户登录(用户名称)
+     */
+    @PostMapping("/user/login/by/user/name")
+    UserLoginRo loginByUserName(@RequestBody LoginByUserNameTo loginTo);
+
+    /**
+     * 获取当前用户
+     */
+    @GetMapping("/user/currentuser")
+    CurrentUserRo getCurrentUser();
 
     /**
      * 判断用户是否存在
@@ -59,11 +76,11 @@ public interface SucUserSvc {
      *            支付金额(判断金额在一定数量下可以免密码输入)
      */
     @GetMapping("/paypswd/verify")
-    PayPswdVerifyRo verifyPayPswd(@RequestParam("userId") Long userId, @RequestParam("payPswd") String payPswd,
-            @RequestParam("amount") Double amount);
+    PayPswdVerifyRo verifyPayPswd(@RequestParam("userId") Long userId, @RequestParam("payPswd") String payPswd, @RequestParam("amount") Double amount);
 
     /**
      * 根据id查询用户分页信息
+     * 
      * @param pageNum
      * @param pageSize
      * @param ids

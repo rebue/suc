@@ -38,6 +38,7 @@ import rebue.suc.mo.SucUserMo;
 import rebue.suc.msg.SucAddUserDoneMsg;
 import rebue.suc.pub.SucAddUserDonePub;
 import rebue.suc.ro.BindWxRo;
+import rebue.suc.ro.CurrentUserRo;
 import rebue.suc.ro.GetLoginNameRo;
 import rebue.suc.ro.LoginPswdModifyRo;
 import rebue.suc.ro.LoginPswdSetRo;
@@ -566,24 +567,27 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         loginLogSvc.add(loginLogMo);
         UserLoginRo ro = new UserLoginRo();
         ro.setUserId(userMo.getId());
+        ro.setOrgId(userMo.getOrgId());
         ro.setResult(LoginResultDic.SUCCESS);
         ro.setMsg("用户登录成功");
-        if (loginType == RegAndLoginTypeDic.EMAIL || loginType == RegAndLoginTypeDic.MOBILE || loginType == RegAndLoginTypeDic.LOGIN_NAME) {
-            if (!StringUtils.isBlank(userMo.getNickname())) {
-                ro.setNickname(userMo.getNickname());
-            } else if (!StringUtils.isBlank(userMo.getWxNickname())) {
-                ro.setNickname(userMo.getWxNickname());
-            } else if (!StringUtils.isBlank(userMo.getQqNickname())) {
-                ro.setNickname(userMo.getQqNickname());
-            }
-            if (!StringUtils.isBlank(userMo.getFace())) {
-                ro.setFace(userMo.getFace());
-            } else if (!StringUtils.isBlank(userMo.getWxFace())) {
-                ro.setFace(userMo.getWxFace());
-            } else if (!StringUtils.isBlank(userMo.getQqFace())) {
-                ro.setFace(userMo.getQqFace());
-            }
+
+        // 判断应该返回的昵称
+        if (!StringUtils.isBlank(userMo.getNickname())) {
+            ro.setNickname(userMo.getNickname());
+        } else if (!StringUtils.isBlank(userMo.getWxNickname())) {
+            ro.setNickname(userMo.getWxNickname());
+        } else if (!StringUtils.isBlank(userMo.getQqNickname())) {
+            ro.setNickname(userMo.getQqNickname());
         }
+        // 判断应该返回的头像
+        if (!StringUtils.isBlank(userMo.getFace())) {
+            ro.setFace(userMo.getFace());
+        } else if (!StringUtils.isBlank(userMo.getWxFace())) {
+            ro.setFace(userMo.getWxFace());
+        } else if (!StringUtils.isBlank(userMo.getQqFace())) {
+            ro.setFace(userMo.getQqFace());
+        }
+
         return ro;
     }
 
@@ -1359,6 +1363,35 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         _log.info("删除用户组织成功，用户id为：{}", id);
         ro.setResult((byte) 1);
         ro.setMsg("删除成功");
+        return ro;
+    }
+
+    /**
+     * 获取当前用户信息
+     */
+    @Override
+    public CurrentUserRo getCurrentUser(Long userId) {
+        _log.info("获取当前用户信息: {}", userId);
+        CurrentUserRo ro = new CurrentUserRo();
+        SucUserMo userMo = _mapper.selectByPrimaryKey(userId);
+        ro.setUserId(userMo.getId());
+        ro.setOrgId(userMo.getOrgId());
+        // 判断应该返回的昵称
+        if (!StringUtils.isBlank(userMo.getNickname())) {
+            ro.setNickname(userMo.getNickname());
+        } else if (!StringUtils.isBlank(userMo.getWxNickname())) {
+            ro.setNickname(userMo.getWxNickname());
+        } else if (!StringUtils.isBlank(userMo.getQqNickname())) {
+            ro.setNickname(userMo.getQqNickname());
+        }
+        // 判断应该返回的头像
+        if (!StringUtils.isBlank(userMo.getFace())) {
+            ro.setFace(userMo.getFace());
+        } else if (!StringUtils.isBlank(userMo.getWxFace())) {
+            ro.setFace(userMo.getWxFace());
+        } else if (!StringUtils.isBlank(userMo.getQqFace())) {
+            ro.setFace(userMo.getQqFace());
+        }
         return ro;
     }
 }

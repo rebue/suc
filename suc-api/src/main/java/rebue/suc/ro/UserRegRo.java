@@ -18,7 +18,6 @@ import rebue.suc.dic.RegResultDic;
 @ApiModel(value = "注册结果", description = "用户注册的返回结果")
 @JsonInclude(Include.NON_NULL)
 public class UserRegRo {
-
     @ApiModelProperty(value = "用户ID", example = "1")
     private Long         userId;
     @ApiModelProperty(value = "注册返回结果代码", example = "1", required = true)
