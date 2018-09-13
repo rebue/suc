@@ -100,5 +100,5 @@ public interface SucUserSvc {
      * 获取单个用户注册信息
      */
     @GetMapping("/suc/reg/getbyid")
-    SucRegRo getRegInfo(@RequestParam("userId") java.lang.Long id);
+    SucRegRo getRegInfo(@RequestParam("id") Long id);
 }
