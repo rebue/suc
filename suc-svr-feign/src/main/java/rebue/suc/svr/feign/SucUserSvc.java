@@ -12,6 +12,7 @@ import rebue.sbs.feign.FeignConfig;
 import rebue.suc.mo.SucUserMo;
 import rebue.suc.ro.CurrentUserRo;
 import rebue.suc.ro.PayPswdVerifyRo;
+import rebue.suc.ro.SucRegRo;
 import rebue.suc.ro.UserLoginRo;
 import rebue.suc.to.LoginByUserNameTo;
 
@@ -88,4 +89,16 @@ public interface SucUserSvc {
      */
     @GetMapping("/suc/user/listuserbyids")
     PageInfo<SucUserMo> listUserByIds(@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize, @RequestParam("ids") String ids);
+    
+    /**
+     * 获取用户购买关系
+     */
+    @GetMapping("/user/getBuyRelation")
+    String getBuyRelation(@RequestParam("userId") Long userId,@RequestParam("onlineId") Long onlineId);
+    
+    /**
+     * 获取单个用户注册信息
+     */
+    @GetMapping("/suc/reg/getbyid")
+    SucRegRo getRegInfo(@RequestParam("userId") java.lang.Long id);
 }

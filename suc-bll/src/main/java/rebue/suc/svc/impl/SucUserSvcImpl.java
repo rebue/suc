@@ -1394,4 +1394,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         }
         return ro;
     }
+
+	@Override
+	public String getBuyRelation(Long userId, Long onlineId) {
+		 _log.info("获取购买关系的用户ID为："+userId+",商品上线ID为："+onlineId);
+		return  redisClient.get(REDIS_KEY_USER_BUY_BUY_RELATION + userId.toString() + onlineId.toString());
+	}
 }

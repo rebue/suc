@@ -232,4 +232,9 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * 获取当前用户信息
      */
     CurrentUserRo getCurrentUser(Long userId);
+    
+    /**
+     * 获取用户购买商品的购买关系
+     */
+    String getBuyRelation(Long userId,Long onlineId);
 }
