@@ -349,18 +349,16 @@ public class SucUserCtrl {
         // 通过用户ID获取用户信息
         return svc.getCurrentUser(userId);
     }
-    
+
     /**
      * 获取用户购买商品的购买关系
      * 
      * @throws ParseException
      */
     @GetMapping("/user/getBuyRelation")
-    String getBuyRelation(@RequestParam("userId") Long userId,@RequestParam("onlineId") Long onlineId) throws ParseException {
+    String getBuyRelation(@RequestParam("userId") Long userId, @RequestParam("onlineId") Long onlineId) throws ParseException {
         _log.info("获取用户购买商品的购买关系");
-        return svc.getBuyRelation(userId,onlineId);
+        return svc.getBuyRelation(userId, onlineId);
     }
-    
-    
-    
+
 }
