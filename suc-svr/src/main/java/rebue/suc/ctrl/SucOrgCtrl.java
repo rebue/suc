@@ -1,8 +1,9 @@
 package rebue.suc.ctrl;
 
-import com.github.pagehelper.PageInfo;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -13,6 +14,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.PageInfo;
+
+import rebue.robotech.dic.ResultDic;
+import rebue.robotech.ro.Ro;
 import rebue.suc.mo.SucOrgMo;
 import rebue.suc.ro.SucOrgRo;
 import rebue.suc.svc.SucOrgSvc;
@@ -23,20 +29,20 @@ public class SucOrgCtrl {
     /**
      * @mbg.generated
      */
-    private static final Logger _log = LoggerFactory.getLogger(SucOrgCtrl.class);
+    private static final Logger _log             = LoggerFactory.getLogger(SucOrgCtrl.class);
 
     /**
      * @mbg.generated
      */
     @Resource
-    private SucOrgSvc svc;
+    private SucOrgSvc           svc;
 
     /**
      * 有唯一约束的字段名称
      *
      * @mbg.generated
      */
-    private String _uniqueFilesName = "某字段内容";
+    private String              _uniqueFilesName = "某字段内容";
 
     /**
      * 添加公司/组织信息
@@ -105,24 +111,6 @@ public class SucOrgCtrl {
     }
 
     /**
-     * 查询公司/组织信息
-     *
-     * @mbg.generated
-     */
-    @GetMapping("/suc/org")
-    PageInfo<SucOrgMo> list(SucOrgMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        _log.info("list SucOrgMo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
-        if (pageSize > 50) {
-            String msg = "pageSize不能大于50";
-            _log.error(msg);
-            throw new IllegalArgumentException(msg);
-        }
-        PageInfo<SucOrgMo> result = svc.list(mo, pageNum, pageSize);
-        _log.info("result: " + result);
-        return result;
-    }
-
-    /**
      * 获取单个公司/组织信息
      *
      * @mbg.generated
@@ -150,38 +138,73 @@ public class SucOrgCtrl {
     }
 
     /**
-     *  删除公司/组织信息
+     * 删除组织信息
      *
-     *  @mbg.overrideByMethodName
+     * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @DeleteMapping("/suc/org")
-    SucOrgRo del(@RequestParam("id") java.lang.Long id) {
-        _log.info("save SucOrgMo:" + id);
-        SucOrgRo ro = new SucOrgRo();
-        try {
-            return svc.delEx(id);
-        } catch (Exception e) {
+    Ro del(@RequestParam("id") java.lang.Long id) {
+        _log.info("del SucOrgMo by id: {}", id);
+        int result = svc.del(id);
+        Ro ro = new Ro();
+        if (result == 1) {
+            String msg = "删除成功";
+            _log.info("{}: id-{}", msg, id);
+            ro.setMsg(msg);
+            ro.setResult(ResultDic.SUCCESS);
+            return ro;
+        } else {
             String msg = "删除失败，找不到该记录";
             _log.error("{}: id-{}", msg, id);
             ro.setMsg(msg);
-            ro.setResult((byte) -1);
+            ro.setResult(ResultDic.FAIL);
             return ro;
         }
     }
 
     /**
-     *  根据组织名称查询组织信息
-     *  @param name
-     *  @return
+     * 查询公司/组织信息
+     * 
+     * @param keys
+     *            模糊查询的关键字
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
+     * 
+     * @mbg.overrideByMethodName
+     */
+    @GetMapping("/suc/org")
+    PageInfo<SucOrgMo> list(@RequestParam(value = "keys", required = false) String keys, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+        _log.info("list keys:" + keys + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+        if (pageSize > 50) {
+            String msg = "pageSize不能大于50";
+            _log.error(msg);
+            throw new IllegalArgumentException(msg);
+        }
+        PageInfo<SucOrgMo> result;
+        if (keys == null)
+            result = svc.list((SucOrgMo) null, pageNum, pageSize);
+        else
+            result = svc.list(keys, pageNum, pageSize);
+        _log.info("result: " + result);
+        return result;
+    }
+
+    /**
+     * 根据组织名称查询组织信息
+     * 
+     * @param name
      */
     @GetMapping("/suc/org/selectbyname")
-    List<SucOrgMo> selectByName(@RequestParam(value = "name", required = false) String name) {
+    List<SucOrgMo> listByName(@RequestParam(value = "name", required = false) String name) {
         _log.info("查询组织信息的参数为：{}", name);
-        return svc.selectByName(name);
+        return svc.listByName(name);
     }
 
     /**
      * 设置启用或者禁用组织
+     * 
      * @param id
      * @param isEnabled
      * @return

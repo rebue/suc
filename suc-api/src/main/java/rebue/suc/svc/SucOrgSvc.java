@@ -1,6 +1,9 @@
 package rebue.suc.svc;
 
 import java.util.List;
+
+import com.github.pagehelper.PageInfo;
+
 import rebue.robotech.svc.MybatisBaseSvc;
 import rebue.suc.mo.SucOrgMo;
 import rebue.suc.ro.SucOrgRo;
@@ -8,24 +11,31 @@ import rebue.suc.ro.SucOrgRo;
 public interface SucOrgSvc extends MybatisBaseSvc<SucOrgMo, java.lang.Long> {
 
     /**
-     *  删除组织
-     *  @param id
-     *  @return
-     */
-    SucOrgRo delEx(Long id);
-
-    /**
      * 根据组织名称查询组织信息
+     * 
      * @param name
      * @return
      */
-    List<SucOrgMo> selectByName(String name);
+    List<SucOrgMo> listByName(String name);
 
     /**
      * 设置禁用或者启用组织
+     * 
      * @param id
      * @param isEnabled
      * @return
      */
     SucOrgRo enable(Long id, Boolean isEnabled);
+
+    /**
+     * 分页模糊查询组织
+     * 
+     * @param keys
+     *            模糊查询的关键字
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
+     */
+    PageInfo<SucOrgMo> list(String keys, int pageNum, int pageSize);
 }
