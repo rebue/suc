@@ -22,6 +22,7 @@ import rebue.suc.mo.SucUserMo;
 import rebue.suc.ro.CurrentUserRo;
 import rebue.suc.ro.GetLoginNameRo;
 import rebue.suc.ro.SetLoginNameRo;
+import rebue.suc.ro.SucUserDetailRo;
 import rebue.suc.ro.SucUserRo;
 import rebue.suc.svc.SucUserSvc;
 import rebue.wheel.turing.JwtUtils;
@@ -144,6 +145,62 @@ public class SucUserCtrl {
     Long getIdByWxId(@RequestParam("wxId") String wxId) {
         _log.info("获取用户ID(通过微信ID): wxId-{}", wxId);
         return svc.getIdByWxId(wxId);
+    }
+
+    /**
+     * 模糊查询关键字且在指定多个用户ID范围内的用户列表
+     * 
+     * @param keys
+     *            模糊查询用户的关键字
+     * @param userIds
+     *            用户ID列表的字符串，用逗号隔开
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
+     */
+    @GetMapping("/suc/user/listbykeysanduserids")
+    PageInfo<SucUserDetailRo> listByKeysAndUserIds(@RequestParam(value = "keys", required = false) String keys, @RequestParam("userIds") String userIds,
+            @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        if (pageNum == null)
+            pageNum = 1;
+        if (pageSize == null)
+            pageSize = 7;
+        _log.info("list ByKeysAndUserIds: userIds=" + userIds + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+        if (pageSize > 50) {
+            String msg = "pageSize不能大于50";
+            _log.error(msg);
+            throw new IllegalArgumentException(msg);
+        }
+        return svc.listByKeysAndUserIds(keys, userIds, pageNum, pageSize);
+    }
+
+    /**
+     * 模糊查询关键字且排除指定多个用户ID外的用户列表
+     * 
+     * @param keys
+     *            模糊查询用户的关键字
+     * @param userIds
+     *            用户ID列表的字符串，用逗号隔开
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
+     */
+    @GetMapping("/suc/user/listbykeysandnotuserids")
+    PageInfo<SucUserDetailRo> listByKeysAndNotUserIds(@RequestParam(value = "keys", required = false) String keys, @RequestParam("userIds") String userIds,
+            @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        if (pageNum == null)
+            pageNum = 1;
+        if (pageSize == null)
+            pageSize = 7;
+        _log.info("list ByKeysAndNotUserIds: userIds=" + userIds + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+        if (pageSize > 50) {
+            String msg = "pageSize不能大于50";
+            _log.error(msg);
+            throw new IllegalArgumentException(msg);
+        }
+        return svc.listByKeysAndNotUserIds(keys, userIds, pageNum, pageSize);
     }
 
     /**

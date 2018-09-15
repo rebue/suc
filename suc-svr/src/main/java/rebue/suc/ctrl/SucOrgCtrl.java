@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -183,7 +184,7 @@ public class SucOrgCtrl {
             throw new IllegalArgumentException(msg);
         }
         PageInfo<SucOrgMo> result;
-        if (keys == null)
+        if (StringUtils.isBlank(keys))
             result = svc.list((SucOrgMo) null, pageNum, pageSize);
         else
             result = svc.list(keys, pageNum, pageSize);

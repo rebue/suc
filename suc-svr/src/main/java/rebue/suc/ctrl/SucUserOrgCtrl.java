@@ -74,7 +74,7 @@ public class SucUserOrgCtrl {
         PageInfo<SucUserDetailRo> added = svc.listAddedUsers(id, keys, pageNum, pageSize);
         _log.info("added: " + added);
         UsersRo ro = new UsersRo();
-        ro.setAddedSucUsers(added);
+        ro.setAddedUsers(added);
         return ro;
     }
 
@@ -106,7 +106,7 @@ public class SucUserOrgCtrl {
         PageInfo<SucUserDetailRo> unadded = svc.listUnaddedUsers(id, keys, pageNum, pageSize);
         _log.info("unadded: " + unadded);
         UsersRo ro = new UsersRo();
-        ro.setUnaddedSucUsers(unadded);
+        ro.setUnaddedUsers(unadded);
         return ro;
     }
 

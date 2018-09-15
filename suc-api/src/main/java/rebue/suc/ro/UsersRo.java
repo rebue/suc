@@ -15,9 +15,9 @@ public class UsersRo {
     /**
      * 已添加的用户列表
      */
-    private PageInfo<SucUserDetailRo> addedSucUsers;
+    private PageInfo<SucUserDetailRo> addedUsers;
     /**
      * 未添加的用户列表
      */
-    private PageInfo<SucUserDetailRo> unaddedSucUsers;
+    private PageInfo<SucUserDetailRo> unaddedUsers;
 }

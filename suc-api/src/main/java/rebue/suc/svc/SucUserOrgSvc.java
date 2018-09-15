@@ -7,6 +7,9 @@ import com.github.pagehelper.PageInfo;
 import rebue.suc.ro.SucUserDetailRo;
 import rebue.suc.ro.UsersRo;
 
+/**
+ * 用户组织
+ */
 public interface SucUserOrgSvc {
 
     /**

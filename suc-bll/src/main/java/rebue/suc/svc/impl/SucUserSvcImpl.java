@@ -44,6 +44,7 @@ import rebue.suc.ro.LoginPswdModifyRo;
 import rebue.suc.ro.LoginPswdSetRo;
 import rebue.suc.ro.PayPswdVerifyRo;
 import rebue.suc.ro.SetLoginNameRo;
+import rebue.suc.ro.SucUserDetailRo;
 import rebue.suc.ro.SucUserRo;
 import rebue.suc.ro.UserLoginRo;
 import rebue.suc.ro.UserRegRo;
@@ -1395,9 +1396,60 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         return ro;
     }
 
-	@Override
-	public String getBuyRelation(Long userId, Long onlineId) {
-		 _log.info("获取购买关系的用户ID为："+userId+",商品上线ID为："+onlineId);
-		return  redisClient.get(REDIS_KEY_USER_BUY_BUY_RELATION + userId.toString() + onlineId.toString());
-	}
+    @Override
+    public String getBuyRelation(Long userId, Long onlineId) {
+        _log.info("获取购买关系的用户ID为：" + userId + ",商品上线ID为：" + onlineId);
+        return redisClient.get(REDIS_KEY_USER_BUY_BUY_RELATION + userId.toString() + onlineId.toString());
+    }
+
+    /**
+     * 模糊查询关键字且在指定多个用户ID范围内的用户列表
+     * 
+     * @param keys
+     *            模糊查询用户的关键字
+     * @param userIds
+     *            用户ID列表的字符串，用逗号隔开
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
+     */
+    @Override
+    public PageInfo<SucUserDetailRo> listByKeysAndUserIds(String keys, String userIds, Integer pageNum, Integer pageSize) {
+        _log.info("模糊查询关键字且在指定多个用户ID范围内的用户列表：keys={}, userIds={}", keys, userIds);
+        if (StringUtils.isBlank(keys))
+            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> _mapper.selectByUserIds(userIds));
+        else
+            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> _mapper.selectByKeysAndUserIds(keys, userIds));
+    }
+
+    /**
+     * 模糊查询关键字且排除指定多个用户ID外的用户列表
+     * 
+     * @param keys
+     *            模糊查询用户的关键字
+     * @param userIds
+     *            用户ID列表的字符串，用逗号隔开
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
+     */
+    @Override
+    public PageInfo<SucUserDetailRo> listByKeysAndNotUserIds(String keys, String userIds, Integer pageNum, Integer pageSize) {
+        _log.info("模糊查询关键字且排除指定多个用户ID外的用户列表：keys={}, userIds={}", keys, userIds);
+        if (StringUtils.isBlank(keys)) {
+            if (StringUtils.isBlank(userIds)) {
+                return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> _mapper.selectAll());
+            } else {
+                return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> _mapper.selectByNotUserIds(userIds));
+            }
+        } else {
+            if (StringUtils.isBlank(userIds)) {
+                return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> _mapper.selectByKeys(keys));
+            } else {
+                return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> _mapper.selectByKeysAndNotUserIds(keys, userIds));
+            }
+        }
+    }
 }

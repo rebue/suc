@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
 
 /**
- * 用户信息
+ * 用户信息(不包含敏感的密码数据)
  *
  * 数据库表: SUC_USER
  *

@@ -2,9 +2,11 @@ package rebue.suc.svc.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+import rebue.suc.mapper.SucUserMapper;
 import rebue.suc.mapper.SucUserOrgMapper;
 import rebue.suc.ro.SucUserDetailRo;
 import rebue.suc.ro.UsersRo;
@@ -34,8 +37,11 @@ import rebue.wheel.ListUtils;
 public class SucUserOrgSvcImpl implements SucUserOrgSvc {
     private static final Logger _log = LoggerFactory.getLogger(SucUserOrgSvcImpl.class);
 
-    @Autowired
+    @Resource
     protected SucUserOrgMapper  userOrgMapper;
+
+    @Resource
+    protected SucUserMapper     userMapper;
 
     /**
      * 添加用户到组织中
@@ -77,11 +83,11 @@ public class SucUserOrgSvcImpl implements SucUserOrgSvc {
         // 获取已添加用户列表
         PageInfo<SucUserDetailRo> added = listAddedUsers(orgId, addedKeys, addedPageNum, pageSize);
         _log.info("added: " + added);
-        ro.setAddedSucUsers(added);
+        ro.setAddedUsers(added);
         // 获取未添加用户列表
         PageInfo<SucUserDetailRo> unadded = listUnaddedUsers(orgId, unaddedKeys, unaddedPageNum, pageSize);
         _log.info("unadded: " + unadded);
-        ro.setUnaddedSucUsers(unadded);
+        ro.setUnaddedUsers(unadded);
         return ro;
     }
 
@@ -100,10 +106,10 @@ public class SucUserOrgSvcImpl implements SucUserOrgSvc {
     @Override
     public PageInfo<SucUserDetailRo> listAddedUsers(Long orgId, String keys, Integer pageNum, Integer pageSize) {
         _log.info("查询指定组织的已添加的用户列表：orgId-{}", orgId);
-        if (keys == null)
-            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> userOrgMapper.selectAddedUsersByOrgId(orgId));
+        if (StringUtils.isBlank(keys))
+            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> userMapper.selectAddedUsersByOrgId(orgId));
         else
-            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> userOrgMapper.selectAddedUsersByOrgIdAndKeys(orgId, keys));
+            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> userMapper.selectAddedUsersByOrgIdAndKeys(orgId, keys));
     }
 
     /**
@@ -121,10 +127,10 @@ public class SucUserOrgSvcImpl implements SucUserOrgSvc {
     @Override
     public PageInfo<SucUserDetailRo> listUnaddedUsers(Long orgId, String keys, Integer pageNum, Integer pageSize) {
         _log.info("查询指定组织的已添加的用户列表：orgId-{}", orgId);
-        if (keys == null)
-            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> userOrgMapper.selectUnaddedUsersByOrgId(orgId));
+        if (StringUtils.isBlank(keys))
+            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> userMapper.selectUnaddedUsersByOrgId(orgId));
         else
-            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> userOrgMapper.selectUnaddedUsersByOrgIdAndKeys(orgId, keys));
+            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> userMapper.selectUnaddedUsersByOrgIdAndKeys(orgId, keys));
     }
 
 }

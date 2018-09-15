@@ -11,6 +11,7 @@ import rebue.suc.ro.LoginPswdModifyRo;
 import rebue.suc.ro.LoginPswdSetRo;
 import rebue.suc.ro.PayPswdVerifyRo;
 import rebue.suc.ro.SetLoginNameRo;
+import rebue.suc.ro.SucUserDetailRo;
 import rebue.suc.ro.SucUserRo;
 import rebue.suc.ro.UserLoginRo;
 import rebue.suc.ro.UserRegRo;
@@ -232,9 +233,37 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * 获取当前用户信息
      */
     CurrentUserRo getCurrentUser(Long userId);
-    
+
     /**
      * 获取用户购买商品的购买关系
      */
-    String getBuyRelation(Long userId,Long onlineId);
+    String getBuyRelation(Long userId, Long onlineId);
+
+    /**
+     * 模糊查询关键字且在指定多个用户ID范围内的用户列表
+     * 
+     * @param keys
+     *            模糊查询用户的关键字
+     * @param userIds
+     *            用户ID列表的字符串，用逗号隔开
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
+     */
+    PageInfo<SucUserDetailRo> listByKeysAndUserIds(String keys, String userIds, Integer pageNum, Integer pageSize);
+
+    /**
+     * 模糊查询关键字且排除指定多个用户ID外的用户列表
+     * 
+     * @param keys
+     *            模糊查询用户的关键字
+     * @param userIds
+     *            用户ID列表的字符串，用逗号隔开
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
+     */
+    PageInfo<SucUserDetailRo> listByKeysAndNotUserIds(String keys, String userIds, Integer pageNum, Integer pageSize);
 }

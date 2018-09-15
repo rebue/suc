@@ -13,6 +13,7 @@ import rebue.suc.mo.SucUserMo;
 import rebue.suc.ro.CurrentUserRo;
 import rebue.suc.ro.PayPswdVerifyRo;
 import rebue.suc.ro.SucRegRo;
+import rebue.suc.ro.SucUserDetailRo;
 import rebue.suc.ro.UserLoginRo;
 import rebue.suc.to.LoginByUserNameTo;
 
@@ -89,16 +90,49 @@ public interface SucUserSvc {
      */
     @GetMapping("/suc/user/listuserbyids")
     PageInfo<SucUserMo> listUserByIds(@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize, @RequestParam("ids") String ids);
-    
+
     /**
      * 获取用户购买关系
      */
     @GetMapping("/user/getBuyRelation")
-    String getBuyRelation(@RequestParam("userId") Long userId,@RequestParam("onlineId") Long onlineId);
-    
+    String getBuyRelation(@RequestParam("userId") Long userId, @RequestParam("onlineId") Long onlineId);
+
     /**
      * 获取单个用户注册信息
      */
     @GetMapping("/suc/reg/getbyid")
     SucRegRo getRegInfo(@RequestParam("id") Long id);
+
+    /**
+     * 模糊查询关键字且在指定多个用户ID范围内的用户列表
+     * 
+     * @param keys
+     *            模糊查询用户的关键字
+     * @param userIds
+     *            用户ID列表的字符串，用逗号隔开
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
+     */
+    @GetMapping("/suc/user/listbykeysanduserids")
+    PageInfo<SucUserDetailRo> listByKeysAndUserIds(@RequestParam(value = "keys", required = false) String keys, @RequestParam("userIds") String userIds,
+            @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize);
+
+    /**
+     * 模糊查询关键字且排除指定多个用户ID外的用户列表
+     * 
+     * @param keys
+     *            模糊查询用户的关键字
+     * @param userIds
+     *            用户ID列表的字符串，用逗号隔开
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
+     */
+    @GetMapping("/suc/user/listbykeysandnotuserids")
+    PageInfo<SucUserDetailRo> listByKeysAndNotUserIds(@RequestParam(value = "keys", required = false) String keys, @RequestParam("userIds") String userIds,
+            @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize);
+
 }
