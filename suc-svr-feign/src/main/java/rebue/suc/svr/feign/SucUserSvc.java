@@ -1,6 +1,7 @@
 package rebue.suc.svr.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +30,7 @@ public interface SucUserSvc {
     /**
      * 用户登录(用户名称)
      */
-    @PostMapping("/user/login/by/user/name")
+    @PostMapping(value = "/user/login/by/user/name", consumes = MediaType.APPLICATION_JSON_VALUE)
     UserLoginRo loginByUserName(@RequestBody LoginByUserNameTo loginTo);
 
     /**
