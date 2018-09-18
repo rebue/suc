@@ -29,7 +29,7 @@ public interface SucUserSvc {
     /**
      * 用户登录(用户名称)
      */
-    @PostMapping("/user/login/by/user/name")
+    @PostMapping(value = "/user/login/by/user/name")
     UserLoginRo loginByUserName(@RequestBody LoginByUserNameTo loginTo);
 
     /**
