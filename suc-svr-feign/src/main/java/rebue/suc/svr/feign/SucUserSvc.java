@@ -95,7 +95,7 @@ public interface SucUserSvc {
      * 获取用户购买关系
      */
     @GetMapping("/user/getBuyRelation")
-    String getBuyRelation(@RequestParam("userId") Long userId, @RequestParam("onlineId") Long onlineId);
+    Long getBuyRelation(@RequestParam("userId") Long userId, @RequestParam("onlineId") Long onlineId);
 
     /**
      * 获取单个用户注册信息
