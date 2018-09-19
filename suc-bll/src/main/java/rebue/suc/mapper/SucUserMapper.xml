@@ -658,14 +658,14 @@
 	LEFT JOIN SUC_ORG so ON su.ORG_ID=so.ID
 	<where>
       <if test="users != null and users != ''">
-        and so.LOGIN_NAME 	LIKE '%${users}%' 
-        OR so.NICKNAME 		LIKE '%${users}%' 
-        OR so.REALNAME 		LIKE '%${users}%' 
-        OR so.IDCARD 		LIKE '%${users}%' 
-        OR so.EMAIL 		LIKE '%${users}%' 
-        OR so.MOBILE 		LIKE '%${users}%' 
-        OR so.QQ_NICKNAME 	LIKE '%${users}%' 
-        OR so.WX_NICKNAME 	LIKE '%${users}%'
+        and su.LOGIN_NAME 	LIKE '%${users}%' 
+        OR su.NICKNAME 		LIKE '%${users}%' 
+        OR su.REALNAME 		LIKE '%${users}%' 
+        OR su.IDCARD 		LIKE '%${users}%' 
+        OR su.EMAIL 		LIKE '%${users}%' 
+        OR su.MOBILE 		LIKE '%${users}%' 
+        OR su.QQ_NICKNAME 	LIKE '%${users}%' 
+        OR su.WX_NICKNAME 	LIKE '%${users}%'
       </if>
     </where>
   </select>
