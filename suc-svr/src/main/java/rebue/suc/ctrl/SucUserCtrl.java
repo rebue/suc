@@ -413,7 +413,7 @@ public class SucUserCtrl {
      * @throws ParseException
      */
     @GetMapping("/user/getBuyRelation")
-    String getBuyRelation(@RequestParam("userId") Long userId, @RequestParam("onlineId") Long onlineId) throws ParseException {
+    Long getBuyRelation(@RequestParam("userId") Long userId, @RequestParam("onlineId") Long onlineId) throws ParseException {
         _log.info("获取用户购买商品的购买关系");
         return svc.getBuyRelation(userId, onlineId);
     }
