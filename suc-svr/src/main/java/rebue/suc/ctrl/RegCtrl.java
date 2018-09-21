@@ -53,7 +53,7 @@ public class RegCtrl {
         regTo.setMac("不再获取MAC地址");
         UserRegRo ro = svc.regByLoginName(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(regTo.getSysId(), ro, resp);
+            jwtSignWithCookie(ro, regTo.getSysId(), resp);
         }
         return ro;
     }
@@ -70,7 +70,7 @@ public class RegCtrl {
         regTo.setMac("不再获取MAC地址");
         UserRegRo ro = svc.regByQq(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(regTo.getSysId(), ro, resp);
+            jwtSignWithCookie(ro, regTo.getSysId(), resp);
         }
         return ro;
     }
@@ -87,7 +87,7 @@ public class RegCtrl {
         regTo.setMac("不再获取MAC地址");
         UserRegRo ro = svc.regByWx(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(regTo.getSysId(), ro, resp);
+            jwtSignWithCookie(ro, regTo.getSysId(), resp);
         }
         return ro;
     }
@@ -98,8 +98,8 @@ public class RegCtrl {
      * @param userId
      *            用户ID
      */
-    private void jwtSignWithCookie(String sysId, UserRegRo userRegRo, HttpServletResponse resp) {
-        JwtSignRo signRo = jwtSvc.sign(sysId, userRegRo.getUserId().toString(), null);
+    private void jwtSignWithCookie(UserRegRo userRegRo, String sysId, HttpServletResponse resp) {
+        JwtSignRo signRo = jwtSvc.sign(userRegRo.getUserId().toString(), sysId, null);
         if (JwtSignResultDic.SUCCESS.equals(signRo.getResult())) {
             JwtUtils.addCookie(signRo.getSign(), signRo.getExpirationTime(), resp);
             userRegRo.setSign(signRo.getSign());

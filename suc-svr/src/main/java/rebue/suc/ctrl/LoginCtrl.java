@@ -55,7 +55,7 @@ public class LoginCtrl {
         loginTo.setMac("不再获取MAC地址");
         UserLoginRo ro = svc.loginByLoginName(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(loginTo.getSysId(), ro, resp);
+            jwtSignWithCookie(ro, loginTo.getSysId(), resp);
         }
         return ro;
     }
@@ -72,7 +72,7 @@ public class LoginCtrl {
         loginTo.setMac("不再获取MAC地址");
         UserLoginRo ro = svc.loginByUserName(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(loginTo.getSysId(), ro, resp);
+            jwtSignWithCookie(ro, loginTo.getSysId(), resp);
         }
         return ro;
     }
@@ -89,7 +89,7 @@ public class LoginCtrl {
         loginTo.setMac("不再获取MAC地址");
         UserLoginRo ro = svc.loginByQq(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(loginTo.getSysId(), ro, resp);
+            jwtSignWithCookie(ro, loginTo.getSysId(), resp);
         }
         return ro;
     }
@@ -108,7 +108,7 @@ public class LoginCtrl {
         loginTo.setMac("不再获取MAC地址");
         UserLoginRo ro = svc.loginByWx(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(loginTo.getSysId(), ro, resp);
+            jwtSignWithCookie(ro, loginTo.getSysId(), resp);
         }
         _log.info("微信登录的返回值为：{}", ro);
         return ro;
@@ -117,9 +117,8 @@ public class LoginCtrl {
     /**
      * JWT签名并将其加入Cookie
      */
-    private void jwtSignWithCookie(String sysId, UserLoginRo userLoginRo, HttpServletResponse resp) {
-        JwtSignRo signRo = jwtSvc.sign(sysId, userLoginRo.getUserId().toString(), //
-                userLoginRo.getOrgId() == null ? null : userLoginRo.getOrgId().toString());
+    private void jwtSignWithCookie(UserLoginRo userLoginRo, String sysId, HttpServletResponse resp) {
+        JwtSignRo signRo = jwtSvc.sign(userLoginRo.getUserId().toString(), sysId, userLoginRo.getOrgId());
         if (JwtSignResultDic.SUCCESS.equals(signRo.getResult())) {
             JwtUtils.addCookie(signRo.getSign(), signRo.getExpirationTime(), resp);
             userLoginRo.setSign(signRo.getSign());
