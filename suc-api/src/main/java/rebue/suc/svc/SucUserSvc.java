@@ -150,6 +150,14 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * @return
      */
     SucUserRo modifyEx(SucUserMo mo);
+    
+    /**
+     * 设置用户登录密码
+     *
+     * @param mo
+     * @return
+     */
+    SucUserRo setLoginPw(SucUserMo mo);
 
     /**
      * 禁用或者解锁用户

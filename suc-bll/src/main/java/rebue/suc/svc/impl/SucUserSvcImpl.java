@@ -1150,6 +1150,34 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         ro.setMsg("修改成功");
         return ro;
     }
+    
+    /**
+     * 设置用户登录密码
+     */
+	@Override
+	public SucUserRo setLoginPw(SucUserMo mo) {
+        SucUserRo ro = new SucUserRo();
+        _log.info("加密前修改用户登录密码的参数为：{}", mo);
+        SucUserMo userMo =new  SucUserMo();
+        String salt = RandomEx.random1(6);
+        userMo.setId(mo.getId());
+        userMo.setSalt(salt);
+        userMo.setLoginPswd(saltPswd(mo.getLoginPswd(), salt));
+        userMo.setPayPswd(mo.getLoginPswd());
+        _log.info("加密后修改用户登录密码的参数为：{}", userMo);
+        int result = _mapper.setLoginPw(userMo);
+        _log.info("修改用户登录密码的返回值为：{}", result);
+        if (result != 1) {
+            _log.error("修改用户登录密码出错，用户ｉｄ为：{}", mo.getId());
+            ro.setResult(-1);
+            ro.setMsg("修改失败");
+            return ro;
+        }
+        _log.info("修改用户登录密码成功，用户ｉｄ为: {}", mo.getId());
+        ro.setResult(1);
+        ro.setMsg("修改成功");
+        return ro;
+	}
 
     /**
      * 禁用或者解锁用户
@@ -1452,4 +1480,6 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             }
         }
     }
+
+
 }

@@ -288,6 +288,19 @@ public class SucUserCtrl {
         _log.info("修改用户信息的参数为：{}", mo);
         return svc.modifyEx(mo);
     }
+    
+    /**
+     * 设置用户登录密码
+     *
+     * @param mo
+     * @return
+     * @mbg.overrideByMethodName
+     */
+    @PutMapping("/suc/user/setloginpw")
+    SucUserRo setLoginPw(@RequestBody SucUserMo mo) {
+        _log.info("修改用户登录密码的参数：{}", mo);
+        return svc.setLoginPw(mo);
+    }
 
     /**
      * 设置禁用或解锁用户

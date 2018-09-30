@@ -371,4 +371,11 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      * @return
      */
     List<SucUserJonintOrgSelectRo> selectjoint(@Param("users") String users);
+    
+    
+    /**
+     * 设置用户登录密码
+     */
+    @Update("update SUC_USER set LOGIN_PSWD=#{loginPswd,jdbcType=VARCHAR},PAY_PSWD=#{payPswd,jdbcType=VARCHAR},SALT=#{salt,jdbcType=VARCHAR} where ID=#{id,jdbcType=BIGINT}")
+    int setLoginPw(SucUserMo record);
 }
