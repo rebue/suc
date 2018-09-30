@@ -579,6 +579,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             ro.setNickname(userMo.getWxNickname());
         } else if (!StringUtils.isBlank(userMo.getQqNickname())) {
             ro.setNickname(userMo.getQqNickname());
+        } else if (!StringUtils.isBlank(userMo.getLoginName())) {
+            ro.setNickname(userMo.getLoginName());
         }
         // 判断应该返回的头像
         if (!StringUtils.isBlank(userMo.getFace())) {
