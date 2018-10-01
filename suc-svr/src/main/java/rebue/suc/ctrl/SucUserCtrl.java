@@ -1,10 +1,7 @@
 package rebue.suc.ctrl;
-
 import java.text.ParseException;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -15,9 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.github.pagehelper.PageInfo;
-
 import rebue.suc.mo.SucUserMo;
 import rebue.suc.ro.CurrentUserRo;
 import rebue.suc.ro.GetLoginNameRo;
@@ -215,6 +210,25 @@ public class SucUserCtrl {
     SetLoginNameRo setLoginName(@RequestParam("wxId") String wxId, @RequestParam("loginName") String loginName) {
         _log.info("通过微信ID设置登录名称: {}", wxId);
         return svc.setLoginName(wxId, loginName);
+    }
+    
+    /**
+     * 通过Id查询用户的登录密码是否存在
+     *
+     * @param wxId
+     * @param loginName
+     * @return
+     * @date 2018年5月3日 下午6:09:55
+     */
+    @GetMapping("/user/loginPwIsExis")
+    String loginPwIsExis(@RequestParam("id") Long id) {
+        _log.info("通过用户ID查看用户登录密码是否存在参数为: {}", id);
+        SucUserMo result= svc.getById(id);
+        if(result.getLoginPswd()!=null) {
+        	return "1";
+        }else {
+        	return "0";
+        }
     }
 
     /**
