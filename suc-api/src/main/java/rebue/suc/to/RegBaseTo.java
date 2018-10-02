@@ -1,20 +1,19 @@
 package rebue.suc.to;
 
-import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 注册与登录的基础传输对象
  */
+@Getter
+@Setter
+@ToString
 public abstract class RegBaseTo extends RegAndLoginBaseTo {
-    @ApiModelProperty(value = "推广者ID", required = true)
+    /**
+     * 推广者ID
+     */
     private Long promoterId;
-
-    public Long getPromoterId() {
-        return promoterId;
-    }
-
-    public void setPromoterId(Long promoterId) {
-        this.promoterId = promoterId;
-    }
 
 }

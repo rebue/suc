@@ -1,5 +1,8 @@
 package rebue.suc.ctrl;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +20,7 @@ import rebue.jwt.svr.feign.JwtSvc;
 import rebue.sbs.redis.RedisSetException;
 import rebue.scx.jwt.dic.JwtSignResultDic;
 import rebue.scx.jwt.ro.JwtSignRo;
+import rebue.scx.jwt.to.JwtUserInfoTo;
 import rebue.suc.dic.LoginResultDic;
 import rebue.suc.ro.UserLoginRo;
 import rebue.suc.svc.SucUserSvc;
@@ -55,7 +59,7 @@ public class LoginCtrl {
         loginTo.setMac("不再获取MAC地址");
         UserLoginRo ro = svc.loginByLoginName(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, loginTo.getSysId(), resp);
+            jwtSignWithCookie(ro, loginTo.getSysId(), null, resp);
         }
         return ro;
     }
@@ -72,7 +76,7 @@ public class LoginCtrl {
         loginTo.setMac("不再获取MAC地址");
         UserLoginRo ro = svc.loginByUserName(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, loginTo.getSysId(), resp);
+            jwtSignWithCookie(ro, loginTo.getSysId(), null, resp);
         }
         return ro;
     }
@@ -89,7 +93,7 @@ public class LoginCtrl {
         loginTo.setMac("不再获取MAC地址");
         UserLoginRo ro = svc.loginByQq(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, loginTo.getSysId(), resp);
+            jwtSignWithCookie(ro, loginTo.getSysId(), null, resp);
         }
         return ro;
     }
@@ -108,7 +112,10 @@ public class LoginCtrl {
         loginTo.setMac("不再获取MAC地址");
         UserLoginRo ro = svc.loginByWx(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, loginTo.getSysId(), resp);
+            Map<String, Object> addition = new LinkedHashMap<>();
+            addition.put("wxOpenId", ro.getUserWxOpenId());
+            addition.put("wxUnionId", ro.getUserWxUnionId());
+            jwtSignWithCookie(ro, loginTo.getSysId(), addition, resp);
         }
         _log.info("微信登录的返回值为：{}", ro);
         return ro;
@@ -117,8 +124,17 @@ public class LoginCtrl {
     /**
      * JWT签名并将其加入Cookie
      */
-    private void jwtSignWithCookie(UserLoginRo userLoginRo, String sysId, HttpServletResponse resp) {
-        JwtSignRo signRo = jwtSvc.sign(userLoginRo.getUserId().toString(), sysId, userLoginRo.getOrgId());
+    private void jwtSignWithCookie(UserLoginRo userLoginRo, String sysId, Map<String, Object> addition, HttpServletResponse resp) {
+        if (userLoginRo.getOrgId() != null) {
+            if (addition == null)
+                addition = new LinkedHashMap<>();
+            addition.put("orgId", userLoginRo.getOrgId());
+        }
+        JwtUserInfoTo to = new JwtUserInfoTo();
+        to.setUserId(userLoginRo.getUserId().toString());
+        to.setSysId(sysId);
+        to.setAddition(addition);
+        JwtSignRo signRo = jwtSvc.sign(to);
         if (JwtSignResultDic.SUCCESS.equals(signRo.getResult())) {
             JwtUtils.addCookie(signRo.getSign(), signRo.getExpirationTime(), resp);
             userLoginRo.setSign(signRo.getSign());

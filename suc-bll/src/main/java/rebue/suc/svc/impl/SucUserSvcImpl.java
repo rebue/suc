@@ -306,7 +306,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         }
         SucUserMo userMo = dozerMapper.map(to, SucUserMo.class);
         add(userMo);
-        return returnSuccessReg(to, RegAndLoginTypeDic.WX, userMo);
+        UserRegRo ro = returnSuccessReg(to, RegAndLoginTypeDic.WX, userMo);
+        ro.setUserWxUnionId(to.getWxId());
+        ro.setUserWxOpenId(to.getWxOpenid());
+        return ro;
     }
 
     /**
@@ -545,7 +548,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 e.printStackTrace();
             }
         }
-        return returnSuccessLogin(to, RegAndLoginTypeDic.WX, userMo);
+        ro = returnSuccessLogin(to, RegAndLoginTypeDic.WX, userMo);
+        ro.setUserWxUnionId(to.getWxId());
+        ro.setUserWxOpenId(to.getWxOpenid());
+        return ro;
     }
 
     /**
@@ -1152,15 +1158,15 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         ro.setMsg("修改成功");
         return ro;
     }
-    
+
     /**
      * 设置用户登录密码
      */
-	@Override
-	public SucUserRo setLoginPw(SucUserMo mo) {
+    @Override
+    public SucUserRo setLoginPw(SucUserMo mo) {
         SucUserRo ro = new SucUserRo();
         _log.info("加密前修改用户登录密码的参数为：{}", mo);
-        SucUserMo userMo =new  SucUserMo();
+        SucUserMo userMo = new SucUserMo();
         String salt = RandomEx.random1(6);
         userMo.setId(mo.getId());
         userMo.setSalt(salt);
@@ -1179,7 +1185,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         ro.setResult(1);
         ro.setMsg("修改成功");
         return ro;
-	}
+    }
 
     /**
      * 禁用或者解锁用户
@@ -1482,6 +1488,5 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             }
         }
     }
-
 
 }

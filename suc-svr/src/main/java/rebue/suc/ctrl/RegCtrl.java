@@ -1,5 +1,8 @@
 package rebue.suc.ctrl;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +19,7 @@ import io.swagger.annotations.ApiOperation;
 import rebue.jwt.svr.feign.JwtSvc;
 import rebue.scx.jwt.dic.JwtSignResultDic;
 import rebue.scx.jwt.ro.JwtSignRo;
+import rebue.scx.jwt.to.JwtUserInfoTo;
 import rebue.suc.dic.RegResultDic;
 import rebue.suc.ro.UserRegRo;
 import rebue.suc.svc.SucUserSvc;
@@ -53,7 +57,7 @@ public class RegCtrl {
         regTo.setMac("不再获取MAC地址");
         UserRegRo ro = svc.regByLoginName(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, regTo.getSysId(), resp);
+            jwtSignWithCookie(ro, regTo.getSysId(), null, resp);
         }
         return ro;
     }
@@ -70,7 +74,7 @@ public class RegCtrl {
         regTo.setMac("不再获取MAC地址");
         UserRegRo ro = svc.regByQq(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, regTo.getSysId(), resp);
+            jwtSignWithCookie(ro, regTo.getSysId(), null, resp);
         }
         return ro;
     }
@@ -87,7 +91,10 @@ public class RegCtrl {
         regTo.setMac("不再获取MAC地址");
         UserRegRo ro = svc.regByWx(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, regTo.getSysId(), resp);
+            Map<String, Object> addition = new LinkedHashMap<>();
+            addition.put("wxOpenId", ro.getUserWxOpenId());
+            addition.put("wxUnionId", ro.getUserWxUnionId());
+            jwtSignWithCookie(ro, regTo.getSysId(), addition, resp);
         }
         return ro;
     }
@@ -98,8 +105,12 @@ public class RegCtrl {
      * @param userId
      *            用户ID
      */
-    private void jwtSignWithCookie(UserRegRo userRegRo, String sysId, HttpServletResponse resp) {
-        JwtSignRo signRo = jwtSvc.sign(userRegRo.getUserId().toString(), sysId, null);
+    private void jwtSignWithCookie(UserRegRo userRegRo, String sysId, Map<String, Object> addition, HttpServletResponse resp) {
+        JwtUserInfoTo to = new JwtUserInfoTo();
+        to.setUserId(userRegRo.getUserId().toString());
+        to.setSysId(sysId);
+        to.setAddition(addition);
+        JwtSignRo signRo = jwtSvc.sign(to);
         if (JwtSignResultDic.SUCCESS.equals(signRo.getResult())) {
             JwtUtils.addCookie(signRo.getSign(), signRo.getExpirationTime(), resp);
             userRegRo.setSign(signRo.getSign());

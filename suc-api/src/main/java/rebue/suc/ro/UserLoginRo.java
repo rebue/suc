@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Data;
 import rebue.suc.dic.LoginResultDic;
 
 /**
@@ -13,6 +14,7 @@ import rebue.suc.dic.LoginResultDic;
  * 
  * @see LoginResultDic
  */
+@Data
 @JsonInclude(Include.NON_NULL)
 public class UserLoginRo {
     /**
@@ -27,6 +29,14 @@ public class UserLoginRo {
      * 用户ID
      */
     private Long           userId;
+    /**
+     * 用户WxOpenID
+     */
+    private String         userWxOpenId;
+    /**
+     * 用户WxUnionID
+     */
+    private String         userWxUnionId;
     /**
      * 用户组织id
      */
@@ -48,75 +58,5 @@ public class UserLoginRo {
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date           expirationTime;
-
-    public LoginResultDic getResult() {
-        return result;
-    }
-
-    public void setResult(LoginResultDic result) {
-        this.result = result;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getFace() {
-        return face;
-    }
-
-    public void setFace(String face) {
-        this.face = face;
-    }
-
-    public Long getOrgId() {
-        return orgId;
-    }
-
-    public void setOrgId(Long orgId) {
-        this.orgId = orgId;
-    }
-
-    public String getSign() {
-        return sign;
-    }
-
-    public void setSign(String sign) {
-        this.sign = sign;
-    }
-
-    public Date getExpirationTime() {
-        return expirationTime;
-    }
-
-    public void setExpirationTime(Date expirationTime) {
-        this.expirationTime = expirationTime;
-    }
-
-    @Override
-    public String toString() {
-        return "UserLoginRo [result=" + result + ", userId=" + userId + ", msg=" + msg + ", nickname=" + nickname + ", face=" + face + ", orgId=" + orgId + ", sign=" + sign
-                + ", expirationTime=" + expirationTime + "]";
-    }
 
 }
