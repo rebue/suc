@@ -243,11 +243,6 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
     CurrentUserRo getCurrentUser(Long userId);
 
     /**
-     * 获取用户购买商品的购买关系
-     */
-    Long getBuyRelation(Long userId, Long onlineId);
-
-    /**
      * 模糊查询关键字且在指定多个用户ID范围内的用户列表
      * 
      * @param keys

@@ -104,11 +104,6 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     private static final String REDIS_KEY_USER_BLACKLIST_PREFIX     = "rebue.suc.svc.user.blacklist.";
 
     /**
-     * 用户购买关系的前缀 后面跟用户的id和上线id拼接成key Value为推广人id
-     */
-    private static final String REDIS_KEY_USER_BUY_BUY_RELATION     = "rebue.suc.svc.user.buy_relation.";
-
-    /**
      * 用户购买关系生效时间（以小时计）
      */
     @Value("${suc.buyRelationHoldHours}")
@@ -548,14 +543,6 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 opLogMo.setMac(to.getMac());
                 opLogMo.setIp(to.getIp());
                 opLogSvc.add(opLogMo);
-            }
-        }
-        if (to.getOnlineId() != null && to.getOnlineId() != 0) {
-            try {
-                redisClient.set(REDIS_KEY_USER_BUY_BUY_RELATION + userMo.getId() + to.getOnlineId(), to.getPromoterId().toString(), 60 * 60 * buyRelationHoldHours);
-            } catch (RedisSetException e) {
-                _log.info("微信用户登录添加购买关系时出错，用户id为：{}", userMo.getId());
-                e.printStackTrace();
             }
         }
         ro = returnSuccessLogin(to, RegAndLoginTypeDic.WX, userMo);
@@ -1440,12 +1427,6 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             ro.setFace(userMo.getQqFace());
         }
         return ro;
-    }
-
-    @Override
-    public Long getBuyRelation(Long userId, Long onlineId) {
-        _log.info("获取购买关系的用户ID为：" + userId + ",商品上线ID为：" + onlineId);
-        return redisClient.getLong(REDIS_KEY_USER_BUY_BUY_RELATION + userId.toString() + onlineId.toString());
     }
 
     /**
