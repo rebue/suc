@@ -15,7 +15,10 @@ import rebue.suc.ro.PayPswdVerifyRo;
 import rebue.suc.ro.SucRegRo;
 import rebue.suc.ro.SucUserDetailRo;
 import rebue.suc.ro.UserLoginRo;
+import rebue.suc.ro.UserRegRo;
 import rebue.suc.to.LoginByUserNameTo;
+import rebue.suc.to.LoginByWxTo;
+import rebue.suc.to.RegByWxTo;
 
 @FeignClient(name = "suc-svr", configuration = FeignConfig.class)
 public interface SucUserSvc {
@@ -31,6 +34,27 @@ public interface SucUserSvc {
      */
     @PostMapping(value = "/user/login/by/user/name")
     UserLoginRo loginByUserName(@RequestBody LoginByUserNameTo loginTo);
+
+    /**
+     * 用户登录(微信)
+     * 1: 成功;
+     * 0: 缓存失败;
+     * -1: 参数不正确;
+     * -2: 找不到用户信息;
+     * -4: 账号被锁定
+     */
+    @PostMapping("/user/login/by/wx")
+    UserLoginRo loginByWx(@RequestBody LoginByWxTo loginTo);
+
+    /**
+     * 用户注册(微信)
+     * 1: 成功;
+     * 0: 缓存失败;
+     * -1: 参数不正确;
+     * -7: 微信的ID已存在
+     */
+    @PostMapping("/user/reg/by/wx")
+    UserRegRo regByWx(@RequestBody RegByWxTo regTo);
 
     /**
      * 获取当前用户

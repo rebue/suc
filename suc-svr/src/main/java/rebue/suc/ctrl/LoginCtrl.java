@@ -100,8 +100,6 @@ public class LoginCtrl {
 
     /**
      * 用户登录(微信)
-     * 
-     * @throws RedisSetException
      */
     @ApiOperation("用户通过微信登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-4: 账号被锁定)")
     @PostMapping("/user/login/by/wx")

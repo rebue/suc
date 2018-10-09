@@ -282,16 +282,20 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserRegRo regByWx(RegByWxTo to) {
-        if (StringUtils.isAnyBlank(to.getWxId(), to.getWxOpenid(), to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
-            _log.warn("没有填写用户微信的ID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
+        if (StringUtils.isAllBlank(to.getWxId(), to.getWxOpenid()) || StringUtils.isAnyBlank(to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp())
+                || to.getSysId() == null) {
+            _log.warn("没有填写用户微信的OpenID或UnionID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
             UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.PARAM_ERROR);
             return regRo;
         }
         SucUserMo condition = new SucUserMo();
-        condition.setWxId(to.getWxId());
+        if (to.getWxId() != null)
+            condition.setWxId(to.getWxId());
+        if (to.getWxOpenid() != null)
+            condition.setWxOpenid(to.getWxOpenid());
         if (_mapper.existSelective(condition)) {
-            _log.warn("微信的ID已存在: {}", to);
+            _log.warn("微信的UnionID或OpenID已存在: {}", to);
             UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.WX_ID_EXIST);
             return regRo;
@@ -496,17 +500,23 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserLoginRo loginByWx(LoginByWxTo to) {
-        if (StringUtils.isAnyBlank(to.getWxId(), to.getWxOpenid(), to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
-            _log.warn("没有填写用户微信的ID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
+        if (StringUtils.isAllBlank(to.getWxId(), to.getWxOpenid()) || StringUtils.isAnyBlank(to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp())
+                || to.getSysId() == null) {
+            _log.warn("没有填写用户微信的OpenID或UnionID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
             UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.PARAM_ERROR);
             return ro;
         }
-        SucUserMo userMo = _mapper.selectByWx(to.getWxId());
+        SucUserMo userMo = null;
+        if (to.getWxId() != null) {
+            _log.info("根据微信UnionID查找用户: {}", to);
+            userMo = _mapper.selectByWx(to.getWxId());
+        }
         if (userMo == null) {
-            _log.warn("根据微信ID找不到此用户: {}", to);
+            _log.info("根据微信OpenId查找用户: {}", to);
             userMo = _mapper.selectByWxOpenid(to.getWxOpenid());
             if (userMo == null) {
+                _log.info("未找到用户: {}", to);
                 UserLoginRo ro = new UserLoginRo();
                 ro.setResult(LoginResultDic.NOT_FOUND_USER);
                 return ro;
