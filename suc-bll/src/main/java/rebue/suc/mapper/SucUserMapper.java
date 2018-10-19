@@ -227,7 +227,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      * @return
      * @date 2018年4月28日 上午11:47:26
      */
-    @Select("SELECT LOGIN_PSWD, SALT, WX_ID FROM SUC_USER WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
+    @Select("SELECT LOGIN_PSWD, PAY_PSWD, SALT, WX_ID FROM SUC_USER WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
     SucUserMo selectUserInfoByWx(@Param("wxId") String wxId);
 
     /**
@@ -240,6 +240,29 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      */
     @Update("UPDATE SUC_USER SET LOGIN_PSWD = #{loginPswd,jdbcType=VARCHAR} WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
     int updateloginPswd(@Param("wxId") String wxId, @Param("loginPswd") String loginPswd);
+
+    /**
+     * 根据微信ID设置支付密码 Title: setLoginPswd Description:
+     *
+     * @param wxId
+     * @param loginPswd
+     * @param salt
+     * @return
+     * @date 2018年4月28日 上午11:59:04
+     */
+    @Update("UPDATE SUC_USER SET PAY_PSWD = #{payPswd,jdbcType=VARCHAR}, SALT = #{salt,jdbcType=VARCHAR} WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
+    int setPayPswd(@Param("wxId") String wxId, @Param("payPswd") String loginPswd, @Param("salt") String salt);
+    
+    /**
+     * 根据微信ID修改支付密码 Title: updateloginPswd Description:
+     *
+     * @param wxId
+     * @param loginPswd
+     * @return
+     * @date 2018年4月28日 上午11:57:49
+     */
+    @Update("UPDATE SUC_USER SET PAY_PSWD = #{payPswd,jdbcType=VARCHAR} WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
+    int updatePayPswd(@Param("wxId") String wxId, @Param("payPswd") String payPswd);
 
     /**
      * 根据微信ID设置登录密码 Title: setLoginPswd Description:

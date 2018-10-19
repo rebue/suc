@@ -9,6 +9,8 @@ import rebue.suc.ro.CurrentUserRo;
 import rebue.suc.ro.GetLoginNameRo;
 import rebue.suc.ro.LoginPswdModifyRo;
 import rebue.suc.ro.LoginPswdSetRo;
+import rebue.suc.ro.PayPswdModifyRo;
+import rebue.suc.ro.PayPswdSetRo;
 import rebue.suc.ro.PayPswdVerifyRo;
 import rebue.suc.ro.SetLoginNameRo;
 import rebue.suc.ro.SucUserDetailRo;
@@ -269,4 +271,21 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      *            每页大小
      */
     PageInfo<SucUserDetailRo> listByKeysAndNotUserIds(String keys, String userIds, Integer pageNum, Integer pageSize);
+
+    /**
+     * 设置支付密码
+     * @param wxId
+     * @param newPayPswd
+     * @return
+     */
+	PayPswdSetRo setPayPassword(String wxId, String newPayPswd);
+
+	/**
+	 * 修改支付密码
+	 * @param wxId
+	 * @param oldPayPswd
+	 * @param newPayPswd
+	 * @return
+	 */
+	PayPswdModifyRo changePayPassword(String wxId, String oldPayPswd, String newPayPswd);
 }

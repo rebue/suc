@@ -24,6 +24,8 @@ import rebue.suc.dic.GetLoginNameDic;
 import rebue.suc.dic.LoginPswdModifyDic;
 import rebue.suc.dic.LoginPswdSetDic;
 import rebue.suc.dic.LoginResultDic;
+import rebue.suc.dic.PayPswdModifyDic;
+import rebue.suc.dic.PayPswdSetDic;
 import rebue.suc.dic.RegAndLoginTypeDic;
 import rebue.suc.dic.RegResultDic;
 import rebue.suc.dic.SetLoginNameDic;
@@ -42,6 +44,8 @@ import rebue.suc.ro.CurrentUserRo;
 import rebue.suc.ro.GetLoginNameRo;
 import rebue.suc.ro.LoginPswdModifyRo;
 import rebue.suc.ro.LoginPswdSetRo;
+import rebue.suc.ro.PayPswdModifyRo;
+import rebue.suc.ro.PayPswdSetRo;
 import rebue.suc.ro.PayPswdVerifyRo;
 import rebue.suc.ro.SetLoginNameRo;
 import rebue.suc.ro.SucUserDetailRo;
@@ -957,6 +961,9 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             return setRo;
         }
         String salt = RandomEx.random1(6);
+        if (userMo.getSalt() != null && !userMo.getSalt().equals("") && !userMo.getSalt().equals("")) {
+        	salt = userMo.getSalt();
+		}
         newLoginPswd = saltPswd(newLoginPswd, salt);
         _log.info("设置登录密码的参数为：{}", wxId + ", " + newLoginPswd + ", " + salt);
         int setResult = _mapper.setLoginPswd(wxId, newLoginPswd, salt);
@@ -1045,6 +1052,143 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         }
         _log.info("微信修改登录密码成功，微信ID为：{}", wxId);
         modifyRo.setResult(LoginPswdModifyDic.SUCCESS);
+        modifyRo.setMsg("修改成功");
+        return modifyRo;
+    }
+    
+    /**
+     * 微信设置支付密码 Title: setLoginPassword Description:
+     *
+     * @param wxId
+     * @param newPayPswd
+     * @return
+     * @date 2018年5月2日 下午12:57:25 1、判断参数是否为空 2、查询用户信息并判断该用户是否存在 3、判断支付密码是否为空
+     *       4、添加支付密码
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public PayPswdSetRo setPayPassword(String wxId, String newPayPswd) {
+    	PayPswdSetRo setRo = new PayPswdSetRo();
+        if (wxId == null || wxId.equals("") || wxId.equals("null")) {
+            _log.error("设置支付密码时出现微信ID为空");
+            setRo.setResult(PayPswdSetDic.NOT_LOGIN);
+            setRo.setMsg("您未登录，请先登录");
+            return setRo;
+        }
+        if (newPayPswd == null || newPayPswd.equals("") || newPayPswd.equals("null")) {
+            _log.error("设置支付密码时出现没有输入新的支付密码，微信ID为：{}", wxId);
+            setRo.setResult(PayPswdSetDic.NEW_PAYPSWD_NULL);
+            setRo.setMsg("请输入支付密码");
+            return setRo;
+        }
+        _log.info("设置支付密码查询用户信息的参数为：{}", wxId);
+        // 查询用户信息
+        SucUserMo userMo = _mapper.selectUserInfoByWx(wxId);
+        _log.info("设置支付密码查询用户信息的返回值为：{}", userMo.toString());
+        if (userMo.getWxId() == null || userMo.getWxId().equals("") || userMo.getWxId().equals("null")) {
+            _log.error("设置支付密码查询用户信息时出现用户信息为空，微信ID为：{}", wxId);
+            setRo.setResult(PayPswdSetDic.NOT_FOUND_USER);
+            setRo.setMsg("找不到用户信息");
+            return setRo;
+        }
+        if (userMo.getPayPswd() != null && !userMo.getPayPswd().equals("") && !userMo.getPayPswd().equals("null")) {
+            _log.error("微信设置支付密码时出现该用户微信用户已设置了支付密码，微信ID为：{}", wxId);
+            setRo.setResult(PayPswdSetDic.HAVE_SET);
+            setRo.setMsg("您已设置过支付密码");
+            return setRo;
+        }
+        String salt = RandomEx.random1(6);
+        if (userMo.getSalt() != null && !userMo.getSalt().equals("") && !userMo.getSalt().equals("")) {
+        	salt = userMo.getSalt();
+		}
+        newPayPswd = saltPswd(newPayPswd, salt);
+        _log.info("设置支付密码的参数为：{}", wxId + ", " + newPayPswd + ", " + salt);
+        int setResult = _mapper.setPayPswd(wxId, newPayPswd, salt);
+        _log.info("设置支付密码的返回值为：{}", setResult);
+        if (setResult < 1) {
+            _log.error("设置支付密码设置支付密码时出错，微信ID为：{}", wxId);
+            setRo.setResult(PayPswdSetDic.SET_ERROR);
+            setRo.setMsg("设置失败");
+            return setRo;
+        }
+        _log.info("微信设置支付密码成功，微信ID为：{}", wxId);
+        setRo.setResult(PayPswdSetDic.SUCCESS);
+        setRo.setMsg("设置成功");
+        return setRo;
+    }
+
+    /**
+     * 微信修改支付密码 Title: changePayPassword Description:
+     *
+     * @param wxId
+     * @param oldPayPswd
+     * @param newPayPswd
+     * @return
+     * @date 2018年5月2日 下午1:21:06 1、判断参数是否为空 2、查询用户信息并判断用户是否存在 3、判断用户是否已设置支付密码
+     *       4、判断输入的支付密码是否正确 5、修改支付密码
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public PayPswdModifyRo changePayPassword(String wxId, String oldPayPswd, String newPayPswd) {
+    	PayPswdModifyRo modifyRo = new PayPswdModifyRo();
+        if (wxId == null || wxId.equals("") || wxId.equals("null")) {
+            _log.error("设置或修改支付密码时出现微信ID为空");
+            modifyRo.setResult(PayPswdModifyDic.NOT_LOGIN);
+            modifyRo.setMsg("您未登录，请先登录");
+            return modifyRo;
+        }
+        if (newPayPswd == null || newPayPswd.equals("") || newPayPswd.equals("null")) {
+            _log.error("修改支付密码时出现没有输入新的支付密码，微信ID为：{}", wxId);
+            modifyRo.setResult(PayPswdModifyDic.NEW_PAYPSWD_NULL);
+            modifyRo.setMsg("请输入新的支付密码");
+            return modifyRo;
+        }
+        if (oldPayPswd == null || oldPayPswd.equals("") || oldPayPswd.equals("null")) {
+            _log.error("修改支付密码时出现没有输入旧的支付密码，微信ID为：{}", wxId);
+            modifyRo.setResult(PayPswdModifyDic.OLD_PAYPSWD_NULL);
+            modifyRo.setMsg("请输入旧的支付密码");
+            return modifyRo;
+        }
+        _log.info("修改支付密码查询用户信息的参数为：{}", wxId);
+        // 查询用户信息
+        SucUserMo userMo = _mapper.selectUserInfoByWx(wxId);
+        _log.info("修改支付密码查询用户信息的返回值为：{}", userMo.toString());
+        if (userMo.getWxId() == null || userMo.getWxId().equals("") || userMo.getWxId().equals("null")) {
+            _log.error("修改支付密码查询用户信息时出现用户信息为空，微信ID为：{}", wxId);
+            modifyRo.setResult(PayPswdModifyDic.NOT_FOUND_USER);
+            modifyRo.setMsg("找不到用户信息");
+            return modifyRo;
+        }
+        String salt = "";
+        String oriPayPswd = userMo.getPayPswd();
+        if (oriPayPswd != null && !oriPayPswd.equals("") && !oriPayPswd.equals("null")) {
+            oldPayPswd = saltPswd(oldPayPswd, userMo.getSalt());
+            if (!oriPayPswd.equals(oldPayPswd)) {
+                _log.error("修改支付密码时出现输入的旧密码不等于原来的旧密码，微信ID为：{}", wxId);
+                modifyRo.setResult(PayPswdModifyDic.OLD_PAYPSWD_ERROR);
+                modifyRo.setMsg("输入的旧密码不正确");
+                return modifyRo;
+            } else {
+                salt = userMo.getSalt();
+                newPayPswd = saltPswd(newPayPswd, salt);
+                _log.info("修改支付密码的参数为：{}", wxId + ", " + newPayPswd);
+                int updateResult = _mapper.updateloginPswd(wxId, newPayPswd);
+                _log.info("修改支付密码的返回值为：{}", updateResult);
+                if (updateResult < 1) {
+                    _log.error("修改支付密码根据微信ID修改密码时出现错误，微信ID为：{}", wxId);
+                    modifyRo.setResult(PayPswdModifyDic.NOT_SET_PAYPSWD);
+                    modifyRo.setMsg("修改失败");
+                    throw new RuntimeException("修改失败");
+                }
+            }
+        } else {
+            _log.error("微信修改支付密码时出现没有设置支付密码，微信ID为：{}", wxId);
+            modifyRo.setResult(PayPswdModifyDic.MODIFY_ERROR);
+            modifyRo.setMsg("您未设置支付密码，请先设置后再试");
+            return modifyRo;
+        }
+        _log.info("微信修改支付密码成功，微信ID为：{}", wxId);
+        modifyRo.setResult(PayPswdModifyDic.SUCCESS);
         modifyRo.setMsg("修改成功");
         return modifyRo;
     }
