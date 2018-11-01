@@ -2,6 +2,7 @@ package rebue.suc.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 @Mapper
@@ -27,4 +28,11 @@ public interface SucUserOrgMapper {
     @Update("UPDATE SUC_USER SET ORG_ID=NULL WHERE ID IN (${userIds})")
     int delUsers(@Param("userIds") String userIds);
 
+    /**
+     * 根据名称判断组织是否存在
+     * @param name
+     * @return
+     */
+    @Select("select count(*) from SUC_ORG where NAME = '${name}'")
+    boolean existByName(@Param("name") String name);
 }

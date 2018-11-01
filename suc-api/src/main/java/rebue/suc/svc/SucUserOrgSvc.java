@@ -68,4 +68,11 @@ public interface SucUserOrgSvc {
      */
     PageInfo<SucUserDetailRo> listUnaddedUsers(Long orgId, String keys, Integer pageNum, Integer pageSize);
 
+    /**
+     * 根据名称判断组织是否存在
+     * @param name
+     * @return
+     */
+	boolean existByName(String name);
+
 }

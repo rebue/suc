@@ -135,4 +135,15 @@ public class SucUserOrgCtrl {
         }
         return svc.listAddedAndUnaddedUsers(id, pageSize, null, pageNum, null, pageNum);
     }
+    
+    /**
+     * 根据名称判断组织是否存在
+     * @param name
+     * @return
+     */
+    @GetMapping("/suc/userorg/existbyname")
+    boolean existByName(@RequestParam("name") String name) {
+    	_log.info("判断组织是否存在的参数为：{}", name);
+    	return svc.existByName(name);
+    }
 }

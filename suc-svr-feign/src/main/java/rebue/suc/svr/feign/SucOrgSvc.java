@@ -1,6 +1,7 @@
 package rebue.suc.svr.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,4 +37,12 @@ public interface SucOrgSvc {
      */
     @PutMapping("/suc/org")
     SucOrgRo modify(@RequestBody SucOrgMo mo);
+    
+    /**
+     * 根据名称判断组织是否存在
+     * @param name
+     * @return
+     */
+    @GetMapping("/suc/userorg/existbyname")
+    boolean existByName(@RequestParam("name") String name);
 }

@@ -133,4 +133,14 @@ public class SucUserOrgSvcImpl implements SucUserOrgSvc {
             return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> userMapper.selectUnaddedUsersByOrgIdAndKeys(orgId, keys));
     }
 
+    /**
+     * 根据名称判断组织是否存在
+     * @param name
+     * @return
+     */
+    @Override
+    public boolean existByName(String name) {
+    	_log.info("根据名称判断组织是否存在的参数为：{}", name);
+    	return userOrgMapper.existByName(name);
+    }
 }
