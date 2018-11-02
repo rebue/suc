@@ -1,22 +1,17 @@
 package rebue.suc.msg;
 
+import lombok.Data;
+
+@Data
 public class SucAddUserDoneMsg {
     /**
      * 用户ID
      */
     private Long id;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return "SucUserAddMsg [id=" + id + "]";
-    }
+    
+    /**
+     * 账户类型(1：普通用户  2：组织用户)
+     */
+    private Byte accountType;
 
 }
