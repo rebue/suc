@@ -17,8 +17,8 @@ import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.suc.mapper.SucOrgMapper;
 import rebue.suc.mapper.SucUserMapper;
 import rebue.suc.mo.SucOrgMo;
-import rebue.suc.msg.SucAddUserDoneMsg;
-import rebue.suc.pub.SucAddUserDonePub;
+import rebue.suc.msg.SucAddOrgDoneMsg;
+import rebue.suc.pub.SucAddOrgDonePub;
 import rebue.suc.ro.SucOrgRo;
 import rebue.suc.svc.SucOrgSvc;
 
@@ -38,7 +38,7 @@ import rebue.suc.svc.SucOrgSvc;
 public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, SucOrgMapper> implements SucOrgSvc {
 
 	@Resource
-    private SucAddUserDonePub   userAddPub;
+    private SucAddOrgDonePub   orgAddPub;
 	
     /**
      * @mbg.overrideByMethodName
@@ -56,10 +56,9 @@ public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, 
         int result = super.add(mo);
         if (result == 1) {
         	// 发布添加用户的消息
-            SucAddUserDoneMsg msg = new SucAddUserDoneMsg();
+            SucAddOrgDoneMsg msg = new SucAddOrgDoneMsg();
             msg.setId(mo.getId());
-            msg.setAccountType((byte) 2);
-            userAddPub.send(msg);
+            orgAddPub.send(msg);
 		}
         return result;
     }
