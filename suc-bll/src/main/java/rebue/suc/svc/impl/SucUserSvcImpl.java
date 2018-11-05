@@ -147,6 +147,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         int result = super.add(mo);
         // 发布添加用户的消息
         SucAddUserDoneMsg msg = dozerMapper.map(mo, SucAddUserDoneMsg.class);
+        msg.setAccountType((byte) 1);
         userAddPub.send(msg);
         return result;
     }

@@ -17,6 +17,8 @@ import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.suc.mapper.SucOrgMapper;
 import rebue.suc.mapper.SucUserMapper;
 import rebue.suc.mo.SucOrgMo;
+import rebue.suc.msg.SucAddUserDoneMsg;
+import rebue.suc.pub.SucAddUserDonePub;
 import rebue.suc.ro.SucOrgRo;
 import rebue.suc.svc.SucOrgSvc;
 
@@ -35,6 +37,9 @@ import rebue.suc.svc.SucOrgSvc;
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, SucOrgMapper> implements SucOrgSvc {
 
+	@Resource
+    private SucAddUserDonePub   userAddPub;
+	
     /**
      * @mbg.overrideByMethodName
      */
@@ -48,7 +53,15 @@ public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, 
         if (mo.getCreateTimestamp() == null || mo.getCreateTimestamp() == 0) {
             mo.setCreateTimestamp(System.currentTimeMillis());
         }
-        return super.add(mo);
+        int result = super.add(mo);
+        if (result == 1) {
+        	// 发布添加用户的消息
+            SucAddUserDoneMsg msg = new SucAddUserDoneMsg();
+            msg.setId(mo.getId());
+            msg.setAccountType((byte) 2);
+            userAddPub.send(msg);
+		}
+        return result;
     }
 
     private static final Logger _log = LoggerFactory.getLogger(SucOrgSvcImpl.class);
