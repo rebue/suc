@@ -1,5 +1,7 @@
 package rebue.suc.svr.feign;
 
+import java.util.List;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,4 +47,12 @@ public interface SucOrgSvc {
      */
     @GetMapping("/suc/userorg/existbyname")
     boolean existByName(@RequestParam("name") String name);
+    
+    /**
+     * 根据组织名称获取单个组织信息
+     * @param name
+     * @return
+     */
+    @PutMapping("/suc/org/getone")
+    SucOrgMo getOne(@RequestParam("name") String name);
 }

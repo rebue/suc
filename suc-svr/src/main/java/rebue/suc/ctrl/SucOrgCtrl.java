@@ -215,4 +215,17 @@ public class SucOrgCtrl {
         _log.info("禁用或者启用组织的参数为：id={}, isEnabled={}", id, isEnabled);
         return svc.enable(id, isEnabled);
     }
+    
+    /**
+     * 根据组织名称获取单个组织信息
+     * @param name
+     * @return
+     */
+    @PutMapping("/suc/org/getone")
+    SucOrgMo getOne(@RequestParam("name") String name) {
+    	_log.info("根据组织名称获取单个组织信息的参数为：{}", name);
+    	SucOrgMo mo = new SucOrgMo();
+    	mo.setName(name);
+    	return svc.getOne(mo);
+    }
 }
