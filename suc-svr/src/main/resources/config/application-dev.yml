@@ -1,3 +1,5 @@
 suc:
   # 购买关系保留小时数
   buyRelationHoldHours: 72
+  # 免密支付限额
+  notPwdPayLimit: 30000000

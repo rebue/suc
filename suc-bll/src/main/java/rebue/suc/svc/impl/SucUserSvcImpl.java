@@ -112,6 +112,12 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      */
     @Value("${suc.buyRelationHoldHours}")
     private Integer             buyRelationHoldHours;
+    
+    /**
+     * 免密支付额度
+     */
+    @Value("${suc.notPwdPayLimit}")
+    private Double notPwdPayLimit;
 
     @Resource
     private SucLoginLogSvc      loginLogSvc;
@@ -707,7 +713,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      */
     @Override
     public Boolean requirePayPswd(Long userId, Double amount) {
-        return amount != null && amount > 200;
+        return amount != null && amount > notPwdPayLimit;
     }
 
     /**
