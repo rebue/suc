@@ -1,6 +1,8 @@
 package rebue.suc.ctrl;
 
 import java.text.ParseException;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -450,6 +452,17 @@ public class SucUserCtrl {
 		Long userId = JwtUtils.getJwtUserIdInCookie(req);
 		// 通过用户ID获取用户信息
 		return svc.getCurrentUser(userId);
+	}
+	
+	/**
+	 * 根据用户微信昵称查找用户信息
+	 */
+	@GetMapping("/user/getByWxNick")
+	List<SucUserMo> getByWxNick(@RequestParam("wxNickName") String wxNickName) {
+		_log.info("根据微信昵称获取用户信息参数：{}", wxNickName);
+		SucUserMo mo = new SucUserMo();
+		mo.setWxNickname(wxNickName);
+		return svc.list(mo);
 	}
 
 }

@@ -1,5 +1,7 @@
 package rebue.suc.svr.feign;
 
+import java.util.List;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -158,5 +160,11 @@ public interface SucUserSvc {
     @GetMapping("/suc/user/listbykeysandnotuserids")
     PageInfo<SucUserDetailRo> listByKeysAndNotUserIds(@RequestParam(value = "keys", required = false) String keys, @RequestParam("userIds") String userIds,
             @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize);
+    
+    /**
+     * 根据微信昵称查找用户信息
+     */
+    @GetMapping("/user/getByWxNick")
+	List<SucUserMo> getByWxNick(@RequestParam("wxNickName") String wxNickName) ;
 
 }
