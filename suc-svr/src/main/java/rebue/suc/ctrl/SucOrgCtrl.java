@@ -221,7 +221,7 @@ public class SucOrgCtrl {
      * @param name
      * @return
      */
-    @PutMapping("/suc/org/getone")
+    @GetMapping("/suc/org/getone")
     SucOrgMo getOne(@RequestParam("name") String name) {
     	_log.info("根据组织名称获取单个组织信息的参数为：{}", name);
     	SucOrgMo mo = new SucOrgMo();

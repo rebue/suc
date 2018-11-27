@@ -53,6 +53,14 @@ public interface SucOrgSvc {
      * @param name
      * @return
      */
-    @PutMapping("/suc/org/getone")
+    @GetMapping("/suc/org/getone")
     SucOrgMo getOne(@RequestParam("name") String name);
+    
+    /**
+     * 根据ID获取单个组织信息
+     * @param name
+     * @return
+     */
+    @GetMapping("/suc/org/getbyid")
+    SucOrgMo getById(@RequestParam("name") String name);
 }
