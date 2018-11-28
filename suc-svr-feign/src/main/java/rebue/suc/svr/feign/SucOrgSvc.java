@@ -62,5 +62,5 @@ public interface SucOrgSvc {
      * @return
      */
     @GetMapping("/suc/org/getbyid")
-    SucOrgMo getById(@RequestParam("id") Long id);
+    SucOrgRo getById(@RequestParam("id") Long id);
 }
