@@ -194,18 +194,18 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      * @param orgId
      *            组织ID
      */
-    @Select("SELECT * FROM SUC_USER WHERE ORG_ID IS NULL || ORG_ID != #{orgId,jdbcType=BIGINT}")
+    @Select("SELECT * FROM SUC_USER WHERE ORG_ID IS NULL or ORG_ID != #{orgId,jdbcType=BIGINT}")
     List<SucUserDetailRo> selectUnaddedUsersByOrgId(@Param("orgId") Long orgId);
 
     /**
-     * 查询指定组织的未添加的用户列表
+     * 根据条件查询指定组织的未添加的用户列表
      * 
      * @param orgId
      *            组织ID
      * @param keys
      *            模糊查询用户的关键字
      */
-    @Select("SELECT * FROM SUC_USER WHERE (ORG_ID IS NULL || ORG_ID != #{orgId,jdbcType=BIGINT}) AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%')")
+    @Select("SELECT * FROM SUC_USER WHERE (ORG_ID IS NULL or ORG_ID != #{orgId,jdbcType=BIGINT}) AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%')")
     List<SucUserDetailRo> selectUnaddedUsersByOrgIdAndKeys(@Param("orgId") Long orgId, @Param("keys") String keys);
 
     /**
