@@ -1,12 +1,10 @@
 package rebue.suc.mapper;
 
 import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-
 import rebue.robotech.mapper.MybatisBaseMapper;
 import rebue.suc.mo.SucUserMo;
 import rebue.suc.ro.SucUserDetailRo;
@@ -16,77 +14,65 @@ import rebue.suc.ro.SucUserJonintOrgSelectRo;
 public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
-     * @mbg.generated 自动生成，如需修改，请删除本行
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    @Override
     int deleteByPrimaryKey(Long id);
 
     /**
-     * @mbg.generated 自动生成，如需修改，请删除本行
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    @Override
     int insert(SucUserMo record);
 
     /**
-     * @mbg.generated 自动生成，如需修改，请删除本行
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    @Override
     int insertSelective(SucUserMo record);
 
     /**
-     * @mbg.generated 自动生成，如需修改，请删除本行
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    @Override
     SucUserMo selectByPrimaryKey(Long id);
 
     /**
-     * @mbg.generated 自动生成，如需修改，请删除本行
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    @Override
     int updateByPrimaryKeySelective(SucUserMo record);
 
     /**
-     * @mbg.generated 自动生成，如需修改，请删除本行
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    @Override
     int updateByPrimaryKey(SucUserMo record);
 
     /**
-     * @mbg.generated 自动生成，如需修改，请删除本行
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    @Override
     List<SucUserMo> selectAll();
 
     /**
-     * @mbg.generated 自动生成，如需修改，请删除本行
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    @Override
     List<SucUserMo> selectSelective(SucUserMo record);
 
     /**
-     * @mbg.generated 自动生成，如需修改，请删除本行
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    @Override
     boolean existByPrimaryKey(Long id);
 
     /**
-     * @mbg.generated 自动生成，如需修改，请删除本行
+     *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    @Override
     boolean existSelective(SucUserMo record);
 
     /**
      * 根据邮箱获取用户信息
      */
-    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_EMAIL, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID from SUC_USER "
-            + " where lower(EMAIL) = lower(#{email,jdbcType=VARCHAR})")
+    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_EMAIL, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID from SUC_USER " + " where lower(EMAIL) = lower(#{email,jdbcType=VARCHAR})")
     SucUserMo selectByEmail(String email);
 
     /**
      * 根据手机号获取用户信息
      */
-    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_MOBILE, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID from SUC_USER "
-            + " where MOBILE = #{mobile,jdbcType=VARCHAR}")
+    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_MOBILE, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID from SUC_USER " + " where MOBILE = #{mobile,jdbcType=VARCHAR}")
     SucUserMo selectByMobile(String mobile);
 
     /**
@@ -121,7 +107,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
      * 模糊查询关键字的用户列表
-     * 
+     *
      * @param keys
      *            模糊查询用户的关键字
      */
@@ -130,7 +116,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
      * 查询在指定多个用户ID范围内的用户列表
-     * 
+     *
      * @param userIds
      *            多个用户ID组成的字符串，用逗号分隔
      */
@@ -139,7 +125,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
      * 模糊查询关键字且在指定多个用户ID范围内的用户列表
-     * 
+     *
      * @param keys
      *            模糊查询用户的关键字
      * @param userIds
@@ -150,7 +136,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
      * 查询除指定多个用户ID外的用户列表
-     * 
+     *
      * @param userIds
      *            多个用户ID组成的字符串，用逗号分隔
      */
@@ -159,7 +145,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
      * 模糊查询关键字且排除指定多个用户ID外的用户列表
-     * 
+     *
      * @param keys
      *            模糊查询用户的关键字
      * @param userIds
@@ -170,7 +156,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
      * 查询指定组织的已添加的用户列表
-     * 
+     *
      * @param orgId
      *            组织ID
      */
@@ -179,7 +165,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
      * 查询指定组织的已添加的用户列表
-     * 
+     *
      * @param orgId
      *            组织ID
      * @param keys
@@ -190,7 +176,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
      * 查询指定组织的未添加的用户列表
-     * 
+     *
      * @param orgId
      *            组织ID
      */
@@ -199,7 +185,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
      * 根据条件查询指定组织的未添加的用户列表
-     * 
+     *
      * @param orgId
      *            组织ID
      * @param keys
@@ -252,7 +238,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      */
     @Update("UPDATE SUC_USER SET PAY_PSWD = #{payPswd,jdbcType=VARCHAR}, SALT = #{salt,jdbcType=VARCHAR} WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
     int setPayPswd(@Param("wxId") String wxId, @Param("payPswd") String loginPswd, @Param("salt") String salt);
-    
+
     /**
      * 根据微信ID修改支付密码 Title: updateloginPswd Description:
      *
@@ -361,7 +347,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
      * 根据组织编号删除用户组织
-     * 
+     *
      * @param orgId
      * @return
      */
@@ -370,7 +356,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
      * 添加用户组织
-     * 
+     *
      * @param id
      * @param orgId
      * @return
@@ -380,7 +366,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
      * 根据用户id删除用户组织
-     * 
+     *
      * @param id
      * @return
      */
@@ -389,13 +375,12 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 
     /**
      * 联查suc-org
-     * 
+     *
      * @param record
      * @return
      */
     List<SucUserJonintOrgSelectRo> selectjoint(@Param("users") String users);
-    
-    
+
     /**
      * 设置用户登录密码
      */

@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/8/23 17:56:43                           */
+/* Created on:     2018/12/15 15:40:26                          */
 /*==============================================================*/
 
 
@@ -16,11 +16,11 @@ drop table if exists SUC_LOGIN_LOG;
 
 drop table if exists SUC_OP_LOG;
 
+drop table if exists SUC_ORG;
+
 drop table if exists SUC_REG;
 
 drop table if exists SUC_USER;
-
-drop table if exists SUC_ORG;
 
 drop table if exists SUC_USER_FORBIDDEN_WORD;
 
@@ -203,6 +203,7 @@ create table SUC_USER
    WX_OPENID            varchar(200) comment '微信openid',
    WX_NICKNAME          varchar(100) comment '微信昵称',
    WX_FACE              varchar(500) comment '微信头像',
+   IS_TESTER            bool not null default false comment '是否测试者',
    IS_LOCK              bool not null default false comment '是否锁定',
    PROMOTER_ID          bigint comment '推广者ID',
    MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳',

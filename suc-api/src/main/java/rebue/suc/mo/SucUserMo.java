@@ -9,7 +9,7 @@ import java.io.Serializable;
  *
  * 数据库表: SUC_USER
  *
- * @mbg.generated 自动生成，如需修改，请删除本行
+ * @mbg.generated 自动生成的注释，如需修改本注释，请删除本行
  */
 @JsonInclude(Include.NON_NULL)
 public class SucUserMo implements Serializable {
@@ -262,6 +262,15 @@ public class SucUserMo implements Serializable {
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Long modifiedTimestamp;
+
+    /**
+     *    是否测试者
+     *
+     *    数据库字段: SUC_USER.IS_TESTER
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private Boolean isTester;
 
     /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -875,6 +884,28 @@ public class SucUserMo implements Serializable {
     }
 
     /**
+     *    是否测试者
+     *
+     *    数据库字段: SUC_USER.IS_TESTER
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public Boolean getIsTester() {
+        return isTester;
+    }
+
+    /**
+     *    是否测试者
+     *
+     *    数据库字段: SUC_USER.IS_TESTER
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setIsTester(Boolean isTester) {
+        this.isTester = isTester;
+    }
+
+    /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
@@ -910,6 +941,7 @@ public class SucUserMo implements Serializable {
         sb.append(", isLock=").append(isLock);
         sb.append(", promoterId=").append(promoterId);
         sb.append(", modifiedTimestamp=").append(modifiedTimestamp);
+        sb.append(", isTester=").append(isTester);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

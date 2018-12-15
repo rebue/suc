@@ -35,3 +35,6 @@ alter table suc.SUC_USER add ORG_ID bigint;
 
 
 
+-- ------------------------------------------------------------------ 以上已经更新到线上 ------------------------------------------------------------------ 
+-- 2018-12-15
+alter table SUC_USER add IS_TESTER            bool not null default false comment '是否测试者';
