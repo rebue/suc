@@ -30,6 +30,10 @@ public class UserLoginRo {
      */
     private Long           userId;
     /**
+     * 用户是否是测试者
+     */
+    private Boolean        isTester;
+    /**
      * 用户WxOpenID
      */
     private String         userWxOpenId;

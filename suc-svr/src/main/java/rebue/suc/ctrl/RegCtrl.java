@@ -50,12 +50,12 @@ public class RegCtrl {
      */
     @ApiOperation("用户通过登录名称注册\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 用户登录名已存在;-3: Email已存在;-4: 手机号码已存在;-5: 身份证号码已存在;-6: QQ的ID已存在;-7: 微信的ID已存在)")
     @PostMapping("/user/reg/by/login/name")
-    UserRegRo regByLoginName(@RequestBody RegByLoginNameTo regTo, HttpServletRequest req, HttpServletResponse resp) {
+    UserRegRo regByLoginName(@RequestBody final RegByLoginNameTo regTo, final HttpServletRequest req, final HttpServletResponse resp) {
         _log.info("reg by login name: {}", regTo);
         regTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         regTo.setUserAgent(AgentUtils.getUserAgent(req));
         regTo.setMac("不再获取MAC地址");
-        UserRegRo ro = svc.regByLoginName(regTo);
+        final UserRegRo ro = svc.regByLoginName(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
             jwtSignWithCookie(ro, regTo.getSysId(), null, resp);
         }
@@ -67,12 +67,12 @@ public class RegCtrl {
      */
     @ApiOperation("用户通过QQ注册\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 用户登录名已存在;-3: Email已存在;-4: 手机号码已存在;-5: 身份证号码已存在;-6: QQ的ID已存在;-7: 微信的ID已存在)")
     @PostMapping("/user/reg/by/qq")
-    UserRegRo regByQq(@RequestBody RegByQqTo regTo, HttpServletRequest req, HttpServletResponse resp) {
+    UserRegRo regByQq(@RequestBody final RegByQqTo regTo, final HttpServletRequest req, final HttpServletResponse resp) {
         _log.info("reg by qq: {}", regTo);
         regTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         regTo.setUserAgent(AgentUtils.getUserAgent(req));
         regTo.setMac("不再获取MAC地址");
-        UserRegRo ro = svc.regByQq(regTo);
+        final UserRegRo ro = svc.regByQq(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
             jwtSignWithCookie(ro, regTo.getSysId(), null, resp);
         }
@@ -84,14 +84,14 @@ public class RegCtrl {
      */
     @ApiOperation("用户通过微信注册\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 用户登录名已存在;-3: Email已存在;-4: 手机号码已存在;-5: 身份证号码已存在;-6: 微信的ID已存在;-7: 微信的ID已存在)")
     @PostMapping("/user/reg/by/wx")
-    UserRegRo regByWx(@RequestBody RegByWxTo regTo, HttpServletRequest req, HttpServletResponse resp) {
+    UserRegRo regByWx(@RequestBody final RegByWxTo regTo, final HttpServletRequest req, final HttpServletResponse resp) {
         _log.info("reg by wx: {}", regTo);
         regTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         regTo.setUserAgent(AgentUtils.getUserAgent(req));
         regTo.setMac("不再获取MAC地址");
-        UserRegRo ro = svc.regByWx(regTo);
+        final UserRegRo ro = svc.regByWx(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
-            Map<String, Object> addition = new LinkedHashMap<>();
+            final Map<String, Object> addition = new LinkedHashMap<>();
             addition.put("wxOpenId", ro.getUserWxOpenId());
             addition.put("wxUnionId", ro.getUserWxUnionId());
             jwtSignWithCookie(ro, regTo.getSysId(), addition, resp);
@@ -105,12 +105,17 @@ public class RegCtrl {
      * @param userId
      *            用户ID
      */
-    private void jwtSignWithCookie(UserRegRo userRegRo, String sysId, Map<String, Object> addition, HttpServletResponse resp) {
-        JwtUserInfoTo to = new JwtUserInfoTo();
+    private void jwtSignWithCookie(final UserRegRo userRegRo, final String sysId, Map<String, Object> addition, final HttpServletResponse resp) {
+        if (addition == null) {
+            addition = new LinkedHashMap<>();
+        }
+        addition.put("isTester", false);
+
+        final JwtUserInfoTo to = new JwtUserInfoTo();
         to.setUserId(userRegRo.getUserId().toString());
         to.setSysId(sysId);
         to.setAddition(addition);
-        JwtSignRo signRo = jwtSvc.sign(to);
+        final JwtSignRo signRo = jwtSvc.sign(to);
         if (JwtSignResultDic.SUCCESS.equals(signRo.getResult())) {
             JwtUtils.addCookie(signRo.getSign(), signRo.getExpirationTime(), resp);
             userRegRo.setSign(signRo.getSign());

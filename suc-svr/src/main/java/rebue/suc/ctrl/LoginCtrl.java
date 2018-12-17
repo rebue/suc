@@ -52,12 +52,12 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过登录名称(LoginName)登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-3: 密码错误;-4: 账号被锁定)")
     @PostMapping("/user/login/by/login/name")
-    UserLoginRo loginByLoginName(@RequestBody LoginByLoginNameTo loginTo, HttpServletRequest req, HttpServletResponse resp) {
+    UserLoginRo loginByLoginName(@RequestBody final LoginByLoginNameTo loginTo, final HttpServletRequest req, final HttpServletResponse resp) {
         _log.info("login: " + loginTo);
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
         loginTo.setMac("不再获取MAC地址");
-        UserLoginRo ro = svc.loginByLoginName(loginTo);
+        final UserLoginRo ro = svc.loginByLoginName(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
             jwtSignWithCookie(ro, loginTo.getSysId(), null, resp);
         }
@@ -69,12 +69,12 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过用户名称(Email/Moblie/LoginName)登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-3: 密码错误;-4: 账号被锁定;-5: 用户用Email登录，但Email尚未通过验证;-6: 用户用手机号登录，但手机号尚未通过验证)")
     @PostMapping("/user/login/by/user/name")
-    UserLoginRo loginByUserName(@RequestBody LoginByUserNameTo loginTo, HttpServletRequest req, HttpServletResponse resp) {
+    UserLoginRo loginByUserName(@RequestBody final LoginByUserNameTo loginTo, final HttpServletRequest req, final HttpServletResponse resp) {
         _log.info("login: " + loginTo);
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
         loginTo.setMac("不再获取MAC地址");
-        UserLoginRo ro = svc.loginByUserName(loginTo);
+        final UserLoginRo ro = svc.loginByUserName(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
             jwtSignWithCookie(ro, loginTo.getSysId(), null, resp);
         }
@@ -86,12 +86,12 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过QQ登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-4: 账号被锁定)")
     @PostMapping("/user/login/by/qq")
-    UserLoginRo loginByQq(@RequestBody LoginByQqTo loginTo, HttpServletRequest req, HttpServletResponse resp) {
+    UserLoginRo loginByQq(@RequestBody final LoginByQqTo loginTo, final HttpServletRequest req, final HttpServletResponse resp) {
         _log.info("login: " + loginTo);
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
         loginTo.setMac("不再获取MAC地址");
-        UserLoginRo ro = svc.loginByQq(loginTo);
+        final UserLoginRo ro = svc.loginByQq(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
             jwtSignWithCookie(ro, loginTo.getSysId(), null, resp);
         }
@@ -103,14 +103,14 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过微信登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-4: 账号被锁定)")
     @PostMapping("/user/login/by/wx")
-    UserLoginRo loginByWx(@RequestBody LoginByWxTo loginTo, HttpServletRequest req, HttpServletResponse resp) throws RedisSetException {
+    UserLoginRo loginByWx(@RequestBody final LoginByWxTo loginTo, final HttpServletRequest req, final HttpServletResponse resp) throws RedisSetException {
         _log.info("login: " + loginTo);
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
         loginTo.setMac("不再获取MAC地址");
-        UserLoginRo ro = svc.loginByWx(loginTo);
+        final UserLoginRo ro = svc.loginByWx(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
-            Map<String, Object> addition = new LinkedHashMap<>();
+            final Map<String, Object> addition = new LinkedHashMap<>();
             addition.put("wxOpenId", ro.getUserWxOpenId());
             addition.put("wxUnionId", ro.getUserWxUnionId());
             jwtSignWithCookie(ro, loginTo.getSysId(), addition, resp);
@@ -122,17 +122,19 @@ public class LoginCtrl {
     /**
      * JWT签名并将其加入Cookie
      */
-    private void jwtSignWithCookie(UserLoginRo userLoginRo, String sysId, Map<String, Object> addition, HttpServletResponse resp) {
+    private void jwtSignWithCookie(final UserLoginRo userLoginRo, final String sysId, Map<String, Object> addition, final HttpServletResponse resp) {
+        if (addition == null) {
+            addition = new LinkedHashMap<>();
+        }
+        addition.put("isTester", userLoginRo.getIsTester());
         if (userLoginRo.getOrgId() != null) {
-            if (addition == null)
-                addition = new LinkedHashMap<>();
             addition.put("orgId", userLoginRo.getOrgId());
         }
-        JwtUserInfoTo to = new JwtUserInfoTo();
+        final JwtUserInfoTo to = new JwtUserInfoTo();
         to.setUserId(userLoginRo.getUserId().toString());
         to.setSysId(sysId);
         to.setAddition(addition);
-        JwtSignRo signRo = jwtSvc.sign(to);
+        final JwtSignRo signRo = jwtSvc.sign(to);
         if (JwtSignResultDic.SUCCESS.equals(signRo.getResult())) {
             JwtUtils.addCookie(signRo.getSign(), signRo.getExpirationTime(), resp);
             userLoginRo.setSign(signRo.getSign());

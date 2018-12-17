@@ -587,6 +587,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         loginLogSvc.add(loginLogMo);
         final UserLoginRo ro = new UserLoginRo();
         ro.setUserId(userMo.getId());
+        ro.setIsTester(userMo.getIsTester());
         ro.setOrgId(userMo.getOrgId());
         ro.setResult(LoginResultDic.SUCCESS);
         ro.setMsg("用户登录成功");
