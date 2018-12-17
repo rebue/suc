@@ -1,5 +1,4 @@
 package rebue.suc.svr.feign;
-
 import java.util.List;
 
 import org.springframework.cloud.openfeign.FeignClient;
@@ -63,4 +62,11 @@ public interface SucOrgSvc {
      */
     @GetMapping("/suc/org/getbyid")
     SucOrgRo getById(@RequestParam("id") Long id);
+    
+    /**
+     * 获取所有的组织
+     * @return
+     */
+    @GetMapping("/suc/org/all")
+    List<SucOrgMo> listAll();
 }

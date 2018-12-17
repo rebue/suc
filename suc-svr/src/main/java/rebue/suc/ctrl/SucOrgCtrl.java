@@ -191,6 +191,17 @@ public class SucOrgCtrl {
         _log.info("result: " + result);
         return result;
     }
+    
+    /*
+     * 获取所有组织
+     */
+    @GetMapping("/suc/org/all")
+    List<SucOrgMo> listAll(){
+        _log.info("开始获取所有的组织");
+        List<SucOrgMo> result=svc.listAll();
+        _log.info("开始获取所有的组织结果为:{}",result);
+        return result;
+    }
 
     /**
      * 根据组织名称查询组织信息
