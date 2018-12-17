@@ -77,6 +77,12 @@ public interface SucUserSvc {
     Boolean isLocked(@RequestParam("id") Long id);
 
     /**
+     * 判断用户是否是测试用户
+     */
+    @GetMapping("/user/istester")
+    Boolean isTester(@RequestParam("userId") Long userId);
+
+    /**
      * 根据微信ID获取用户ID
      */
     @GetMapping("/user/id/bywxid")
@@ -160,11 +166,11 @@ public interface SucUserSvc {
     @GetMapping("/suc/user/listbykeysandnotuserids")
     PageInfo<SucUserDetailRo> listByKeysAndNotUserIds(@RequestParam(value = "keys", required = false) String keys, @RequestParam("userIds") String userIds,
             @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize);
-    
+
     /**
      * 根据微信昵称查找用户信息
      */
     @GetMapping("/user/getByWxNick")
-	List<SucUserMo> getByWxNick(@RequestParam("wxNickName") String wxNickName) ;
+    List<SucUserMo> getByWxNick(@RequestParam("wxNickName") String wxNickName);
 
 }

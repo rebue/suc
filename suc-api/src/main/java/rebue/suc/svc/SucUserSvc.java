@@ -36,12 +36,12 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
     /**
      * 用户注册(通过QQ)
      */
-    public UserRegRo regByQq(RegByQqTo regTo);
+    UserRegRo regByQq(RegByQqTo regTo);
 
     /**
      * 用户注册(通过微信)
      */
-    public UserRegRo regByWx(RegByWxTo regTo);
+    UserRegRo regByWx(RegByWxTo regTo);
 
     /**
      * 用户登录(通过登录名称)
@@ -88,7 +88,12 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
     /**
      * 判断用户是否被锁定
      */
-    Boolean isLocked(Long id);
+    Boolean isLocked(Long userId);
+
+    /**
+     * 判断用户是否是测试用户
+     */
+    Boolean isTester(Long userId);
 
     /**
      * 用户绑定微信
@@ -152,7 +157,7 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * @return
      */
     SucUserRo modifyEx(SucUserMo mo);
-    
+
     /**
      * 设置用户登录密码
      *
@@ -274,18 +279,20 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
 
     /**
      * 设置支付密码
+     * 
      * @param wxId
      * @param newPayPswd
      * @return
      */
-	PayPswdSetRo setPayPassword(String wxId, String newPayPswd);
+    PayPswdSetRo setPayPassword(String wxId, String newPayPswd);
 
-	/**
-	 * 修改支付密码
-	 * @param wxId
-	 * @param oldPayPswd
-	 * @param newPayPswd
-	 * @return
-	 */
-	PayPswdModifyRo changePayPassword(String wxId, String oldPayPswd, String newPayPswd);
+    /**
+     * 修改支付密码
+     * 
+     * @param wxId
+     * @param oldPayPswd
+     * @param newPayPswd
+     * @return
+     */
+    PayPswdModifyRo changePayPassword(String wxId, String oldPayPswd, String newPayPswd);
 }

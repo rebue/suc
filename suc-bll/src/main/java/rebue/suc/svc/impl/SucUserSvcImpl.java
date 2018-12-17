@@ -812,10 +812,23 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 判断用户是否被锁定
      */
     @Override
-    public Boolean isLocked(final Long id) {
+    public Boolean isLocked(final Long userId) {
+        _log.info("判断用户是否被锁定: {}", userId);
         final SucUserMo condition = new SucUserMo();
-        condition.setId(id);
+        condition.setId(userId);
         condition.setIsLock(true);
+        return _mapper.existSelective(condition);
+    }
+
+    /**
+     * 判断用户是否是测试用户
+     */
+    @Override
+    public Boolean isTester(final Long userId) {
+        _log.info("判断用户是否是测试用户: {}", userId);
+        final SucUserMo condition = new SucUserMo();
+        condition.setId(userId);
+        condition.setIsTester(true);
         return _mapper.existSelective(condition);
     }
 
