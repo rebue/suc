@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Update;
 
 import rebue.robotech.mapper.MybatisBaseMapper;
 import rebue.suc.mo.SucOrgMo;
+import rebue.suc.ro.OrgAccountRo;
 
 @Mapper
 public interface SucOrgMapper extends MybatisBaseMapper<SucOrgMo, Long> {
@@ -99,4 +100,10 @@ public interface SucOrgMapper extends MybatisBaseMapper<SucOrgMo, Long> {
      */
     @Update("UPDATE SUC_ORG SET IS_ENABLED=#{isEnabled,jdbcType=TINYINT} WHERE ID = #{id,jdbcType=BIGINT}")
     int enable(@Param("id") Long id, @Param("isEnabled") boolean isEnabled);
+    
+    /**
+     * 根据组织名称查询组织信息
+     */
+    List<OrgAccountRo> selectOrg(SucOrgMo mo);
+    
 }

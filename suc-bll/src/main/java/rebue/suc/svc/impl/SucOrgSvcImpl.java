@@ -13,12 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+import rebue.afc.mo.AfcAccountMo;
+import rebue.afc.svr.feign.AfcAccountSvc;
+import rebue.ord.ro.OrdSettleRo;
+import rebue.ord.svr.feign.OrdOrderSvc;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.suc.mapper.SucOrgMapper;
 import rebue.suc.mapper.SucUserMapper;
 import rebue.suc.mo.SucOrgMo;
 import rebue.suc.msg.SucAddOrgDoneMsg;
 import rebue.suc.pub.SucAddOrgDonePub;
+import rebue.suc.ro.OrgAccountRo;
 import rebue.suc.ro.SucOrgRo;
 import rebue.suc.svc.SucOrgSvc;
 
@@ -40,6 +45,11 @@ public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, 
 	@Resource
     private SucAddOrgDonePub   orgAddPub;
 	
+	@Resource
+	AfcAccountSvc  afcAccountSvc;
+	
+	@Resource
+	OrdOrderSvc   ordOrderSvc;
     /**
      * @mbg.overrideByMethodName
      */
@@ -134,5 +144,35 @@ public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, 
         ro.setMsg("设置成功");
         return ro;
     }
+
+	@Override
+	public PageInfo<OrgAccountRo> listOrgAccount(SucOrgMo mo, int pageNum, int pageSize) {
+        _log.info("查询组织的参数SucOrgMo：{} pageNum-{} pageSize-{} ", mo,pageNum,pageSize);
+        PageInfo<OrgAccountRo> result=PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectOrg(mo));
+        _log.info("查询组织的参数返回的结果是 {}",result);
+        for (OrgAccountRo item : result.getList()) {
+			_log.info("获取供应商账户余额和订单结算信息循环开始----------------------------------------");
+			_log.info("获取供应商账户的参数是-id{}",item.getSupplierId());
+			AfcAccountMo AfcAccountResult=  afcAccountSvc.getById(item.getSupplierId());
+			_log.info("获取供应商账户的结果是-AfcAccountResult{}",AfcAccountResult);
+			if(AfcAccountResult !=null) {
+				item.setBalance(AfcAccountResult.getBalance());
+			}
+			_log.info("获取供应商订单待结算和已结算成本的参数为 SupplierId-{} ",item.getSupplierId());
+			 OrdSettleRo  ordSettleResult=ordOrderSvc.getSettleTotal(item.getSupplierId());
+				_log.info("获取供应商订单待结算和已结算成本的结果为 ordSettleResult-{} ",ordSettleResult);
+			 if(ordSettleResult !=null) {
+				 if(ordSettleResult.getAlreadySettle() !=null) {
+					 item.setAlreadySettle(ordSettleResult.getAlreadySettle());
+				 }
+				 if(ordSettleResult.getNotSettle() !=null) {
+					 item.setNotSettle(ordSettleResult.getNotSettle());
+				 }
+			 }
+			_log.info("获取供应商账户余额和订单结算信息循环开结束+++++++++++++++++++++++++++++++++++++++");
+
+		}
+        return result;
+	}
 
 }

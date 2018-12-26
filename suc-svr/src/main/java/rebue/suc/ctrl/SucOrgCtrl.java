@@ -21,6 +21,7 @@ import com.github.pagehelper.PageInfo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 import rebue.suc.mo.SucOrgMo;
+import rebue.suc.ro.OrgAccountRo;
 import rebue.suc.ro.SucOrgRo;
 import rebue.suc.svc.SucOrgSvc;
 
@@ -238,5 +239,21 @@ public class SucOrgCtrl {
     	SucOrgMo mo = new SucOrgMo();
     	mo.setName(name);
     	return svc.getOne(mo);
+    }
+    
+    /**
+     * 查询公司/组织信息
+     * 
+     * 
+     */
+    @GetMapping("/suc/org/account")
+    PageInfo<OrgAccountRo> listOrgAccount(final SucOrgMo mo, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+        _log.info("listOrgAccount mo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+        if (pageSize > 50) {
+            String msg = "pageSize不能大于50";
+            _log.error(msg);
+            throw new IllegalArgumentException(msg);
+        }
+    	return svc.listOrgAccount(mo, pageNum, pageSize);
     }
 }

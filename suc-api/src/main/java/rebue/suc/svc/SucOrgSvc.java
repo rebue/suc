@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 
 import rebue.robotech.svc.MybatisBaseSvc;
 import rebue.suc.mo.SucOrgMo;
+import rebue.suc.ro.OrgAccountRo;
 import rebue.suc.ro.SucOrgRo;
 
 public interface SucOrgSvc extends MybatisBaseSvc<SucOrgMo, java.lang.Long> {
@@ -38,4 +39,16 @@ public interface SucOrgSvc extends MybatisBaseSvc<SucOrgMo, java.lang.Long> {
      *            每页大小
      */
     PageInfo<SucOrgMo> list(String keys, int pageNum, int pageSize);
+    
+    /**
+     * 分页查询
+     * 
+     * @param keys
+     *            模糊查询的关键字
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
+     */
+    PageInfo<OrgAccountRo> listOrgAccount(SucOrgMo mo, int pageNum, int pageSize);
 }

@@ -202,4 +202,11 @@
     </if>
   	ORDER BY CREATE_TIMESTAMP DESC LIMIT 0,5
   </select>
+  
+   <select id="selectOrg" parameterType="rebue.suc.mo.SucOrgMo" resultType="rebue.suc.ro.OrgAccountRo">
+  	SELECT ID as supplierId , NAME as supplierName  FROM SUC_ORG 
+  	<if test="name != null and name != ''">
+       WHERE NAME LIKE '%${name}%'
+    </if>
+  </select>
 </mapper>
