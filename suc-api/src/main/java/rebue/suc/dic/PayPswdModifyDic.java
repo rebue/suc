@@ -78,5 +78,10 @@ public enum PayPswdModifyDic implements EnumBase {
 		// TODO Auto-generated method stub
 		return code;
 	}
+	
+	@Override
+    public String getName() {
+        return name();
+    }
 
 }

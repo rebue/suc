@@ -39,12 +39,12 @@ public enum GetLoginNameDic implements EnumBase {
      * 否则jackson将调用默认的反序列化方法，而不会调用本方法
      */
     @JsonCreator
-    public static RegResultDic getItem(int code) {
+    public static GetLoginNameDic getItem(int code) {
         EnumBase result = valueMap.get(code);
         if (result == null) {
             throw new IllegalArgumentException("输入的code" + code + "不在枚举的取值范围内");
         }
-        return (RegResultDic) result;
+        return (GetLoginNameDic) result;
     }
 
     private int code;
@@ -63,4 +63,10 @@ public enum GetLoginNameDic implements EnumBase {
     public int getCode() {
         return code;
     }
+    
+    @Override
+    public String getName() {
+        return name();
+    }
+
 }

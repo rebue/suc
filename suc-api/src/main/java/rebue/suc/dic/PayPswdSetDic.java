@@ -73,4 +73,9 @@ public enum PayPswdSetDic implements EnumBase {
 		return code;
 	}
 
+	@Override
+    public String getName() {
+        return name();
+    }
+
 }

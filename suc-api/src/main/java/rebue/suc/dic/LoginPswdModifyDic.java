@@ -79,4 +79,9 @@ public enum LoginPswdModifyDic implements EnumBase {
 		return code;
 	}
 
+	@Override
+    public String getName() {
+        return name();
+    }
+
 }

@@ -80,4 +80,9 @@ public enum RegAndLoginTypeDic implements EnumBase {
         return code;
     }
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
 }
