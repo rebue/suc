@@ -61,7 +61,10 @@
 				<groupId>com.github.rebue.ord</groupId>
 				<artifactId>ord-svr-feign</artifactId>
 		</dependency>
-
+		<dependency>
+				<groupId>com.github.rebue.pnt</groupId>
+				<artifactId>pnt-svr-feign</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>

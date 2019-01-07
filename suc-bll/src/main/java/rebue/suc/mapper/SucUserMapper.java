@@ -9,6 +9,7 @@ import rebue.robotech.mapper.MybatisBaseMapper;
 import rebue.suc.mo.SucUserMo;
 import rebue.suc.ro.SucUserDetailRo;
 import rebue.suc.ro.SucUserJonintOrgSelectRo;
+import rebue.suc.ro.UserPointRo;
 
 @Mapper
 public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
@@ -386,4 +387,11 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      */
     @Update("update SUC_USER set LOGIN_PSWD=#{loginPswd,jdbcType=VARCHAR},PAY_PSWD=#{payPswd,jdbcType=VARCHAR},SALT=#{salt,jdbcType=VARCHAR} where ID=#{id,jdbcType=BIGINT}")
     int setLoginPw(SucUserMo record);
+    /**
+     * 查询用户信息
+     * @param users
+     * @return
+     */
+    List<UserPointRo> listUserInformation(@Param("users") String users);
+
 }

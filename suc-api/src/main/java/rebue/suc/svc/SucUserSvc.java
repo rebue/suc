@@ -16,6 +16,7 @@ import rebue.suc.ro.SetLoginNameRo;
 import rebue.suc.ro.SucUserDetailRo;
 import rebue.suc.ro.SucUserRo;
 import rebue.suc.ro.UserLoginRo;
+import rebue.suc.ro.UserPointRo;
 import rebue.suc.ro.UserRegRo;
 import rebue.suc.to.BindWxTo;
 import rebue.suc.to.LoginByLoginNameTo;
@@ -215,7 +216,7 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * @param pageSize
      * @return
      */
-    PageInfo<SucUserMo> listEx(String users, int pageNum, int pageSize);
+    PageInfo<UserPointRo> listEx(String users, int pageNum, int pageSize);
 
     /**
      * 添加用户组织

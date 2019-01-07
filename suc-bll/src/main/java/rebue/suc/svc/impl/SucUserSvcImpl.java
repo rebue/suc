@@ -1,6 +1,7 @@
 package rebue.suc.svc.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -16,6 +17,8 @@ import com.github.dozermapper.core.Mapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+import rebue.pnt.mo.PntAccountMo;
+import rebue.pnt.svr.feign.PntAccountSvc;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.sbs.redis.RedisClient;
 import rebue.sbs.redis.RedisSetException;
@@ -51,6 +54,7 @@ import rebue.suc.ro.SetLoginNameRo;
 import rebue.suc.ro.SucUserDetailRo;
 import rebue.suc.ro.SucUserRo;
 import rebue.suc.ro.UserLoginRo;
+import rebue.suc.ro.UserPointRo;
 import rebue.suc.ro.UserRegRo;
 import rebue.suc.svc.SucLockLogSvc;
 import rebue.suc.svc.SucLoginLogSvc;
@@ -118,7 +122,9 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      */
     @Value("${suc.notPwdPayLimit}")
     private Double              notPwdPayLimit;
-
+    
+    @Resource
+    private PntAccountSvc       pntAccountSvc;
     @Resource
     private SucLoginLogSvc      loginLogSvc;
 
@@ -1488,10 +1494,19 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * @return
      */
     @Override
-    public PageInfo<SucUserMo> listEx(final String users, final int pageNum, final int pageSize) {
-        _log.info("list: qo-{}; pageNum-{}; pageSize-{}", users, pageNum, pageSize);
-        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectjoint(users));
-    }
+	public PageInfo<UserPointRo> listEx(final String users, final int pageNum, final int pageSize) {
+		_log.info("list: qo-{}; pageNum-{}; pageSize-{}", users, pageNum, pageSize);
+		PageInfo<UserPointRo> result = PageHelper.startPage(pageNum, pageSize)
+				.doSelectPageInfo(() -> _mapper.listUserInformation(users));
+		List<UserPointRo> list=result.getList();
+		for(UserPointRo ro:list) {
+			_log.info("获取当前账户参数： ro:-{}",ro);
+			PntAccountMo pnt=pntAccountSvc.getById(ro.getId());
+			_log.info("获取当前账户总积分返回的结果： PntAccountMo:-{}",pnt);
+				ro.setPoint(pnt.getPoint());
+		}
+		return result;
+	}
 
     /**
      * 根据用户id查询用户分页信息

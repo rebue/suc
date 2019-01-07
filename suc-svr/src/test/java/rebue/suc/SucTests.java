@@ -661,4 +661,10 @@ public class SucTests {
         String result = OkhttpUtils.postByJsonParams(_hostUrl + "user/setloginname/bywxid", map);
         System.out.println(result);
     }
+    
+    @Test
+    public void listUserInformation() throws IOException {
+    	String result=OkhttpUtils.get(_hostUrl+"/suc/user?users="+1+"&pageNum="+1+"&&pageSize="+5);
+    	System.out.print(result);
+    }
 }

@@ -687,4 +687,23 @@
       </if>
     </where>
   </select>
+  
+  <!-- 查询用户信息 -->
+  <select id="listUserInformation" parameterType="String" resultType="rebue.suc.ro.UserPointRo">
+  	SELECT su.*, so.`NAME` FROM SUC_USER su
+	LEFT JOIN SUC_ORG so ON su.ORG_ID=so.ID
+	<where>
+      <if test="users != null and users != ''">
+        and su.LOGIN_NAME 	LIKE '%${users}%' 
+        OR su.NICKNAME 		LIKE '%${users}%' 
+        OR su.REALNAME 		LIKE '%${users}%' 
+        OR su.IDCARD 		LIKE '%${users}%' 
+        OR su.EMAIL 		LIKE '%${users}%' 
+        OR su.MOBILE 		LIKE '%${users}%' 
+        OR su.QQ_NICKNAME 	LIKE '%${users}%' 
+        OR su.WX_NICKNAME 	LIKE '%${users}%'
+        OR su.ID 			LIKE '%${users}%'
+      </if>
+    </where>
+  </select>
 </mapper>

@@ -25,6 +25,7 @@ import rebue.suc.ro.GetLoginNameRo;
 import rebue.suc.ro.SetLoginNameRo;
 import rebue.suc.ro.SucUserDetailRo;
 import rebue.suc.ro.SucUserRo;
+import rebue.suc.ro.UserPointRo;
 import rebue.suc.svc.SucUserSvc;
 import rebue.wheel.turing.JwtUtils;
 
@@ -288,7 +289,7 @@ public class SucUserCtrl {
      * @mbg.overrideByMethodName
      */
     @GetMapping("/suc/user")
-    PageInfo<SucUserMo> list(@RequestParam(value = "users", required = false) final String users, @RequestParam("pageNum") final int pageNum,
+    PageInfo<UserPointRo> list(@RequestParam(value = "users", required = false) final String users, @RequestParam("pageNum") final int pageNum,
             @RequestParam("pageSize") final int pageSize) {
         _log.info("list users:" + users + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
@@ -296,7 +297,7 @@ public class SucUserCtrl {
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        final PageInfo<SucUserMo> result = svc.listEx(users, pageNum, pageSize);
+        final PageInfo<UserPointRo> result = svc.listEx(users, pageNum, pageSize);
         _log.info("result: " + result);
         return result;
     }
