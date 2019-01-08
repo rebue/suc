@@ -22,9 +22,21 @@ public class OrgAccountRo {
 	private String  supplierName;
 	
 	/**
+	 * 已经提现总额
+	 */
+    private BigDecimal withdrawTotal;
+	
+	/**
 	 * 账户余额
 	 */
     private BigDecimal  balance;
+    
+    /**
+     *    提现中总额
+     *
+
+     */
+    private BigDecimal withdrawing;
     
 	/**
 	 * 已经结算的订单总额

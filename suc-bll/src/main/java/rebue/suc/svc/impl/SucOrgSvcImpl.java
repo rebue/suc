@@ -14,7 +14,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 import rebue.afc.mo.AfcAccountMo;
+import rebue.afc.ro.OrgWithdrawRo;
 import rebue.afc.svr.feign.AfcAccountSvc;
+import rebue.afc.svr.feign.AfcTradeSvc;
 import rebue.ord.ro.OrdSettleRo;
 import rebue.ord.svr.feign.OrdOrderSvc;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
@@ -47,6 +49,9 @@ public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, 
 	
 	@Resource
 	AfcAccountSvc  afcAccountSvc;
+	
+	@Resource
+	AfcTradeSvc  afcTradeSvc;
 	
 	@Resource
 	OrdOrderSvc   ordOrderSvc;
@@ -152,12 +157,22 @@ public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, 
         _log.info("查询组织的参数返回的结果是 {}",result);
         for (OrgAccountRo item : result.getList()) {
 			_log.info("获取供应商账户余额和订单结算信息循环开始----------------------------------------");
-			_log.info("获取供应商账户的参数是-id{}",item.getSupplierId());
+			//获取供应商账户
+			_log.info("获取供应商账户的参数是-id-{}",item.getSupplierId());
 			AfcAccountMo AfcAccountResult=  afcAccountSvc.getById(item.getSupplierId());
-			_log.info("获取供应商账户的结果是-AfcAccountResult{}",AfcAccountResult);
+			_log.info("获取供应商账户的结果是-AfcAccountResult-{}",AfcAccountResult);
 			if(AfcAccountResult !=null) {
 				item.setBalance(AfcAccountResult.getBalance());
+				item.setWithdrawing(AfcAccountResult.getWithdrawing());
 			}
+			//获取供应商已经提现总额
+			_log.info("获取供应商已经提现总额的参数是-id-{}",item.getSupplierId());	
+			OrgWithdrawRo  orgWithdrawRo= afcTradeSvc.getOrgWithdrawTotal(item.getSupplierId());
+			_log.info("获取供应商已经提现总额的结果是-orgWithdrawRo-{}",orgWithdrawRo);
+			if(orgWithdrawRo !=null) {
+				item.setWithdrawTotal(orgWithdrawRo.getWithdrawTotal());
+			}
+			//获取供应商已经结算和待结算总成本
 			_log.info("获取供应商订单待结算和已结算成本的参数为 SupplierId-{} ",item.getSupplierId());
 			 OrdSettleRo  ordSettleResult=ordOrderSvc.getSettleTotal(item.getSupplierId());
 				_log.info("获取供应商订单待结算和已结算成本的结果为 ordSettleResult-{} ",ordSettleResult);
