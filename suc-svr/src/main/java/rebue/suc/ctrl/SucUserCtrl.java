@@ -289,15 +289,15 @@ public class SucUserCtrl {
      * @mbg.overrideByMethodName
      */
     @GetMapping("/suc/user")
-    PageInfo<UserPointRo> list(@RequestParam(value = "users", required = false) final String users, @RequestParam("pageNum") final int pageNum,
+    PageInfo<UserPointRo> list(@RequestParam(value = "keys", required = false) final String keys, @RequestParam("pageNum") final int pageNum,
             @RequestParam("pageSize") final int pageSize) {
-        _log.info("list users:" + users + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+        _log.info("list users:" + keys + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             final String msg = "pageSize不能大于50";
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        final PageInfo<UserPointRo> result = svc.listEx(users, pageNum, pageSize);
+        final PageInfo<UserPointRo> result = svc.listEx(keys, pageNum, pageSize);
         _log.info("result: " + result);
         return result;
     }

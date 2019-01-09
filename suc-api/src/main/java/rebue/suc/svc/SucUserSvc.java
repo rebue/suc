@@ -216,7 +216,7 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * @param pageSize
      * @return
      */
-    PageInfo<UserPointRo> listEx(String users, int pageNum, int pageSize);
+    PageInfo<UserPointRo> listEx(String keys, int pageNum, int pageSize);
 
     /**
      * 添加用户组织

@@ -1488,16 +1488,16 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     /**
      * 多条件同时查询
      *
-     * @param users
+     * @param keys
      * @param pageNum
      * @param pageSize
      * @return
      */
     @Override
-	public PageInfo<UserPointRo> listEx(final String users, final int pageNum, final int pageSize) {
-		_log.info("list: qo-{}; pageNum-{}; pageSize-{}", users, pageNum, pageSize);
+	public PageInfo<UserPointRo> listEx(final String keys, final int pageNum, final int pageSize) {
+		_log.info("list: qo-{}; pageNum-{}; pageSize-{}", keys, pageNum, pageSize);
 		PageInfo<UserPointRo> result = PageHelper.startPage(pageNum, pageSize)
-				.doSelectPageInfo(() -> _mapper.listUserInformation(users));
+				.doSelectPageInfo(() -> _mapper.listUserInformation(keys));
 		List<UserPointRo> list=result.getList();
 		for(UserPointRo ro:list) {
 			_log.info("获取当前账户参数： ro:-{}",ro);

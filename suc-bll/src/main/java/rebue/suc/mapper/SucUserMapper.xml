@@ -693,16 +693,16 @@
   	SELECT su.*, so.`NAME` FROM SUC_USER su
 	LEFT JOIN SUC_ORG so ON su.ORG_ID=so.ID
 	<where>
-      <if test="users != null and users != ''">
-        and su.LOGIN_NAME 	LIKE '%${users}%' 
-        OR su.NICKNAME 		LIKE '%${users}%' 
-        OR su.REALNAME 		LIKE '%${users}%' 
-        OR su.IDCARD 		LIKE '%${users}%' 
-        OR su.EMAIL 		LIKE '%${users}%' 
-        OR su.MOBILE 		LIKE '%${users}%' 
-        OR su.QQ_NICKNAME 	LIKE '%${users}%' 
-        OR su.WX_NICKNAME 	LIKE '%${users}%'
-        OR su.ID 			LIKE '%${users}%'
+      <if test="keys != null and keys != ''">
+        and su.LOGIN_NAME 	LIKE '%${keys}%' 
+        OR su.NICKNAME 		LIKE '%${keys}%' 
+        OR su.REALNAME 		LIKE '%${keys}%' 
+        OR su.IDCARD 		LIKE '%${keys}%' 
+        OR su.EMAIL 		LIKE '%${keys}%' 
+        OR su.MOBILE 		LIKE '%${keys}%' 
+        OR su.QQ_NICKNAME 	LIKE '%${keys}%' 
+        OR su.WX_NICKNAME 	LIKE '%${keys}%'
+        OR su.ID 			LIKE '%${keys}'
       </if>
     </where>
   </select>
