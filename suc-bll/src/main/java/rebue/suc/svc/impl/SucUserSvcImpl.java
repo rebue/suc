@@ -1504,6 +1504,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 			PntAccountMo pnt=pntAccountSvc.getById(ro.getId());
 			_log.info("获取当前账户总积分返回的结果： PntAccountMo:-{}",pnt);
 				ro.setPoint(pnt.getPoint());
+				ro.setModifiedTimestamp(pnt.getModifiedTimestamp());
 		}
 		return result;
 	}
