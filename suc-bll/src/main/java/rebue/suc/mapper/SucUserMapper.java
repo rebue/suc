@@ -132,7 +132,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      * @param userIds
      *            多个用户ID组成的字符串，用逗号分隔
      */
-    @Select("SELECT * FROM SUC_USER WHERE ID IN (${userIds}) AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%')")
+    @Select("SELECT * FROM SUC_USER WHERE ID IN (${userIds}) AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%' OR ID LIKE '%${keys}%')")
     List<SucUserDetailRo> selectByKeysAndUserIds(@Param("keys") String keys, @Param("userIds") String userIds);
 
     /**
@@ -172,7 +172,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      * @param keys
      *            模糊查询用户的关键字
      */
-    @Select("SELECT * FROM SUC_USER WHERE ORG_ID = #{orgId,jdbcType=BIGINT} AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%')")
+    @Select("SELECT * FROM SUC_USER WHERE ORG_ID = #{orgId,jdbcType=BIGINT} AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%' OR ID LIKE '%${keys}%')")
     List<SucUserDetailRo> selectAddedUsersByOrgIdAndKeys(@Param("orgId") Long orgId, @Param("keys") String keys);
 
     /**
@@ -192,7 +192,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      * @param keys
      *            模糊查询用户的关键字
      */
-    @Select("SELECT * FROM SUC_USER WHERE (ORG_ID IS NULL or ORG_ID != #{orgId,jdbcType=BIGINT}) AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%')")
+    @Select("SELECT * FROM SUC_USER WHERE (ORG_ID IS NULL or ORG_ID != #{orgId,jdbcType=BIGINT}) AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%' OR ID LIKE '%${keys}%' )")
     List<SucUserDetailRo> selectUnaddedUsersByOrgIdAndKeys(@Param("orgId") Long orgId, @Param("keys") String keys);
 
     /**
