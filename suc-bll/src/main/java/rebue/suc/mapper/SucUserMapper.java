@@ -112,7 +112,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      * @param keys
      *            模糊查询用户的关键字
      */
-    @Select("SELECT * FROM SUC_USER WHERE (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%')")
+    @Select("SELECT * FROM SUC_USER WHERE (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%' OR ID LIKE '%${keys}%')")
     List<SucUserDetailRo> selectByKeys(@Param("keys") String keys);
 
     /**
@@ -152,7 +152,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      * @param userIds
      *            多个用户ID组成的字符串，用逗号分隔
      */
-    @Select("SELECT * FROM SUC_USER WHERE ID NOT IN (${userIds}) AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%')")
+    @Select("SELECT * FROM SUC_USER WHERE ID NOT IN (${userIds}) AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%' OR ID LIKE '%${keys}%')")
     List<SucUserDetailRo> selectByKeysAndNotUserIds(@Param("keys") String keys, @Param("userIds") String userIds);
 
     /**
