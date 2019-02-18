@@ -184,11 +184,7 @@ public class SucOrgCtrl {
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<SucOrgMo> result;
-        if (StringUtils.isBlank(keys))
-            result = svc.list((SucOrgMo) null, pageNum, pageSize);
-        else
-            result = svc.list(keys, pageNum, pageSize);
+        PageInfo<SucOrgMo> result = svc.list(keys, pageNum, pageSize);
         _log.info("result: " + result);
         return result;
     }

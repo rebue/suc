@@ -80,7 +80,7 @@ public interface SucOrgMapper extends MybatisBaseMapper<SucOrgMo, Long> {
      * @param keys
      *            模糊查询的关键字
      */
-    @Select("SELECT * FROM SUC_ORG WHERE NAME LIKE '%${keys}%' OR REMARK LIKE '%${keys}%'")
+    @Select("SELECT * FROM SUC_ORG WHERE NAME LIKE '%${keys}%' OR REMARK LIKE '%${keys}%' order by CREATE_TIMESTAMP  ")
     List<SucOrgMo> selectByKeys(@Param("keys") String keys);
 
     /**
