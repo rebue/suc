@@ -227,9 +227,9 @@ public class SucUserCtrl {
      * @date 2018年5月3日 下午6:09:55
      */
     @PostMapping("/user/setloginname/bywxid")
-    SetLoginNameRo setLoginName(@RequestParam("wxId") final String wxId, @RequestParam("loginName") final String loginName) {
-        _log.info("通过微信ID设置登录名称: {}", wxId);
-        return svc.setLoginName(wxId, loginName);
+    SetLoginNameRo setLoginName(@RequestParam("id") final Long id, @RequestParam("loginName") final String loginName) {
+        _log.info("通过ID设置登录名称: {}", id);
+        return svc.setLoginName(id, loginName);
     }
 
     /**
@@ -278,9 +278,9 @@ public class SucUserCtrl {
      * @date 2018年5月4日 上午9:06:34
      */
     @GetMapping("/user/loginName/bywxid")
-    GetLoginNameRo getLoginNameByWx(@RequestParam("wxId") final String wxId) {
-        _log.info("根据微信ID获取用户登录名称: {}", wxId);
-        return svc.getLoginNameByWx(wxId);
+    GetLoginNameRo getLoginNameByWx(@RequestParam("id") final Long id) {
+        _log.info("根据ID获取用户登录名称: {}", id);
+        return svc.getLoginNameByWx(id);
     }
 
     /**

@@ -208,71 +208,71 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
     int unlock(Long id);
 
     /**
-     * 根据微信ID查询登录密码、密码组合码、微信ID Title: selectUserInfoByWx Description:
+     * 根据ID查询登录密码、密码组合码、微信ID Title: selectUserInfoByWx Description:
      *
-     * @param wxId
+     * @param id
      * @return
      * @date 2018年4月28日 上午11:47:26
      */
-    @Select("SELECT LOGIN_PSWD, PAY_PSWD, SALT, WX_ID FROM SUC_USER WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
-    SucUserMo selectUserInfoByWx(@Param("wxId") String wxId);
+    @Select("SELECT LOGIN_PSWD, PAY_PSWD, SALT, WX_ID FROM SUC_USER WHERE ID=#{id,jdbcType=BIGINT}")
+    SucUserMo selectUserInfoByWx(@Param("id") Long id);
 
     /**
      * 根据微信ID修改登录密码 Title: updateloginPswd Description:
      *
-     * @param wxId
+     * @param id
      * @param loginPswd
      * @return
      * @date 2018年4月28日 上午11:57:49
      */
-    @Update("UPDATE SUC_USER SET LOGIN_PSWD = #{loginPswd,jdbcType=VARCHAR} WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
-    int updateloginPswd(@Param("wxId") String wxId, @Param("loginPswd") String loginPswd);
+    @Update("UPDATE SUC_USER SET LOGIN_PSWD = #{loginPswd,jdbcType=VARCHAR} WHERE ID=#{id,jdbcType=BIGINT}")
+    int updateloginPswd(@Param("id") Long id, @Param("loginPswd") String loginPswd);
 
     /**
-     * 根据微信ID设置支付密码 Title: setLoginPswd Description:
+     * 根据id设置支付密码 Title: setLoginPswd Description:
      *
-     * @param wxId
+     * @param id
      * @param loginPswd
      * @param salt
      * @return
      * @date 2018年4月28日 上午11:59:04
      */
-    @Update("UPDATE SUC_USER SET PAY_PSWD = #{payPswd,jdbcType=VARCHAR}, SALT = #{salt,jdbcType=VARCHAR} WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
-    int setPayPswd(@Param("wxId") String wxId, @Param("payPswd") String loginPswd, @Param("salt") String salt);
+    @Update("UPDATE SUC_USER SET PAY_PSWD = #{payPswd,jdbcType=VARCHAR}, SALT = #{salt,jdbcType=VARCHAR} WHERE ID=#{id,jdbcType=BIGINT}")
+    int setPayPswd(@Param("id") Long id, @Param("payPswd") String loginPswd, @Param("salt") String salt);
 
     /**
-     * 根据微信ID修改支付密码 Title: updateloginPswd Description:
+     * 根据id修改支付密码 Title: updateloginPswd Description:
      *
-     * @param wxId
+     * @param id
      * @param loginPswd
      * @return
      * @date 2018年4月28日 上午11:57:49
      */
-    @Update("UPDATE SUC_USER SET PAY_PSWD = #{payPswd,jdbcType=VARCHAR} WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
-    int updatePayPswd(@Param("wxId") String wxId, @Param("payPswd") String payPswd);
+    @Update("UPDATE SUC_USER SET PAY_PSWD = #{payPswd,jdbcType=VARCHAR} WHERE ID=#{id,jdbcType=BIGINT}")
+    int updatePayPswd(@Param("id") Long id, @Param("payPswd") String payPswd);
 
     /**
-     * 根据微信ID设置登录密码 Title: setLoginPswd Description:
+     * 根据id设置登录密码 Title: setLoginPswd Description:
      *
-     * @param wxId
+     * @param id
      * @param loginPswd
      * @param salt
      * @return
      * @date 2018年4月28日 上午11:59:04
      */
-    @Update("UPDATE SUC_USER SET LOGIN_PSWD = #{loginPswd,jdbcType=VARCHAR}, SALT = #{salt,jdbcType=VARCHAR} WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
-    int setLoginPswd(@Param("wxId") String wxId, @Param("loginPswd") String loginPswd, @Param("salt") String salt);
+    @Update("UPDATE SUC_USER SET LOGIN_PSWD = #{loginPswd,jdbcType=VARCHAR}, SALT = #{salt,jdbcType=VARCHAR} WHERE ID=#{id,jdbcType=BIGINT}")
+    int setLoginPswd(@Param("id") Long id, @Param("loginPswd") String loginPswd, @Param("salt") String salt);
 
     /**
-     * 根据微信ID设置登录名称 Title: setLoginName Description:
+     * 根据id设置登录名称 Title: setLoginName Description:
      *
-     * @param wxId
+     * @param id
      * @param loginName
      * @return
      * @date 2018年5月3日 下午5:30:31
      */
-    @Update("UPDATE SUC_USER SET LOGIN_NAME = #{loginName,jdbcType=VARCHAR} WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
-    int setLoginName(@Param("wxId") String wxId, @Param("loginName") String loginName);
+    @Update("UPDATE SUC_USER SET LOGIN_NAME = #{loginName,jdbcType=VARCHAR} WHERE ID=#{id,jdbcType=BIGINT}")
+    int setLoginName(@Param("id") Long id, @Param("loginName") String loginName);
 
     /**
      * 根据微信ID获取用户登录名称 Title: selectLoginNameByWx Description:
@@ -281,8 +281,8 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      * @return
      * @date 2018年5月4日 上午9:02:28
      */
-    @Select("SELECT LOGIN_NAME FROM SUC_USER WHERE WX_ID = #{wxId,jdbcType=VARCHAR}")
-    String selectLoginNameByWx(@Param("wxId") String wxId);
+    @Select("SELECT LOGIN_NAME FROM SUC_USER WHERE ID=#{id,jdbcType=BIGINT}")
+    String selectLoginNameByWx(@Param("id") Long id);
 
     /**
      * 设置用户锁定/解锁

@@ -977,33 +977,33 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	 */
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public LoginPswdSetRo setLoginPassword(final String wxId, String newLoginPswd) {
+	public LoginPswdSetRo setLoginPassword(final Long id, String newLoginPswd) {
 		final LoginPswdSetRo setRo = new LoginPswdSetRo();
-		if (wxId == null || wxId.equals("") || wxId.equals("null")) {
-			_log.error("设置登录密码时出现微信ID为空");
+		if (id == null) {
+			_log.error("设置登录密码时出现ID为空");
 			setRo.setResult(LoginPswdSetDic.NOT_LOGIN);
 			setRo.setMsg("您未登录，请先登录");
 			return setRo;
 		}
 		if (newLoginPswd == null || newLoginPswd.equals("") || newLoginPswd.equals("null")) {
-			_log.error("设置登录密码时出现没有输入新的登录密码，微信ID为：{}", wxId);
+			_log.error("设置登录密码时出现没有输入新的登录密码，ID为：{}", id);
 			setRo.setResult(LoginPswdSetDic.NEW_LOGINPSWD_NULL);
 			setRo.setMsg("请输入登录密码");
 			return setRo;
 		}
-		_log.info("设置登录密码查询用户信息的参数为：{}", wxId);
+		_log.info("设置登录密码查询用户信息的参数为：{}", id);
 		// 查询用户信息
-		final SucUserMo userMo = _mapper.selectUserInfoByWx(wxId);
+		final SucUserMo userMo = _mapper.selectByPrimaryKey(id);
 		_log.info("设置登录密码查询用户信息的返回值为：{}", userMo.toString());
 		if (userMo.getWxId() == null || userMo.getWxId().equals("") || userMo.getWxId().equals("null")) {
-			_log.error("设置登录密码查询用户信息时出现用户信息为空，微信ID为：{}", wxId);
+			_log.error("设置登录密码查询用户信息时出现用户信息为空，ID为：{}", id);
 			setRo.setResult(LoginPswdSetDic.NOT_FOUND_USER);
 			setRo.setMsg("找不到用户信息");
 			return setRo;
 		}
 		if (userMo.getLoginPswd() != null && !userMo.getLoginPswd().equals("")
 				&& !userMo.getLoginPswd().equals("null")) {
-			_log.error("微信设置登录密码时出现该用户微信用户已设置了登录密码，微信ID为：{}", wxId);
+			_log.error("微信设置登录密码时出现该用户微信用户已设置了登录密码，ID为：{}", id);
 			setRo.setResult(LoginPswdSetDic.HAVE_SET);
 			setRo.setMsg("您已设置过登录密码");
 			return setRo;
@@ -1013,16 +1013,16 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 			salt = userMo.getSalt();
 		}
 		newLoginPswd = saltPswd(newLoginPswd, salt);
-		_log.info("设置登录密码的参数为：{}", wxId + ", " + newLoginPswd + ", " + salt);
-		final int setResult = _mapper.setLoginPswd(wxId, newLoginPswd, salt);
+		_log.info("设置登录密码的参数为：{}", id + ", " + newLoginPswd + ", " + salt);
+		final int setResult = _mapper.setLoginPswd(id, newLoginPswd, salt);
 		_log.info("设置登录密码的返回值为：{}", setResult);
 		if (setResult < 1) {
-			_log.error("设置登录密码设置登录密码时出错，微信ID为：{}", wxId);
+			_log.error("设置登录密码设置登录密码时出错，ID为：{}", id);
 			setRo.setResult(LoginPswdSetDic.SET_ERROR);
 			setRo.setMsg("设置失败");
 			return setRo;
 		}
-		_log.info("微信设置登录密码成功，微信ID为：{}", wxId);
+		_log.info("微信设置登录密码成功，ID为：{}", id);
 		setRo.setResult(LoginPswdSetDic.SUCCESS);
 		setRo.setMsg("设置成功");
 		return setRo;
@@ -1040,32 +1040,32 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	 */
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public LoginPswdModifyRo changeLoginPassword(final String wxId, String oldLoginPswd, String newLoginPswd) {
+	public LoginPswdModifyRo changeLoginPassword(final Long id, String oldLoginPswd, String newLoginPswd) {
 		final LoginPswdModifyRo modifyRo = new LoginPswdModifyRo();
-		if (wxId == null || wxId.equals("") || wxId.equals("null")) {
-			_log.error("设置或修改登录密码时出现微信ID为空");
+		if (id == null) {
+			_log.error("设置或修改登录密码时出现ID为空");
 			modifyRo.setResult(LoginPswdModifyDic.NOT_LOGIN);
 			modifyRo.setMsg("您未登录，请先登录");
 			return modifyRo;
 		}
 		if (newLoginPswd == null || newLoginPswd.equals("") || newLoginPswd.equals("null")) {
-			_log.error("修改登录密码时出现没有输入新的登录密码，微信ID为：{}", wxId);
+			_log.error("修改登录密码时出现没有输入新的登录密码，ID为：{}", id);
 			modifyRo.setResult(LoginPswdModifyDic.NEW_LOGINPSWD_NULL);
 			modifyRo.setMsg("请输入新的登录密码");
 			return modifyRo;
 		}
 		if (oldLoginPswd == null || oldLoginPswd.equals("") || oldLoginPswd.equals("null")) {
-			_log.error("修改登录密码时出现没有输入旧的登录密码，微信ID为：{}", wxId);
+			_log.error("修改登录密码时出现没有输入旧的登录密码，ID为：{}", id);
 			modifyRo.setResult(LoginPswdModifyDic.OLD_LOGINPSWD_NULL);
 			modifyRo.setMsg("请输入旧的登录密码");
 			return modifyRo;
 		}
-		_log.info("修改登录密码查询用户信息的参数为：{}", wxId);
+		_log.info("修改登录密码查询用户信息的参数为：{}", id);
 		// 查询用户信息
-		final SucUserMo userMo = _mapper.selectUserInfoByWx(wxId);
-		_log.info("修改登录密码查询用户信息的返回值为：{}", userMo.toString());
-		if (userMo.getWxId() == null || userMo.getWxId().equals("") || userMo.getWxId().equals("null")) {
-			_log.error("修改登录密码查询用户信息时出现用户信息为空，微信ID为：{}", wxId);
+		final SucUserMo userMo = _mapper.selectByPrimaryKey(id);
+		_log.info("修改登录密码查询用户信息的返回值为：{}", userMo);
+		if (userMo == null) {
+			_log.error("修改登录密码查询用户信息时出现用户信息为空，ID为：{}", id);
 			modifyRo.setResult(LoginPswdModifyDic.NOT_FOUND_USER);
 			modifyRo.setMsg("找不到用户信息");
 			return modifyRo;
@@ -1075,30 +1075,30 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 		if (oriLoginPswd != null && !oriLoginPswd.equals("") && !oriLoginPswd.equals("null")) {
 			oldLoginPswd = saltPswd(oldLoginPswd, userMo.getSalt());
 			if (!oriLoginPswd.equals(oldLoginPswd)) {
-				_log.error("修改登录密码时出现输入的旧密码不等于原来的旧密码，微信ID为：{}", wxId);
+				_log.error("修改登录密码时出现输入的旧密码不等于原来的旧密码，微信ID为：{}", id);
 				modifyRo.setResult(LoginPswdModifyDic.OLD_LOGINPSWD_ERROR);
 				modifyRo.setMsg("输入的旧密码不正确");
 				return modifyRo;
 			} else {
 				salt = userMo.getSalt();
 				newLoginPswd = saltPswd(newLoginPswd, salt);
-				_log.info("修改登录密码的参数为：{}", wxId + ", " + newLoginPswd);
-				final int updateResult = _mapper.updateloginPswd(wxId, newLoginPswd);
+				_log.info("修改登录密码的参数为：{}", id + ", " + newLoginPswd);
+				final int updateResult = _mapper.updateloginPswd(id, newLoginPswd);
 				_log.info("修改登录密码的返回值为：{}", updateResult);
 				if (updateResult < 1) {
-					_log.error("修改登录密码根据微信ID修改密码时出现错误，微信ID为：{}", wxId);
+					_log.error("修改登录密码根据微信ID修改密码时出现错误，ID为：{}", id);
 					modifyRo.setResult(LoginPswdModifyDic.NOT_SET_LOGINPSWD);
 					modifyRo.setMsg("修改失败");
 					throw new RuntimeException("修改失败");
 				}
 			}
 		} else {
-			_log.error("微信修改登录密码时出现没有设置登录密码，微信ID为：{}", wxId);
+			_log.error("微信修改登录密码时出现没有设置登录密码，ID为：{}", id);
 			modifyRo.setResult(LoginPswdModifyDic.MODIFY_ERROR);
 			modifyRo.setMsg("您未设置登录密码，请先设置后再试");
 			return modifyRo;
 		}
-		_log.info("微信修改登录密码成功，微信ID为：{}", wxId);
+		_log.info("微信修改登录密码成功，ID为：{}", id);
 		modifyRo.setResult(LoginPswdModifyDic.SUCCESS);
 		modifyRo.setMsg("修改成功");
 		return modifyRo;
@@ -1115,32 +1115,32 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	 */
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public PayPswdSetRo setPayPassword(final String wxId, String newPayPswd) {
+	public PayPswdSetRo setPayPassword(final Long id, String newPayPswd) {
 		final PayPswdSetRo setRo = new PayPswdSetRo();
-		if (wxId == null || wxId.equals("") || wxId.equals("null")) {
-			_log.error("设置支付密码时出现微信ID为空");
+		if (id == null) {
+			_log.error("设置支付密码时出现ID为空");
 			setRo.setResult(PayPswdSetDic.NOT_LOGIN);
 			setRo.setMsg("您未登录，请先登录");
 			return setRo;
 		}
 		if (newPayPswd == null || newPayPswd.equals("") || newPayPswd.equals("null")) {
-			_log.error("设置支付密码时出现没有输入新的支付密码，微信ID为：{}", wxId);
+			_log.error("设置支付密码时出现没有输入新的支付密码，ID为：{}", id);
 			setRo.setResult(PayPswdSetDic.NEW_PAYPSWD_NULL);
 			setRo.setMsg("请输入支付密码");
 			return setRo;
 		}
-		_log.info("设置支付密码查询用户信息的参数为：{}", wxId);
+		_log.info("设置支付密码查询用户信息的参数为：{}", id);
 		// 查询用户信息
-		final SucUserMo userMo = _mapper.selectUserInfoByWx(wxId);
+		final SucUserMo userMo = _mapper.selectByPrimaryKey(id);
 		_log.info("设置支付密码查询用户信息的返回值为：{}", userMo.toString());
-		if (userMo.getWxId() == null || userMo.getWxId().equals("") || userMo.getWxId().equals("null")) {
-			_log.error("设置支付密码查询用户信息时出现用户信息为空，微信ID为：{}", wxId);
+		if (userMo == null) {
+			_log.error("设置支付密码查询用户信息时出现用户信息为空，ID为：{}", id);
 			setRo.setResult(PayPswdSetDic.NOT_FOUND_USER);
 			setRo.setMsg("找不到用户信息");
 			return setRo;
 		}
 		if (userMo.getPayPswd() != null && !userMo.getPayPswd().equals("") && !userMo.getPayPswd().equals("null")) {
-			_log.error("微信设置支付密码时出现该用户微信用户已设置了支付密码，微信ID为：{}", wxId);
+			_log.error("微信设置支付密码时出现该用户微信用户已设置了支付密码, ID为：{}", id);
 			setRo.setResult(PayPswdSetDic.HAVE_SET);
 			setRo.setMsg("您已设置过支付密码");
 			return setRo;
@@ -1150,16 +1150,16 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 			salt = userMo.getSalt();
 		}
 		newPayPswd = saltPswd(newPayPswd, salt);
-		_log.info("设置支付密码的参数为：{}", wxId + ", " + newPayPswd + ", " + salt);
-		final int setResult = _mapper.setPayPswd(wxId, newPayPswd, salt);
+		_log.info("设置支付密码的参数为：{}", id + ", " + newPayPswd + ", " + salt);
+		final int setResult = _mapper.setPayPswd(id, newPayPswd, salt);
 		_log.info("设置支付密码的返回值为：{}", setResult);
 		if (setResult < 1) {
-			_log.error("设置支付密码设置支付密码时出错，微信ID为：{}", wxId);
+			_log.error("设置支付密码设置支付密码时出错，ID为：{}", id);
 			setRo.setResult(PayPswdSetDic.SET_ERROR);
 			setRo.setMsg("设置失败");
 			return setRo;
 		}
-		_log.info("微信设置支付密码成功，微信ID为：{}", wxId);
+		_log.info("微信设置支付密码成功，ID为：{}", id);
 		setRo.setResult(PayPswdSetDic.SUCCESS);
 		setRo.setMsg("设置成功");
 		return setRo;
@@ -1177,32 +1177,32 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	 */
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public PayPswdModifyRo changePayPassword(final String wxId, String oldPayPswd, String newPayPswd) {
+	public PayPswdModifyRo changePayPassword(final Long id, String oldPayPswd, String newPayPswd) {
 		final PayPswdModifyRo modifyRo = new PayPswdModifyRo();
-		if (wxId == null || wxId.equals("") || wxId.equals("null")) {
-			_log.error("设置或修改支付密码时出现微信ID为空");
+		if (id == null) {
+			_log.error("设置或修改支付密码时出现ID为空");
 			modifyRo.setResult(PayPswdModifyDic.NOT_LOGIN);
 			modifyRo.setMsg("您未登录，请先登录");
 			return modifyRo;
 		}
 		if (newPayPswd == null || newPayPswd.equals("") || newPayPswd.equals("null")) {
-			_log.error("修改支付密码时出现没有输入新的支付密码，微信ID为：{}", wxId);
+			_log.error("修改支付密码时出现没有输入新的支付密码，ID为：{}", id);
 			modifyRo.setResult(PayPswdModifyDic.NEW_PAYPSWD_NULL);
 			modifyRo.setMsg("请输入新的支付密码");
 			return modifyRo;
 		}
 		if (oldPayPswd == null || oldPayPswd.equals("") || oldPayPswd.equals("null")) {
-			_log.error("修改支付密码时出现没有输入旧的支付密码，微信ID为：{}", wxId);
+			_log.error("修改支付密码时出现没有输入旧的支付密码，ID为：{}", id);
 			modifyRo.setResult(PayPswdModifyDic.OLD_PAYPSWD_NULL);
 			modifyRo.setMsg("请输入旧的支付密码");
 			return modifyRo;
 		}
-		_log.info("修改支付密码查询用户信息的参数为：{}", wxId);
+		_log.info("修改支付密码查询用户信息的参数为：{}", id);
 		// 查询用户信息
-		final SucUserMo userMo = _mapper.selectUserInfoByWx(wxId);
-		_log.info("修改支付密码查询用户信息的返回值为：{}", userMo.toString());
-		if (userMo.getWxId() == null || userMo.getWxId().equals("") || userMo.getWxId().equals("null")) {
-			_log.error("修改支付密码查询用户信息时出现用户信息为空，微信ID为：{}", wxId);
+		final SucUserMo userMo = _mapper.selectByPrimaryKey(id);
+		_log.info("修改支付密码查询用户信息的返回值为：{}", userMo);
+		if (userMo == null) {
+			_log.error("修改支付密码查询用户信息时出现用户信息为空，ID为：{}", id);
 			modifyRo.setResult(PayPswdModifyDic.NOT_FOUND_USER);
 			modifyRo.setMsg("找不到用户信息");
 			return modifyRo;
@@ -1212,30 +1212,30 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 		if (oriPayPswd != null && !oriPayPswd.equals("") && !oriPayPswd.equals("null")) {
 			oldPayPswd = saltPswd(oldPayPswd, userMo.getSalt());
 			if (!oriPayPswd.equals(oldPayPswd)) {
-				_log.error("修改支付密码时出现输入的旧密码不等于原来的旧密码，微信ID为：{}", wxId);
+				_log.error("修改支付密码时出现输入的旧密码不等于原来的旧密码，ID为：{}", id);
 				modifyRo.setResult(PayPswdModifyDic.OLD_PAYPSWD_ERROR);
 				modifyRo.setMsg("输入的旧密码不正确");
 				return modifyRo;
 			} else {
 				salt = userMo.getSalt();
 				newPayPswd = saltPswd(newPayPswd, salt);
-				_log.info("修改支付密码的参数为：{}", wxId + ", " + newPayPswd);
-				final int updateResult = _mapper.updateloginPswd(wxId, newPayPswd);
+				_log.info("修改支付密码的参数为：{}", id + ", " + newPayPswd);
+				final int updateResult = _mapper.updatePayPswd(id, newPayPswd);
 				_log.info("修改支付密码的返回值为：{}", updateResult);
 				if (updateResult < 1) {
-					_log.error("修改支付密码根据微信ID修改密码时出现错误，微信ID为：{}", wxId);
+					_log.error("修改支付密码根据微信ID修改密码时出现错误，ID为：{}", id);
 					modifyRo.setResult(PayPswdModifyDic.NOT_SET_PAYPSWD);
 					modifyRo.setMsg("修改失败");
 					throw new RuntimeException("修改失败");
 				}
 			}
 		} else {
-			_log.error("微信修改支付密码时出现没有设置支付密码，微信ID为：{}", wxId);
+			_log.error("微信修改支付密码时出现没有设置支付密码，ID为：{}", id);
 			modifyRo.setResult(PayPswdModifyDic.MODIFY_ERROR);
 			modifyRo.setMsg("您未设置支付密码，请先设置后再试");
 			return modifyRo;
 		}
-		_log.info("微信修改支付密码成功，微信ID为：{}", wxId);
+		_log.info("微信修改支付密码成功，微信ID为：{}", id);
 		modifyRo.setResult(PayPswdModifyDic.SUCCESS);
 		modifyRo.setMsg("修改成功");
 		return modifyRo;
@@ -1252,47 +1252,47 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	 */
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-	public SetLoginNameRo setLoginName(final String wxId, final String loginName) {
+	public SetLoginNameRo setLoginName(final Long id, final String loginName) {
 		final SetLoginNameRo setRo = new SetLoginNameRo();
-		if (wxId == null || wxId.equals("") || wxId.equals("null")) {
+		if (id == null) {
 			_log.error("通过微信ID设置登录名称时出现微信ID");
 			setRo.setResult(SetLoginNameDic.NOT_LOGIN);
 			setRo.setMsg("您未登录，请先登录");
 			return setRo;
 		}
 		if (loginName == null || loginName.equals("null") || loginName.equals("")) {
-			_log.error("通过微信ID设置登录名称时出现登录名称为空，微信ID为：{}", wxId);
+			_log.error("通过微信ID设置登录名称时出现登录名称为空，ID为：{}", id);
 			setRo.setResult(SetLoginNameDic.NEW_LOGINNAME_NULL);
 			setRo.setMsg("请输入登录名称");
 			return setRo;
 		}
 		SucUserMo userMo = new SucUserMo();
-		userMo.setWxId(wxId);
-		_log.info("通过微信ID设置登录名称根据微信判断用户是否存在的参数为：{}", wxId);
+		userMo.setId(id);
+		_log.info("通过ID设置登录名称根据微信判断用户是否存在的参数为：{}", id);
 		final Boolean userFlag = _mapper.existSelective(userMo);
-		_log.info("通过微信ID设置登录名称根据微信判断用户是否存在的返回值为：{}", userFlag);
+		_log.info("通过ID设置登录名称根据微信判断用户是否存在的返回值为：{}", userFlag);
 		if (!userFlag) {
-			_log.error("通过微信ID设置登录名称根据微信判断用户是否存在时出现该用户不存在，微信ID为：{}", wxId);
+			_log.error("通过ID设置登录名称根据微信判断用户是否存在时出现该用户不存在，ID为：{}", id);
 			setRo.setResult(SetLoginNameDic.NOT_REGISTER);
-			setRo.setMsg("您未注册，请");
+			setRo.setMsg("您未注册，请您先注册");
 			return setRo;
 		}
 		userMo = new SucUserMo();
 		userMo.setLoginName(loginName);
-		_log.info("通过微信ID设置登录名称根据登录名称判断该名称是否已存在的参数为：{}", loginName);
+		_log.info("通过ID设置登录名称根据登录名称判断该名称是否已存在的参数为：{}", loginName);
 		final Boolean loginNameFlag = _mapper.existSelective(userMo);
-		_log.info("通过微信ID设置登录名称根据登录名称判断该名称是否已存在的返回值为：{}", loginNameFlag);
+		_log.info("通过ID设置登录名称根据登录名称判断该名称是否已存在的返回值为：{}", loginNameFlag);
 		if (loginNameFlag) {
-			_log.error("根据微信ID设置登录名称时出现该登录名称已存在，微信ID为：{}", wxId);
+			_log.error("根据ID设置登录名称时出现该登录名称已存在，ID为：{}", id);
 			setRo.setResult(SetLoginNameDic.LOGNAME_ALREADY_EXIST);
 			setRo.setMsg("该名称已存在");
 			return setRo;
 		}
-		_log.info("根据微信ID设置登录名称的参数为：{}，{}", wxId, loginName);
-		final int setResult = _mapper.setLoginName(wxId, loginName);
-		_log.info("根据微信ID设置登录名称的返回值为：{}", setResult);
+		_log.info("根据ID设置登录名称的参数为：{}，{}", id, loginName);
+		final int setResult = _mapper.setLoginName(id, loginName);
+		_log.info("根据ID设置登录名称的返回值为：{}", setResult);
 		if (setResult != 1) {
-			_log.error("根据微信ID设置登录名称时出现设置失败，微信ID为：{}", wxId);
+			_log.error("根据ID设置登录名称时出现设置失败，ID为：{}", id);
 			setRo.setResult(SetLoginNameDic.SET_ERROR);
 			setRo.setMsg("设置失败");
 			return setRo;
@@ -1311,9 +1311,9 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	 * @date 2018年5月4日 上午9:04:08
 	 */
 	@Override
-	public GetLoginNameRo getLoginNameByWx(final String wxId) {
+	public GetLoginNameRo getLoginNameByWx(final Long id) {
 		final GetLoginNameRo ro = new GetLoginNameRo();
-		final String loginName = _mapper.selectLoginNameByWx(wxId);
+		final String loginName = _mapper.selectLoginNameByWx(id);
 		_log.info("用户登录名称是: {}", loginName);
 		if (StringUtils.isBlank(loginName)) {
 			ro.setResult(GetLoginNameDic.FAIL);

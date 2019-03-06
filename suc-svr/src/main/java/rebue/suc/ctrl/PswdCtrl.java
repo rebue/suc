@@ -57,40 +57,40 @@ public class PswdCtrl {
 	}
 
 	/**
-	 * 微信设置登录密码
+	 * 设置登录密码
 	 */
 	@PostMapping("/loginpswd/add/bywxid")
-	LoginPswdSetRo setLoginPassword(@RequestParam("wxId") String wxId,
+	LoginPswdSetRo setLoginPassword(@RequestParam("id") Long id,
 			@RequestParam("newLoginPswd") String newLoginPswd) {
-		_log.info("设置登录密码的参数为：{}，{}", wxId, newLoginPswd);
-		return svc.setLoginPassword(wxId, newLoginPswd);
+		_log.info("设置登录密码的参数为：{}，{}", id, newLoginPswd);
+		return svc.setLoginPassword(id, newLoginPswd);
 	}
 
 	/**
 	 * 修改登录密码
 	 */
 	@PostMapping("/loginpswd/modify/bywxid")
-	LoginPswdModifyRo changeLoginPassword(@RequestParam("wxId") String wxId,
+	LoginPswdModifyRo changeLoginPassword(@RequestParam("id") Long id,
 			@RequestParam("oldLoginPswd") String oldLoginPswd, @RequestParam("newLoginPswd") String newLoginPswd) {
-		return svc.changeLoginPassword(wxId, oldLoginPswd, newLoginPswd);
+		return svc.changeLoginPassword(id, oldLoginPswd, newLoginPswd);
 	}
 	
 	/**
 	 * 微信设置支付密码
 	 */
 	@PostMapping("/paypswd/add/bywxid")
-	PayPswdSetRo setPayPassword(@RequestParam("wxId") String wxId,
+	PayPswdSetRo setPayPassword(@RequestParam("id") Long id,
 			@RequestParam("newPayPswd") String newPayPswd) {
-		_log.info("设置登录密码的参数为：{}，{}", wxId, newPayPswd);
-		return svc.setPayPassword(wxId, newPayPswd);
+		_log.info("设置登录密码的参数为：{}，{}", id, newPayPswd);
+		return svc.setPayPassword(id, newPayPswd);
 	}
 
 	/**
 	 * 修改登录密码
 	 */
 	@PostMapping("/paypswd/modify/bywxid")
-	PayPswdModifyRo changePayPassword(@RequestParam("wxId") String wxId,
+	PayPswdModifyRo changePayPassword(@RequestParam("id") Long id,
 			@RequestParam("oldPayPswd") String oldPayPswd, @RequestParam("newPayPswd") String newPayPswd) {
-		return svc.changePayPassword(wxId, oldPayPswd, newPayPswd);
+		return svc.changePayPassword(id, oldPayPswd, newPayPswd);
 	}
 }

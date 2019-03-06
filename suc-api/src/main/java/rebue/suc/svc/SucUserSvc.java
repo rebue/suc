@@ -114,33 +114,33 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
     /**
      * 微信设置登录密码 Title: setLoginPassword Description:
      *
-     * @param wxId
+     * @param id
      * @param newLoginPswd
      * @return
      * @date 2018年5月2日 下午1:10:03
      */
-    LoginPswdSetRo setLoginPassword(String wxId, String newLoginPswd);
+    LoginPswdSetRo setLoginPassword(Long id, String newLoginPswd);
 
     /**
      * 微信修改登录密码 Title: changeLoginPassword Description:
      *
-     * @param wxId
+     * @param id
      * @param oldLoginPswd
      * @param newLoginPswd
      * @return
      * @date 2018年5月2日 下午1:21:46
      */
-    LoginPswdModifyRo changeLoginPassword(String wxId, String oldLoginPswd, String newLoginPswd);
+    LoginPswdModifyRo changeLoginPassword(Long id, String oldLoginPswd, String newLoginPswd);
 
     /**
      * 根据微信ID设置登录名称 Title: setLoginName Description:
      *
-     * @param wxId
+     * @param id
      * @param loginName
      * @return
      * @date 2018年5月3日 下午5:38:56
      */
-    SetLoginNameRo setLoginName(String wxId, String loginName);
+    SetLoginNameRo setLoginName(Long id, String loginName);
 
     /**
      * 根据微信ID获取用户登录名称 Title: selectLoginNameByWx Description:
@@ -149,7 +149,7 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * @return
      * @date 2018年5月4日 上午9:04:49
      */
-    GetLoginNameRo getLoginNameByWx(String wxId);
+    GetLoginNameRo getLoginNameByWx(Long id);
 
     /**
      * 修改用户信息
@@ -281,19 +281,19 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
     /**
      * 设置支付密码
      * 
-     * @param wxId
+     * @param id
      * @param newPayPswd
      * @return
      */
-    PayPswdSetRo setPayPassword(String wxId, String newPayPswd);
+    PayPswdSetRo setPayPassword(Long id, String newPayPswd);
 
     /**
      * 修改支付密码
      * 
-     * @param wxId
+     * @param id
      * @param oldPayPswd
      * @param newPayPswd
      * @return
      */
-    PayPswdModifyRo changePayPassword(String wxId, String oldPayPswd, String newPayPswd);
+    PayPswdModifyRo changePayPassword(Long id, String oldPayPswd, String newPayPswd);
 }
