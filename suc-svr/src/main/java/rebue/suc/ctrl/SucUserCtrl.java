@@ -171,7 +171,7 @@ public class SucUserCtrl {
      *            每页大小
      */
     @GetMapping("/suc/user/listbykeysanduserids")
-    PageInfo<SucUserDetailRo> listByKeysAndUserIds(@RequestParam(value = "keys", required = false) final String keys, @RequestParam("userIds") final String userIds,
+    PageInfo<SucUserDetailRo> listByKeysAndUserIds(@RequestParam(value = "keys", required = false) final String keys, @RequestParam(value = "userIds", required = false) final String userIds,
             @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         if (pageNum == null) {
             pageNum = 1;
@@ -201,7 +201,7 @@ public class SucUserCtrl {
      *            每页大小
      */
     @GetMapping("/suc/user/listbykeysandnotuserids")
-    PageInfo<SucUserDetailRo> listByKeysAndNotUserIds(@RequestParam(value = "keys", required = false) final String keys, @RequestParam("userIds") final String userIds,
+    PageInfo<SucUserDetailRo> listByKeysAndNotUserIds(@RequestParam(value = "keys", required = false) final String keys, @RequestParam(value = "userIds", required = false) final String userIds,
             @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         if (pageNum == null) {
             pageNum = 1;
