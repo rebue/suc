@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/12/15 15:40:26                          */
+/* Created on:     2019/3/13 14:22:58                           */
 /*==============================================================*/
 
 
@@ -138,6 +138,7 @@ create table SUC_ORG
    REMARK               varchar(500) comment '公司/组织备注',
    CREATE_TIMESTAMP     bigint not null comment '创建时间戳',
    IS_ENABLED           bool not null default true comment '是否启用',
+   CONTACT              varchar(15) comment '联系方式',
    primary key (ID)
 );
 
