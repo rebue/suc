@@ -9,7 +9,7 @@ import java.io.Serializable;
  *
  * 数据库表: SUC_ORG
  *
- * @mbg.generated 自动生成，如需修改，请删除本行
+ * @mbg.generated 自动生成的注释，如需修改本注释，请删除本行
  */
 @JsonInclude(Include.NON_NULL)
 public class SucOrgMo implements Serializable {
@@ -58,6 +58,15 @@ public class SucOrgMo implements Serializable {
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private Boolean isEnabled;
+
+    /**
+     *    联系方式
+     *
+     *    数据库字段: SUC_ORG.CONTACT
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private String contact;
 
     /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -175,6 +184,28 @@ public class SucOrgMo implements Serializable {
     }
 
     /**
+     *    联系方式
+     *
+     *    数据库字段: SUC_ORG.CONTACT
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public String getContact() {
+        return contact;
+    }
+
+    /**
+     *    联系方式
+     *
+     *    数据库字段: SUC_ORG.CONTACT
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
@@ -188,6 +219,7 @@ public class SucOrgMo implements Serializable {
         sb.append(", remark=").append(remark);
         sb.append(", createTimestamp=").append(createTimestamp);
         sb.append(", isEnabled=").append(isEnabled);
+        sb.append(", contact=").append(contact);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
