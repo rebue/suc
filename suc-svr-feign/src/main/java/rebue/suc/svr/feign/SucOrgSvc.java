@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.github.pagehelper.PageInfo;
+
 import rebue.sbs.feign.FeignConfig;
 import rebue.suc.mo.SucOrgMo;
+import rebue.suc.ro.SucOrgInOrNotInRo;
 import rebue.suc.ro.SucOrgRo;
 
 @FeignClient(name = "suc-svr", configuration = FeignConfig.class)
@@ -69,4 +72,39 @@ public interface SucOrgSvc {
      */
     @GetMapping("/suc/org/all")
     List<SucOrgMo> listAll();
+    
+    /**
+     * 查询已经存在和没有存在
+     * @param orgIds
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/suc/org/listaddedandunaddedorgs")
+    SucOrgInOrNotInRo listAddedAndUnaddedOrgs(@RequestParam("orgIds") String orgIds, @RequestParam(value = "pageNum", required = false) Integer pageNum,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize) ;
+    
+    /**
+     * 查询已经存在的
+     * @param orgIds
+     * @param keys
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/suc/org/listaddedorgs")
+    PageInfo<SucOrgMo> listAddedOrgs(@RequestParam("orgIds") String orgIds, @RequestParam(value = "keys", required = false) String keys,
+            @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize);
+    
+    /**
+     * 
+     * @param orgIds
+     * @param keys
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/suc/org/listunaddedorgs")
+    PageInfo<SucOrgMo> listUnaddedOrgs(@RequestParam("orgIds") String orgIds, @RequestParam(value = "keys", required = false) String keys,
+            @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize);
 }

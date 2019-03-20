@@ -93,4 +93,39 @@ public interface SucOrgMapper extends MybatisBaseMapper<SucOrgMo, Long> {
      * 根据组织名称查询组织信息
      */
     List<OrgAccountRo> selectOrg(SucOrgMo mo);
+    
+    /**
+     * 根据组织id集合查询指定组织的未添加的组织列表
+     * @param keys
+     *            模糊查询的关键字
+     */
+    @Select("SELECT * FROM SUC_ORG where ID not  in(${orgIds}) ")
+    List<SucOrgMo> selectUnaddedOrgsByOrgIds(@Param("orgIds") String orgIds);
+    
+    /**
+     * 根据组织id集合和关键字查询指定组织的未添加的组织列表
+     * @param keys
+     *            模糊查询的关键字
+     */
+    @Select("SELECT * FROM SUC_ORG where ID not  in(${orgIds}) and name LIKE '%${keys}%' ")
+    List<SucOrgMo> selectUnaddedOrgsByOrgIdsAndKeys(@Param("orgIds") String orgIds,@Param("keys") String keys);
+    
+    /**
+     *  根据组织id集合查询指定组织的已添加的组织列表
+     *
+     * @param orgId
+     *            组织ID集合
+     */
+    @Select("SELECT * FROM SUC_ORG where ID in(${orgIds})")
+    List<SucOrgMo> selectAddedOrgsByOrgIds(@Param("orgIds") String orgIds);
+    
+    
+    /**
+     *  根据组织id集合和关键字查询指定组织的已添加的组织列表
+     *
+     * @param orgId
+     *            组织ID集合
+     */
+    @Select("SELECT * FROM SUC_ORG where ID in(${orgIds}) and name LIKE '%${keys}%' ")
+    List<SucOrgMo> selectAddedOrgsByOrgIdsAndKeys(@Param("orgIds") String orgIds,@Param("keys") String keys);
 }

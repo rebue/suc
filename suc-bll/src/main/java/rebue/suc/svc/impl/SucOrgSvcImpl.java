@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import rebue.suc.mo.SucOrgMo;
 import rebue.suc.msg.SucAddOrgDoneMsg;
 import rebue.suc.pub.SucAddOrgDonePub;
 import rebue.suc.ro.OrgAccountRo;
+import rebue.suc.ro.SucOrgInOrNotInRo;
 import rebue.suc.ro.SucOrgRo;
 import rebue.suc.svc.SucOrgSvc;
 
@@ -188,6 +190,45 @@ public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, 
 
 		}
         return result;
+	}
+	
+	
+	@Override
+	public SucOrgInOrNotInRo listAddedAndUnaddedOrgs(String orgIds, Integer pageSize, String addedKeys,
+			Integer addedPageNum, String unaddedKeys, Integer unaddedPageNum) {
+		SucOrgInOrNotInRo ro = new SucOrgInOrNotInRo();
+		// 获取已添加组织列表
+		PageInfo<SucOrgMo> added = listAddedOrgs(orgIds, addedKeys, addedPageNum, pageSize);
+		_log.info("added: " + added);
+		ro.setAddedOrgs(added);
+		// 获取未添加组织列表
+		PageInfo<SucOrgMo> unadded = listUnaddedOrgs(orgIds, unaddedKeys, unaddedPageNum, pageSize);
+		_log.info("unadded: " + unadded);
+		ro.setUnaddedOrgs(unadded);
+		return ro;
+	}
+
+	@Override
+	public PageInfo<SucOrgMo> listAddedOrgs(String orgIds, String keys, Integer pageNum, Integer pageSize) {
+		_log.info("查询指定组织的已添加的组织列表：orgId-{},keys-{},pageNum-{},pageSize-{}", orgIds,keys,pageNum,pageSize);
+		if (StringUtils.isBlank(keys))
+			return PageHelper.startPage(pageNum, pageSize)
+					.doSelectPageInfo(() -> _mapper.selectAddedOrgsByOrgIds(orgIds));
+		else
+			return PageHelper.startPage(pageNum, pageSize)
+					.doSelectPageInfo(() -> _mapper.selectAddedOrgsByOrgIdsAndKeys(orgIds, keys));
+
+	}
+
+	@Override
+	public PageInfo<SucOrgMo> listUnaddedOrgs(String orgIds, String keys, Integer pageNum, Integer pageSize) {
+		_log.info("查询指定组织的没有添加的组织列表：orgId-{}", orgIds);
+		if (StringUtils.isBlank(keys))
+			return PageHelper.startPage(pageNum, pageSize)
+					.doSelectPageInfo(() -> _mapper.selectUnaddedOrgsByOrgIds(orgIds));
+		else
+			return PageHelper.startPage(pageNum, pageSize)
+					.doSelectPageInfo(() -> _mapper.selectUnaddedOrgsByOrgIdsAndKeys(orgIds, keys));
 	}
 
 }
