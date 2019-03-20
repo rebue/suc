@@ -1113,6 +1113,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	 * @date 2018年5月2日 下午12:57:25 1、判断参数是否为空 2、查询用户信息并判断该用户是否存在 3、判断支付密码是否为空
 	 *       4、添加支付密码
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public PayPswdSetRo setPayPassword(final Long id, String newPayPswd) {
@@ -1683,4 +1684,27 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 		}
 	}
 
+	/**
+	 * 根据组织id、用户id、关键字查询除指定id外的用户列表
+	 * 
+	 * @param orgId    组织id
+	 * @param userIds  要排除的用户，多个以逗号隔开
+	 * @param keys     模糊查询的用户关键字
+	 * @param pageNum  第几页
+	 * @param pageSize 每页大小
+	 * @return
+	 */
+	@Override
+	public PageInfo<SucUserDetailRo> listUnaddedUsersByOrgIdAndUsers(Long orgId, String userIds, String keys,
+			Integer pageNum, Integer pageSize) {
+		_log.info("根据组织id、用户id、关键字查询除指定id外的用户列表的参数为：orgId-{}, userIds-{}, keys-{}, pageNum-{}, pageSize-{}", orgId,
+				userIds, keys, pageNum, pageSize);
+		if (StringUtils.isBlank(userIds)) {
+			return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC")
+					.doSelectPageInfo(() -> _mapper.selectUnaddedUsersByOrgIdAndkeys(orgId, keys));
+		} else {
+			return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC")
+					.doSelectPageInfo(() -> _mapper.selectUnaddedUsersByOrgIdAndUserIdsAndKeys(orgId, userIds, keys));
+		}
+	}
 }

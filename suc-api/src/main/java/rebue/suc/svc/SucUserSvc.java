@@ -296,4 +296,17 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * @return
      */
     PayPswdModifyRo changePayPassword(Long id, String oldPayPswd, String newPayPswd);
+
+    /**
+	 * 根据组织id、用户id、关键字查询除指定id外的用户列表
+	 * 
+	 * @param orgId    组织id
+	 * @param userIds  要排除的用户，多个以逗号隔开
+	 * @param keys     模糊查询的用户关键字
+	 * @param pageNum  第几页
+	 * @param pageSize 每页大小
+	 * @return
+	 */
+	PageInfo<SucUserDetailRo> listUnaddedUsersByOrgIdAndUsers(Long orgId, String userIds, String keys, Integer pageNum,
+			Integer pageSize);
 }
