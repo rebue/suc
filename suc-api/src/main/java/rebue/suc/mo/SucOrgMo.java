@@ -69,6 +69,15 @@ public class SucOrgMo implements Serializable {
     private String contact;
 
     /**
+     *    公司/组织简称
+     *
+     *    数据库字段: SUC_ORG.SHORT_NAME
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private String shortName;
+
+    /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private static final long serialVersionUID = 1L;
@@ -206,6 +215,28 @@ public class SucOrgMo implements Serializable {
     }
 
     /**
+     *    公司/组织简称
+     *
+     *    数据库字段: SUC_ORG.SHORT_NAME
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public String getShortName() {
+        return shortName;
+    }
+
+    /**
+     *    公司/组织简称
+     *
+     *    数据库字段: SUC_ORG.SHORT_NAME
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
@@ -220,6 +251,7 @@ public class SucOrgMo implements Serializable {
         sb.append(", createTimestamp=").append(createTimestamp);
         sb.append(", isEnabled=").append(isEnabled);
         sb.append(", contact=").append(contact);
+        sb.append(", shortName=").append(shortName);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
