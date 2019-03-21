@@ -41,5 +41,8 @@ alter table SUC_USER add IS_TESTER            bool not null default false commen
 
 -- ------------------------------------------------------------------ 以上已经更新到线上 ------------------------------------------------------------------ 
 
--- 2018-03-13
+-- 2019-03-13
 alter table SUC_ORG add CONTACT              varchar(15) comment '联系方式';
+
+-- 2019-03-21
+alter table SUC_ORG add SHORT_NAME           varchar(50) comment '公司/组织简称';
