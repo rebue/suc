@@ -1511,10 +1511,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	 * @return
 	 */
 	@Override
-	public PageInfo<UserPointRo> listEx(final String keys, final int pageNum, final int pageSize) {
-		_log.info("list: qo-{}; pageNum-{}; pageSize-{}", keys, pageNum, pageSize);
+	public PageInfo<UserPointRo> listEx(final String keys, Long orgId, final int pageNum, final int pageSize) {
+		_log.info("list: qo-{}; orgId-{}; pageNum-{}; pageSize-{}", keys, orgId, pageNum, pageSize);
 		PageInfo<UserPointRo> result = PageHelper.startPage(pageNum, pageSize)
-				.doSelectPageInfo(() -> _mapper.listUserInformation(keys));
+				.doSelectPageInfo(() -> _mapper.listUserInformation(keys, orgId));
 		List<UserPointRo> list = result.getList();
 		for (UserPointRo ro : list) {
 			_log.info("获取当前账户参数： ro:-{}", ro);

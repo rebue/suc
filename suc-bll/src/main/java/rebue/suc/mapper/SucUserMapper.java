@@ -405,6 +405,6 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 	 * @param users
 	 * @return
 	 */
-	List<UserPointRo> listUserInformation(@Param("keys") String keys);
+	List<UserPointRo> listUserInformation(@Param("keys") String keys, @Param("orgId") Long orgId);
 
 }

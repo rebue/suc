@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -101,6 +102,9 @@ public class SucUserCtrl {
 
 	@Resource
 	private SucUserSvc svc;
+
+	@Value("${debug:false}")
+	private Boolean isDebug;
 
 	/**
 	 * 获取用户信息（通过用户ID）
@@ -282,19 +286,32 @@ public class SucUserCtrl {
 
 	/**
 	 * 查询用户信息
+	 * 
+	 * @throws ParseException
 	 *
 	 * @mbg.overrideByMethodName
 	 */
 	@GetMapping("/suc/user")
 	PageInfo<UserPointRo> list(@RequestParam(value = "keys", required = false) final String keys,
-			@RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize) {
-		_log.info("list users:" + keys + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+			@RequestParam(value = "isOrgGet", required = false) final Boolean isOrgGet,
+			@RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize,
+			HttpServletRequest request) throws ParseException {
+		_log.info("list users:" + keys + ", isOrgGet=" + isOrgGet + ", pageNum = " + pageNum + ", pageSize = "
+				+ pageSize);
 		if (pageSize > 50) {
 			final String msg = "pageSize不能大于50";
 			_log.error(msg);
 			throw new IllegalArgumentException(msg);
 		}
-		final PageInfo<UserPointRo> result = svc.listEx(keys, pageNum, pageSize);
+		Long orgId = null;
+		if (isOrgGet != null && isOrgGet) {
+			orgId = 560754349274431488L;
+			if (!isDebug) {
+				orgId = (Long) JwtUtils.getJwtAdditionItemInCookie(request, "orgId");
+			}
+		}
+
+		final PageInfo<UserPointRo> result = svc.listEx(keys, orgId, pageNum, pageSize);
 		_log.info("result: " + result);
 		return result;
 	}

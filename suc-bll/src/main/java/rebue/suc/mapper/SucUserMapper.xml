@@ -704,6 +704,9 @@
         OR su.WX_NICKNAME 	LIKE '%${keys}%'
         OR su.ID 			LIKE '%${keys}'
       </if>
+      <if test="orgId != null and orgId != ''">
+        and ORG_ID = #{orgId,jdbcType=BIGINT}
+      </if>
     </where>
   </select>
 </mapper>
