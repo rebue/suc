@@ -1,5 +1,6 @@
 package rebue.suc.ctrl;
 
+import java.text.ParseException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -44,17 +45,28 @@ public class RegCtrl {
     private SucUserSvc          svc;
     @Resource
     private JwtSvc              jwtSvc;
+    
+    @Value("${debug:true}")
+    private Boolean isDebug;
 
     /**
      * 用户注册(登录名称)
+     * @throws ParseException 
      */
     @ApiOperation("用户通过登录名称注册\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 用户登录名已存在;-3: Email已存在;-4: 手机号码已存在;-5: 身份证号码已存在;-6: QQ的ID已存在;-7: 微信的ID已存在)")
     @PostMapping("/user/reg/by/login/name")
-    UserRegRo regByLoginName(@RequestBody final RegByLoginNameTo regTo, final HttpServletRequest req, final HttpServletResponse resp) {
+    UserRegRo regByLoginName(@RequestBody final RegByLoginNameTo regTo, final HttpServletRequest req, final HttpServletResponse resp) throws ParseException {
         _log.info("reg by login name: {}", regTo);
         regTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         regTo.setUserAgent(AgentUtils.getUserAgent(req));
         regTo.setMac("不再获取MAC地址");
+        if (regTo.getIsOrgAdd()) {
+        	Long orgId = 560754349274431488L;
+        	if (!isDebug) {
+        		orgId = (Long) JwtUtils.getJwtAdditionItemInCookie(req, "orgId");
+			}
+        	regTo.setOrgId(orgId);
+		}
         final UserRegRo ro = svc.regByLoginName(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
             jwtSignWithCookie(ro, regTo.getSysId(), null, resp);
