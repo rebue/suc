@@ -1537,8 +1537,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	 * @return
 	 */
 	@Override
-	public PageInfo<SucUserMo> listUserByIds(final int pageNum, final int pageSize, final String ids) {
-		return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectByIds(ids));
+	public PageInfo<SucUserMo> listUserByIdsAndKeys(final int pageNum, final int pageSize, final String ids, final String keys) {
+		return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.listUserByIdsAndKeys(ids,keys));
 	}
 
 	/**

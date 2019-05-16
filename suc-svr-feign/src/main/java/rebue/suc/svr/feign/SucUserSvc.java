@@ -107,9 +107,9 @@ public interface SucUserSvc {
 	 * @param ids
 	 * @return
 	 */
-	@GetMapping("/suc/user/listuserbyids")
-	PageInfo<SucUserMo> listUserByIds(@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize,
-			@RequestParam("ids") String ids);
+	@GetMapping("/suc/user/listuserbyidsAndKeys")
+	PageInfo<SucUserMo> listuserbyidsAndKeys(@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize,
+			@RequestParam("ids") String ids,@RequestParam("keys") String keys);
 
 	/**
 	 * 获取用户购买关系

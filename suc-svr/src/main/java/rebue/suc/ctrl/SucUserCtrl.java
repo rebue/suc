@@ -439,11 +439,11 @@ public class SucUserCtrl {
 	 * @param ids
 	 * @return
 	 */
-	@GetMapping("/suc/user/listuserbyids")
-	PageInfo<SucUserMo> listUserByIds(@RequestParam("pageNum") final int pageNum,
-			@RequestParam("pageSize") final int pageSize, @RequestParam("ids") final String ids) {
+	@GetMapping("/suc/user/listuserbyidsAndKeys")
+	PageInfo<SucUserMo> listUserByIdsAndKeys(@RequestParam("pageNum") final int pageNum,
+			@RequestParam("pageSize") final int pageSize, @RequestParam("ids") final String ids,@RequestParam(value = "kdys", required = false) final String kdys) {
 		_log.info("查询用户信息的参数为：pageNum={}, pageSize={}, ids={}", pageNum, pageSize, ids);
-		return svc.listUserByIds(pageNum, pageSize, ids);
+		return svc.listUserByIdsAndKeys(pageNum, pageSize, ids,kdys);
 	}
 
 	/**

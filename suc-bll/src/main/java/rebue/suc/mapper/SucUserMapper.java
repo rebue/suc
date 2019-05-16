@@ -355,7 +355,7 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
 	 * @param ids
 	 * @return
 	 */
-	List<SucUserMo> selectByIds(@Param("ids") String ids);
+	List<SucUserMo> listUserByIdsAndKeys(@Param("ids") String ids,@Param("keys") String keys);
 
 	/**
 	 * 根据组织编号删除用户组织
