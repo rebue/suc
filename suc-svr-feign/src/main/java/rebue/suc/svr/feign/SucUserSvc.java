@@ -109,7 +109,7 @@ public interface SucUserSvc {
 	 */
 	@GetMapping("/suc/user/listuserbyidsAndKeys")
 	PageInfo<SucUserMo> listuserbyidsAndKeys(@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize,
-			@RequestParam("ids") String ids,@RequestParam("keys") String keys);
+			@RequestParam("userIds") String userIds,@RequestParam("addedKeys") String addedKeys);
 
 	/**
 	 * 获取用户购买关系

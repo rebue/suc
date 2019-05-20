@@ -441,9 +441,9 @@ public class SucUserCtrl {
 	 */
 	@GetMapping("/suc/user/listuserbyidsAndKeys")
 	PageInfo<SucUserMo> listUserByIdsAndKeys(@RequestParam("pageNum") final int pageNum,
-			@RequestParam("pageSize") final int pageSize, @RequestParam("ids") final String ids,@RequestParam(value = "kdys", required = false) final String kdys) {
-		_log.info("查询用户信息的参数为：pageNum={}, pageSize={}, ids={}", pageNum, pageSize, ids);
-		return svc.listUserByIdsAndKeys(pageNum, pageSize, ids,kdys);
+			@RequestParam("pageSize") final int pageSize, @RequestParam("userIds") final String ids,@RequestParam(value = "addedKeys", required = false) final String addedKeys) {
+		_log.info("查询用户信息的参数为：pageNum={}, pageSize={}, ids={},kdys={}", pageNum, pageSize, ids,addedKeys);
+		return svc.listUserByIdsAndKeys(pageNum, pageSize, ids,addedKeys);
 	}
 
 	/**
