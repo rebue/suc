@@ -532,4 +532,15 @@ public class SucUserCtrl {
 		}
 		return svc.listUnaddedUsersByOrgIdAndUsers(orgId, userIds, keys, pageNum, pageSize);
 	}
+	
+	/**
+	 * 根据条件查询一条用户信息
+	 * @param mo
+	 * @return
+	 */
+	@GetMapping("/suc/user/getone")
+	SucUserMo getOne(SucUserMo mo) {
+		_log.info("getOne SucUserMo-{}", mo);
+		return svc.getOne(mo);
+	}
 }
