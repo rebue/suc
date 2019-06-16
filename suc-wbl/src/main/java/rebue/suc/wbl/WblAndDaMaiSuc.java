@@ -65,6 +65,26 @@ public class WblAndDaMaiSuc {
 						Map<String, Object> m = new HashMap<>();
 						m.put("accountId", sucUserMo.getId());
 						m.put("tradeAmount", balance);
+						m.put("changeAmount2", balance);
+						m.put("tradeType", 10);
+						m.put("tradeTitle", "微薄利商超余额充值");
+						OkhttpUtils.postByJsonParams("http://127.0.0.1:9300/afc/trade/addex", m);
+						
+						m = new HashMap<>();
+						m.put("accountId", sucUserMo.getId());
+						m.put("tradeAmount", cashback);
+						m.put("changeAmount1", cashback);
+						m.put("tradeType", 11);
+						m.put("tradeTitle", "微薄利商超返现金充值");
+						OkhttpUtils.postByJsonParams("http://127.0.0.1:9300/afc/trade/addex", m);
+						
+						m = new HashMap<>();
+						m.put("accountId", sucUserMo.getId());
+						m.put("tradeAmount", deposit);
+						m.put("changeAmount1", deposit);
+						m.put("tradeType", 40);
+						m.put("tradeTitle", "微薄利商超保证金充值");
+						OkhttpUtils.postByJsonParams("http://127.0.0.1:9300/afc/trade/addex", m);
 					}
 				}
 			} else {
