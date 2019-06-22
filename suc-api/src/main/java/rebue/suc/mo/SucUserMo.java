@@ -43,7 +43,7 @@ public class SucUserMo implements Serializable {
 
     /**
      *    登录密码
-     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.LOGIN_PSWD
      *
@@ -53,9 +53,9 @@ public class SucUserMo implements Serializable {
 
     /**
      *    支付密码
-     *                用户的支付密码默认和登录密码一致
-     *                保存在字段的计算方法如下：
-     *                MD5(数据库存储的已加密的登陆密码)
+     *            用户的支付密码默认和登录密码一致
+     *            保存在字段的计算方法如下：
+     *            MD5(数据库存储的已加密的登陆密码)
      *
      *    数据库字段: SUC_USER.PAY_PSWD
      *
@@ -65,8 +65,8 @@ public class SucUserMo implements Serializable {
 
     /**
      *    密码组合码
-     *                与密码组合加密用
-     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *            与密码组合加密用
+     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.SALT
      *
@@ -237,6 +237,15 @@ public class SucUserMo implements Serializable {
     private String wxFace;
 
     /**
+     *    是否测试者
+     *
+     *    数据库字段: SUC_USER.IS_TESTER
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private Boolean isTester;
+
+    /**
      *    是否锁定
      *
      *    数据库字段: SUC_USER.IS_LOCK
@@ -264,13 +273,13 @@ public class SucUserMo implements Serializable {
     private Long modifiedTimestamp;
 
     /**
-     *    是否测试者
+     *    记录用户所属领域(也可称为群组)
      *
-     *    数据库字段: SUC_USER.IS_TESTER
+     *    数据库字段: SUC_USER.DOMAIN_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    private Boolean isTester;
+    private String domainId;
 
     /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
@@ -345,7 +354,7 @@ public class SucUserMo implements Serializable {
 
     /**
      *    登录密码
-     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.LOGIN_PSWD
      *
@@ -357,7 +366,7 @@ public class SucUserMo implements Serializable {
 
     /**
      *    登录密码
-     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.LOGIN_PSWD
      *
@@ -369,9 +378,9 @@ public class SucUserMo implements Serializable {
 
     /**
      *    支付密码
-     *                用户的支付密码默认和登录密码一致
-     *                保存在字段的计算方法如下：
-     *                MD5(数据库存储的已加密的登陆密码)
+     *            用户的支付密码默认和登录密码一致
+     *            保存在字段的计算方法如下：
+     *            MD5(数据库存储的已加密的登陆密码)
      *
      *    数据库字段: SUC_USER.PAY_PSWD
      *
@@ -383,9 +392,9 @@ public class SucUserMo implements Serializable {
 
     /**
      *    支付密码
-     *                用户的支付密码默认和登录密码一致
-     *                保存在字段的计算方法如下：
-     *                MD5(数据库存储的已加密的登陆密码)
+     *            用户的支付密码默认和登录密码一致
+     *            保存在字段的计算方法如下：
+     *            MD5(数据库存储的已加密的登陆密码)
      *
      *    数据库字段: SUC_USER.PAY_PSWD
      *
@@ -397,8 +406,8 @@ public class SucUserMo implements Serializable {
 
     /**
      *    密码组合码
-     *                与密码组合加密用
-     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *            与密码组合加密用
+     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.SALT
      *
@@ -410,8 +419,8 @@ public class SucUserMo implements Serializable {
 
     /**
      *    密码组合码
-     *                与密码组合加密用
-     *                登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
+     *            与密码组合加密用
+     *            登录密码=小写(MD5(小写(MD5(密码明文))+小写(密码组合码)))
      *
      *    数据库字段: SUC_USER.SALT
      *
@@ -818,6 +827,28 @@ public class SucUserMo implements Serializable {
     }
 
     /**
+     *    是否测试者
+     *
+     *    数据库字段: SUC_USER.IS_TESTER
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public Boolean getIsTester() {
+        return isTester;
+    }
+
+    /**
+     *    是否测试者
+     *
+     *    数据库字段: SUC_USER.IS_TESTER
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setIsTester(Boolean isTester) {
+        this.isTester = isTester;
+    }
+
+    /**
      *    是否锁定
      *
      *    数据库字段: SUC_USER.IS_LOCK
@@ -884,25 +915,25 @@ public class SucUserMo implements Serializable {
     }
 
     /**
-     *    是否测试者
+     *    记录用户所属领域(也可称为群组)
      *
-     *    数据库字段: SUC_USER.IS_TESTER
+     *    数据库字段: SUC_USER.DOMAIN_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    public Boolean getIsTester() {
-        return isTester;
+    public String getDomainId() {
+        return domainId;
     }
 
     /**
-     *    是否测试者
+     *    记录用户所属领域(也可称为群组)
      *
-     *    数据库字段: SUC_USER.IS_TESTER
+     *    数据库字段: SUC_USER.DOMAIN_ID
      *
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
-    public void setIsTester(Boolean isTester) {
-        this.isTester = isTester;
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
     }
 
     /**
@@ -938,10 +969,11 @@ public class SucUserMo implements Serializable {
         sb.append(", wxOpenid=").append(wxOpenid);
         sb.append(", wxNickname=").append(wxNickname);
         sb.append(", wxFace=").append(wxFace);
+        sb.append(", isTester=").append(isTester);
         sb.append(", isLock=").append(isLock);
         sb.append(", promoterId=").append(promoterId);
         sb.append(", modifiedTimestamp=").append(modifiedTimestamp);
-        sb.append(", isTester=").append(isTester);
+        sb.append(", domainId=").append(domainId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

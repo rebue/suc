@@ -78,6 +78,15 @@ public class SucOrgMo implements Serializable {
     private String shortName;
 
     /**
+     *    组织编号(也可称为商户号)
+     *
+     *    数据库字段: SUC_ORG.ORG_CODE
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    private String orgCode;
+
+    /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     private static final long serialVersionUID = 1L;
@@ -237,6 +246,28 @@ public class SucOrgMo implements Serializable {
     }
 
     /**
+     *    组织编号(也可称为商户号)
+     *
+     *    数据库字段: SUC_ORG.ORG_CODE
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    /**
+     *    组织编号(也可称为商户号)
+     *
+     *    数据库字段: SUC_ORG.ORG_CODE
+     *
+     *    @mbg.generated 自动生成，如需修改，请删除本行
+     */
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
+    }
+
+    /**
      *    @mbg.generated 自动生成，如需修改，请删除本行
      */
     @Override
@@ -252,6 +283,7 @@ public class SucOrgMo implements Serializable {
         sb.append(", isEnabled=").append(isEnabled);
         sb.append(", contact=").append(contact);
         sb.append(", shortName=").append(shortName);
+        sb.append(", orgCode=").append(orgCode);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

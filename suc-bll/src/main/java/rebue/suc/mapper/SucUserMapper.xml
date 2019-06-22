@@ -30,10 +30,11 @@
     <result column="WX_OPENID" jdbcType="VARCHAR" property="wxOpenid" />
     <result column="WX_NICKNAME" jdbcType="VARCHAR" property="wxNickname" />
     <result column="WX_FACE" jdbcType="VARCHAR" property="wxFace" />
+    <result column="IS_TESTER" jdbcType="TINYINT" property="isTester" />
     <result column="IS_LOCK" jdbcType="TINYINT" property="isLock" />
     <result column="PROMOTER_ID" jdbcType="BIGINT" property="promoterId" />
     <result column="MODIFIED_TIMESTAMP" jdbcType="BIGINT" property="modifiedTimestamp" />
-    <result column="IS_TESTER" jdbcType="TINYINT" property="isTester" />
+    <result column="DOMAIN_ID" jdbcType="VARCHAR" property="domainId" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
@@ -42,8 +43,8 @@
     -->
     ID, ORG_ID, LOGIN_NAME, LOGIN_PSWD, PAY_PSWD, SALT, NICKNAME, FACE, REALNAME, IS_VERIFIED_REALNAME, 
     IDCARD, IS_VERIFIED_IDCARD, EMAIL, IS_VERIFIED_EMAIL, MOBILE, IS_VERIFIED_MOBILE, 
-    QQ_ID, QQ_OPENID, QQ_NICKNAME, QQ_FACE, WX_ID, WX_OPENID, WX_NICKNAME, WX_FACE, IS_LOCK, 
-    PROMOTER_ID, MODIFIED_TIMESTAMP, IS_TESTER
+    QQ_ID, QQ_OPENID, QQ_NICKNAME, QQ_FACE, WX_ID, WX_OPENID, WX_NICKNAME, WX_FACE, IS_TESTER, 
+    IS_LOCK, PROMOTER_ID, MODIFIED_TIMESTAMP, DOMAIN_ID
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     <!--
@@ -76,8 +77,8 @@
       IS_VERIFIED_MOBILE, QQ_ID, QQ_OPENID, 
       QQ_NICKNAME, QQ_FACE, WX_ID, 
       WX_OPENID, WX_NICKNAME, WX_FACE, 
-      IS_LOCK, PROMOTER_ID, MODIFIED_TIMESTAMP, 
-      IS_TESTER)
+      IS_TESTER, IS_LOCK, PROMOTER_ID, 
+      MODIFIED_TIMESTAMP, DOMAIN_ID)
     values (#{id,jdbcType=BIGINT}, #{orgId,jdbcType=BIGINT}, #{loginName,jdbcType=VARCHAR}, 
       #{loginPswd,jdbcType=VARCHAR}, #{payPswd,jdbcType=VARCHAR}, #{salt,jdbcType=CHAR}, 
       #{nickname,jdbcType=VARCHAR}, #{face,jdbcType=VARCHAR}, #{realname,jdbcType=VARCHAR}, 
@@ -86,8 +87,8 @@
       #{isVerifiedMobile,jdbcType=TINYINT}, #{qqId,jdbcType=VARCHAR}, #{qqOpenid,jdbcType=VARCHAR}, 
       #{qqNickname,jdbcType=VARCHAR}, #{qqFace,jdbcType=VARCHAR}, #{wxId,jdbcType=VARCHAR}, 
       #{wxOpenid,jdbcType=VARCHAR}, #{wxNickname,jdbcType=VARCHAR}, #{wxFace,jdbcType=VARCHAR}, 
-      #{isLock,jdbcType=TINYINT}, #{promoterId,jdbcType=BIGINT}, #{modifiedTimestamp,jdbcType=BIGINT}, 
-      #{isTester,jdbcType=TINYINT})
+      #{isTester,jdbcType=TINYINT}, #{isLock,jdbcType=TINYINT}, #{promoterId,jdbcType=BIGINT}, 
+      #{modifiedTimestamp,jdbcType=BIGINT}, #{domainId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="rebue.suc.mo.SucUserMo">
     <!--
@@ -168,6 +169,9 @@
       <if test="wxFace != null">
         WX_FACE,
       </if>
+      <if test="isTester != null">
+        IS_TESTER,
+      </if>
       <if test="isLock != null">
         IS_LOCK,
       </if>
@@ -177,8 +181,8 @@
       <if test="modifiedTimestamp != null">
         MODIFIED_TIMESTAMP,
       </if>
-      <if test="isTester != null">
-        IS_TESTER,
+      <if test="domainId != null">
+        DOMAIN_ID,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -254,6 +258,9 @@
       <if test="wxFace != null">
         #{wxFace,jdbcType=VARCHAR},
       </if>
+      <if test="isTester != null">
+        #{isTester,jdbcType=TINYINT},
+      </if>
       <if test="isLock != null">
         #{isLock,jdbcType=TINYINT},
       </if>
@@ -263,8 +270,8 @@
       <if test="modifiedTimestamp != null">
         #{modifiedTimestamp,jdbcType=BIGINT},
       </if>
-      <if test="isTester != null">
-        #{isTester,jdbcType=TINYINT},
+      <if test="domainId != null">
+        #{domainId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -344,6 +351,9 @@
       <if test="wxFace != null">
         WX_FACE = #{wxFace,jdbcType=VARCHAR},
       </if>
+      <if test="isTester != null">
+        IS_TESTER = #{isTester,jdbcType=TINYINT},
+      </if>
       <if test="isLock != null">
         IS_LOCK = #{isLock,jdbcType=TINYINT},
       </if>
@@ -353,8 +363,8 @@
       <if test="modifiedTimestamp != null">
         MODIFIED_TIMESTAMP = #{modifiedTimestamp,jdbcType=BIGINT},
       </if>
-      <if test="isTester != null">
-        IS_TESTER = #{isTester,jdbcType=TINYINT},
+      <if test="domainId != null">
+        DOMAIN_ID = #{domainId,jdbcType=VARCHAR},
       </if>
     </set>
     where ID = #{id,jdbcType=BIGINT}
@@ -388,10 +398,11 @@
       WX_OPENID = #{wxOpenid,jdbcType=VARCHAR},
       WX_NICKNAME = #{wxNickname,jdbcType=VARCHAR},
       WX_FACE = #{wxFace,jdbcType=VARCHAR},
+      IS_TESTER = #{isTester,jdbcType=TINYINT},
       IS_LOCK = #{isLock,jdbcType=TINYINT},
       PROMOTER_ID = #{promoterId,jdbcType=BIGINT},
       MODIFIED_TIMESTAMP = #{modifiedTimestamp,jdbcType=BIGINT},
-      IS_TESTER = #{isTester,jdbcType=TINYINT}
+      DOMAIN_ID = #{domainId,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectAll" resultMap="BaseResultMap">
@@ -402,7 +413,7 @@
     select ID, ORG_ID, LOGIN_NAME, LOGIN_PSWD, PAY_PSWD, SALT, NICKNAME, FACE, REALNAME, 
     IS_VERIFIED_REALNAME, IDCARD, IS_VERIFIED_IDCARD, EMAIL, IS_VERIFIED_EMAIL, MOBILE, 
     IS_VERIFIED_MOBILE, QQ_ID, QQ_OPENID, QQ_NICKNAME, QQ_FACE, WX_ID, WX_OPENID, WX_NICKNAME, 
-    WX_FACE, IS_LOCK, PROMOTER_ID, MODIFIED_TIMESTAMP, IS_TESTER
+    WX_FACE, IS_TESTER, IS_LOCK, PROMOTER_ID, MODIFIED_TIMESTAMP, DOMAIN_ID
     from SUC_USER
   </select>
   <select id="selectSelective" parameterType="rebue.suc.mo.SucUserMo" resultMap="BaseResultMap">
@@ -483,6 +494,9 @@
       <if test="wxFace != null and wxFace != ''">
         and WX_FACE = #{wxFace,jdbcType=VARCHAR}
       </if>
+      <if test="isTester != null">
+        and IS_TESTER = #{isTester,jdbcType=TINYINT}
+      </if>
       <if test="isLock != null">
         and IS_LOCK = #{isLock,jdbcType=TINYINT}
       </if>
@@ -492,8 +506,8 @@
       <if test="modifiedTimestamp != null">
         and MODIFIED_TIMESTAMP = #{modifiedTimestamp,jdbcType=BIGINT}
       </if>
-      <if test="isTester != null">
-        and IS_TESTER = #{isTester,jdbcType=TINYINT}
+      <if test="domainId != null and domainId != ''">
+        and DOMAIN_ID = #{domainId,jdbcType=VARCHAR}
       </if>
     </where>
   </select>
@@ -586,6 +600,9 @@
       <if test="wxFace != null and wxFace != ''">
         and WX_FACE = #{wxFace,jdbcType=VARCHAR}
       </if>
+      <if test="isTester != null">
+        and IS_TESTER = #{isTester,jdbcType=TINYINT}
+      </if>
       <if test="isLock != null">
         and IS_LOCK = #{isLock,jdbcType=TINYINT}
       </if>
@@ -595,8 +612,8 @@
       <if test="modifiedTimestamp != null and modifiedTimestamp != ''">
         and MODIFIED_TIMESTAMP = #{modifiedTimestamp,jdbcType=BIGINT}
       </if>
-      <if test="isTester != null">
-        and IS_TESTER = #{isTester,jdbcType=TINYINT}
+      <if test="domainId != null and domainId != ''">
+        and DOMAIN_ID = #{domainId,jdbcType=VARCHAR}
       </if>
     </where>
   </select>
