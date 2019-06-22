@@ -46,3 +46,34 @@ alter table SUC_ORG add CONTACT              varchar(15) comment '联系方式';
 
 -- 2019-03-21
 alter table SUC_ORG add SHORT_NAME           varchar(50) comment '公司/组织简称';
+
+-- 2019-06-21
+--创建SUC_DOMAIN表
+drop table if exists suc.SUC_DOMAIN;
+
+create table suc.SUC_DOMAIN
+(
+   ID                   varchar(20) not null comment '领域ID',
+   NAME                 varchar(20) not null comment '领域名称',
+   REMARK               varchar(50) comment '领域备注',
+   primary key (ID),
+   unique key AK_DOMAIN_NAME (NAME)
+);
+
+alter table suc.SUC_DOMAIN comment '领域信息';
+-- SUC_ORG表中添加组织编号字段
+alter table suc.SUC_ORG add ORG_CODE varchar(30) comment '组织编号(也可称为商户号)';
+-- SUC_ORG表中组织编号字段设为unique
+alter table suc.SUC_ORG add unique (ORG_CODE);
+-- SUC_USER表中添加领域id
+alter table suc.SUC_USER add DOMAIN_ID varchar(20) comment '记录用户所属领域(也可称为群组)';
+-- suc_user表中将领域id和组织id分别与登录账号、手机号、邮箱、微信id、QQid设为unique 
+alter table suc.SUC_USER add unique key AK_DOMAIN_ID_AND_ORG_ID_AND_LOGIN_NAME (ORG_ID, LOGIN_NAME, DOMAIN_ID);
+alter table suc.SUC_USER add unique key AK_DOMAIN_ID_AND_ORG_ID_AND_MOBILE (ORG_ID, DOMAIN_ID, MOBILE);
+alter table suc.SUC_USER add unique key AK_DOMAIN_ID_AND_ORG_ID_AND_EMAIL (ORG_ID, EMAIL, DOMAIN_ID);
+alter table suc.SUC_USER add unique key AK_DOMAIN_ID_AND_ORG_ID_AND_WX_ID (ORG_ID, WX_ID, DOMAIN_ID);
+alter table suc.SUC_USER add unique key AK_DOMAIN_ID_AND_ORG_ID_AND_QQ_ID (ORG_ID, QQ_ID, DOMAIN_ID);
+--添加外键
+alter table suc.SUC_USER add constraint FK_Relationship_7 foreign key (DOMAIN_ID)
+      references suc.SUC_DOMAIN (ID) on delete restrict on update restrict;
+

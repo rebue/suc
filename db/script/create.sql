@@ -1,12 +1,14 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/3/21 17:18:54                           */
+/* Created on:     2019/6/21 20:59:43                           */
 /*==============================================================*/
 
 
 drop table if exists CAPTCHA_EMAIL_TEMP;
 
 drop table if exists CAPTCHA_QUESTION_BANK;
+
+drop table if exists SUC_DOMAIN;
 
 drop table if exists SUC_HELLO;
 
@@ -48,6 +50,20 @@ create table CAPTCHA_QUESTION_BANK
    TIP                  national varchar(200) comment '验证提示',
    primary key (ID)
 );
+
+/*==============================================================*/
+/* Table: SUC_DOMAIN                                            */
+/*==============================================================*/
+create table SUC_DOMAIN
+(
+   ID                   varchar(20) not null comment '领域ID',
+   NAME                 varchar(20) not null comment '领域名称',
+   REMARK               varchar(50) comment '领域备注',
+   primary key (ID),
+   unique key AK_DOMAIN_NAME (NAME)
+);
+
+alter table SUC_DOMAIN comment '领域信息';
 
 /*==============================================================*/
 /* Table: SUC_HELLO                                             */
@@ -140,7 +156,9 @@ create table SUC_ORG
    CREATE_TIMESTAMP     bigint not null comment '创建时间戳',
    IS_ENABLED           bool not null default true comment '是否启用',
    CONTACT              varchar(15) comment '联系方式',
-   primary key (ID)
+   ORG_CODE             varchar(30) comment '组织编号(也可称为商户号)',
+   primary key (ID),
+   unique key AK_ORG_CODE (ORG_CODE)
 );
 
 alter table SUC_ORG comment '公司/组织信息';
@@ -209,6 +227,7 @@ create table SUC_USER
    IS_LOCK              bool not null default false comment '是否锁定',
    PROMOTER_ID          bigint comment '推广者ID',
    MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳',
+   DOMAIN_ID            varchar(20) comment '记录用户所属领域(也可称为群组）',
    primary key (ID),
    unique key AK_USER_LOGIN_NAME (LOGIN_NAME),
    unique key AK_USER_IDCARD (IDCARD),
@@ -217,7 +236,12 @@ create table SUC_USER
    unique key AK_USER_QQ_ID (QQ_ID),
    unique key AK_USER_QQ_OPENID (QQ_OPENID),
    unique key AK_USER_WX_ID (WX_ID),
-   unique key AK_USER_WX_OPENID (WX_OPENID)
+   unique key AK_USER_WX_OPENID (WX_OPENID),
+   unique key AK_DOMAIN_ID_AND_ORG_ID_AND_LOGIN_NAME (ORG_ID, LOGIN_NAME, DOMAIN_ID),
+   unique key AK_DOMAIN_ID_AND_ORG_ID_AND_MOBILE (ORG_ID, DOMAIN_ID, MOBILE),
+   unique key AK_DOMAIN_ID_AND_ORG_ID_AND_EMAIL (ORG_ID, EMAIL, DOMAIN_ID),
+   unique key AK_DOMAIN_ID_AND_ORG_ID_AND_WX_ID (ORG_ID, WX_ID, DOMAIN_ID),
+   unique key AK_DOMAIN_ID_AND_ORG_ID_AND_QQ_ID (ORG_ID, QQ_ID, DOMAIN_ID)
 );
 
 alter table SUC_USER comment '用户信息';
@@ -230,7 +254,7 @@ create table SUC_USER_FORBIDDEN_WORD
    ID                   bigint not null comment '用户名敏感词ID',
    KEYWORD              varchar(20) not null comment '关键字',
    primary key (ID),
-   key AK_USER_KEYWORD (KEYWORD)
+   unique key AK_USER_KEYWORD (KEYWORD)
 );
 
 alter table SUC_USER_FORBIDDEN_WORD comment '用户名敏感词
@@ -253,4 +277,7 @@ alter table SUC_REG add constraint FK_Relationship_5 foreign key (PROMOTER_ID)
 
 alter table SUC_USER add constraint FK_Relationship_6 foreign key (ORG_ID)
       references SUC_ORG (ID) on delete restrict on update restrict;
+
+alter table SUC_USER add constraint FK_Relationship_7 foreign key (DOMAIN_ID)
+      references SUC_DOMAIN (ID) on delete restrict on update restrict;
 

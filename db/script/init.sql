@@ -11,3 +11,7 @@
 -- INSERT INTO CAPTCHA_EMAIL_TEMP(ID,TEMP_NAME,TEMP_CONTENT,EMAIL_SUBJECT)VALUES('RESET_PASSWORD','发送重置密码邮件的模板','您要重置密码的验证码是%s','重置密码邮件验证');
 
 INSERT INTO SUC_USER (ID, LOGIN_NAME, LOGIN_PSWD, SALT, NICKNAME,MODIFIED_TIMESTAMP)VALUES(1,'admin','bc9db97ebf008d9acf54b333bd6f94ca','zcSeWA','平台管理员',UNIX_TIMESTAMP(SYSDATE()) * 1000);
+
+insert into suc.SUC_DOMAIN (id,name,remark)values('buyer','买家','买家领域');
+insert into suc.SUC_DOMAIN (id,name,remark)values('platform','平台','平台领域');
+insert into suc.SUC_DOMAIN (id,name,remark)values('bussines','商家','商家领域');
