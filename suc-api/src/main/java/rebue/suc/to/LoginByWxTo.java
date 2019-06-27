@@ -42,5 +42,9 @@ public class LoginByWxTo extends RegAndLoginBaseTo {
      * 上线id
      */
     private Long   onlineId;
-
+    
+    /**
+     * 领域id
+     */
+    private String domainId; 
 }

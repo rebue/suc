@@ -36,7 +36,11 @@ public class RegByWxTo extends RegBaseTo {
      * 推广人id
      */
     private Long   promoterId;
-
+    
+    /**
+     * 领域id
+     */
+    private String domainId;
     /**
      * 上线id
      * TODO 删除此属性

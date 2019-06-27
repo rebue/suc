@@ -18,7 +18,7 @@ import rebue.wheel.baseintf.EnumBase;
  * -4 账号被锁定
  * -5 用户用邮箱登录，但邮箱尚未通过验证
  * -6 用户用手机号登录，但手机号尚未通过验证
- * 
+ * -7 用户不在此领域中
  */
 @ApiModel(value = "登录返回结果", description = "登录返回结果的字典")
 public enum LoginResultDic implements EnumBase {
@@ -62,8 +62,12 @@ public enum LoginResultDic implements EnumBase {
      * -6: 用户用手机号登录，但手机号尚未通过验证
      */
     @ApiModelProperty(value = "用户用手机号登录，但手机号尚未通过验证")
-    NO_VERITY_MOBILE(-6);
-
+    NO_VERITY_MOBILE(-6),
+    /**
+     * -7: 用户不在此领域中
+     */
+    @ApiModelProperty(value = "用户不在此领域中")
+    NO_IN_DOMAIN(-7);
     /**
      * 枚举的所有项，注意这个变量是静态单例的
      */

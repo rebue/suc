@@ -1,5 +1,7 @@
 package rebue.suc.to;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -24,5 +26,9 @@ public class LoginByUserNameTo extends RegAndLoginBaseTo {
      * 登录密码（须将明码经过MD5处理才能作为参数）
      */
     private String loginPswd;
-
+    
+    /**
+     * 领域id
+     */
+    private List<String> domainId;
 }

@@ -446,6 +446,23 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 			ro.setMsg("找不到此用户");
 			return ro;
 		}
+		//查询用户是否能在该领域登录
+		Boolean noDomain = true;
+		for (String domainId : to.getDomainId()) {
+			if (domainId.equals(userMo.getDomainId())) {
+				noDomain = false;
+				break;
+			}
+		}
+		if (noDomain) {
+			_log.info("该用户不在此领域中:" + to);
+			final UserLoginRo ro = new UserLoginRo();
+			ro.setResult(LoginResultDic.NO_IN_DOMAIN);
+			ro.setMsg("该用户不存在");
+			return ro;
+		}
+		_log.info("该用户在此领域中:" + to);
+		
 		if (userMo.getLoginPswd() == null) {
 			final UserLoginRo ro = new UserLoginRo();
 			ro.setResult(LoginResultDic.PASSWORD_ERROR);
@@ -544,6 +561,12 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 				ro.setResult(LoginResultDic.NOT_FOUND_USER);
 				return ro;
 			}
+		}
+		if(!to.getDomainId().equals(userMo.getDomainId())) {
+			_log.info("用户不在此领域中: {}", to);
+			final UserLoginRo ro = new UserLoginRo();
+			ro.setResult(LoginResultDic.NO_IN_DOMAIN);
+			return ro;
 		}
 		UserLoginRo ro = verifyLogin(userMo, null);
 		if (ro != null) {
@@ -1537,8 +1560,9 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 	 * @return
 	 */
 	@Override
-	public PageInfo<SucUserMo> listUserByIdsAndKeys(final int pageNum, final int pageSize, final String ids, final String keys) {
-		return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.listUserByIdsAndKeys(ids,keys));
+	public PageInfo<SucUserMo> listUserByIdsAndKeys(final int pageNum, final int pageSize, final String ids,
+			final String keys) {
+		return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.listUserByIdsAndKeys(ids, keys));
 	}
 
 	/**
