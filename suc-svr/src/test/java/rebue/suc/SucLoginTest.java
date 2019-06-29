@@ -72,7 +72,7 @@ public class SucLoginTest {
 			String installBussinesResult =OkhttpUtils.putByJsonParams(hostUrl+"/suc/user/installByBuyer", bussines);
 			_log.info("添加商家账号信息返回值为：bussines-{}",installBussinesResult);
 			
-			_log.info("开始修改商家角色");
+			_log.info("开始修改商家角色,修改平台的话需要注释掉");
 			String pfmHostUrl = "http://localhost:20182";
 			String roleResult =OkhttpUtils.put(pfmHostUrl+"/pfm/userrole/updateByUserId?oldUserId="+buyer.getId()+"&userId="+bussines.getId());
 			_log.info("结束修改商家角色");

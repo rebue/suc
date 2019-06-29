@@ -549,6 +549,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 			return ro;
 		}
 		SucUserMo userMo = null;
+		to.setDomainId("buyer");
 		if (to.getWxId() != null) {
 			_log.info("根据微信UnionID查找用户: {}", to);
 			userMo = _mapper.selectByWx(to.getWxId());
