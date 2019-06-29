@@ -543,4 +543,24 @@ public class SucUserCtrl {
 		_log.info("getOne SucUserMo-{}", mo);
 		return svc.getOne(mo);
 	}
+	
+	/**
+	 * 根据领域id查询用户
+	 * @param domainId
+	 * @return
+	 */
+	@GetMapping("/suc/user/selectByDomainId")
+	List<SucUserMo> selectByDomainId(String domainId){
+		_log.info("selectByDomainId domainId-{}", domainId);
+		return svc.selectByDomainId(domainId);
+	}
+	
+	/**
+	 * 根据买家创建商家用户信息
+	 */
+	@PutMapping("/suc/user/installByBuyer")
+	int installById(@RequestBody final SucUserMo mo) {
+		_log.info("updateById SucUserMo-{}", mo);
+		return svc.installByBuyer(mo);
+	}
 }

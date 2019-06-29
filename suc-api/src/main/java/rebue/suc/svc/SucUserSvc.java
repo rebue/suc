@@ -1,5 +1,7 @@
 package rebue.suc.svc;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 
 import rebue.robotech.svc.MybatisBaseSvc;
@@ -309,4 +311,19 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
 	 */
 	PageInfo<SucUserDetailRo> listUnaddedUsersByOrgIdAndUsers(Long orgId, String userIds, String keys, Integer pageNum,
 			Integer pageSize);
+	
+	/**
+	 * 根据领域id查询用户信息
+	 * @param mo
+	 * @return
+	 */
+	List<SucUserMo> selectByDomainId(String domainId);
+	
+	/**
+	 * 根据买家创建商家用户信息
+	 * @param mo
+	 * @return
+	 */
+	int installByBuyer(SucUserMo mo);
+	
 }

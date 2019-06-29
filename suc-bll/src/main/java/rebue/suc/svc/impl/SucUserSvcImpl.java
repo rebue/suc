@@ -159,7 +159,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 		final int result = super.add(mo);
 		// 发布添加用户的消息
 		final SucAddUserDoneMsg msg = dozerMapper.map(mo, SucAddUserDoneMsg.class);
-		userAddPub.send(msg);
+		userAddPub.
+		send(msg);
 		return result;
 	}
 
@@ -1733,4 +1734,32 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 					.doSelectPageInfo(() -> _mapper.selectUnaddedUsersByOrgIdAndUserIdsAndKeys(orgId, userIds, keys));
 		}
 	}
+	
+	/**
+	 * 根据领域id查询用户信息
+	 */
+	@Override
+	public List<SucUserMo> selectByDomainId(String domainId) {
+		SucUserMo mo = new SucUserMo();
+		mo.setDomainId(domainId);
+		_log.info("根据领域id查询的参数是:SucUserMo-{}" + mo);
+		List<SucUserMo> result = _mapper.selectSelective(mo);
+		_log.info("根据领域id查询的返回值是:List<SucUserMo>-{}" + result);
+		return result;
+	}
+	
+	/**
+	 * 根据买家创建商家用户信息
+	 */
+	@Override
+	public int installByBuyer(SucUserMo mo) {
+		_log.info("根据买家创建商家用户信息开始");
+		if(mo.getOrgId() == null || mo.getLoginName() == null || mo.getLoginPswd() == null || mo.getPayPswd() == null || mo.getSalt() == null || !mo.getDomainId().equals("bussines") ) {
+			_log.info("参数错误：SucUserMo-{}",mo);
+		}
+		int result =add(mo);
+		_log.info("根据买家创建商家用户信息结束");
+		return result;
+	}
+	
 }
