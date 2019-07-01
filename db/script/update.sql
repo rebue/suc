@@ -39,7 +39,6 @@ alter table suc.SUC_USER add ORG_ID bigint;
 -- 2018-12-15
 alter table SUC_USER add IS_TESTER            bool not null default false comment '是否测试者';
 
--- ------------------------------------------------------------------ 以上已经更新到线上 ------------------------------------------------------------------ 
 
 -- 2019-03-13
 alter table SUC_ORG add CONTACT              varchar(15) comment '联系方式';
@@ -47,7 +46,10 @@ alter table SUC_ORG add CONTACT              varchar(15) comment '联系方式';
 -- 2019-03-21
 alter table SUC_ORG add SHORT_NAME           varchar(50) comment '公司/组织简称';
 
--- 2019-06-21
+-- ------------------------------------------------------------------ 以上已经更新到线上 ------------------------------------------------------------------ 
+
+
+
 --创建SUC_DOMAIN表
 drop table if exists suc.SUC_DOMAIN;
 
@@ -73,7 +75,8 @@ alter table suc.SUC_USER add unique key AK_DOMAIN_ID_AND_ORG_ID_AND_MOBILE (ORG_
 alter table suc.SUC_USER add unique key AK_DOMAIN_ID_AND_ORG_ID_AND_EMAIL (ORG_ID, EMAIL, DOMAIN_ID);
 alter table suc.SUC_USER add unique key AK_DOMAIN_ID_AND_ORG_ID_AND_WX_ID (ORG_ID, WX_ID, DOMAIN_ID);
 alter table suc.SUC_USER add unique key AK_DOMAIN_ID_AND_ORG_ID_AND_QQ_ID (ORG_ID, QQ_ID, DOMAIN_ID);
---添加外键
+-- 添加外键
 alter table suc.SUC_USER add constraint FK_Relationship_7 foreign key (DOMAIN_ID)
       references suc.SUC_DOMAIN (ID) on delete restrict on update restrict;
+-- ------------------------------------------------------------------ 以上已经更新到线上 2019-06-27 ------------------------------------------------------------------ 
 
