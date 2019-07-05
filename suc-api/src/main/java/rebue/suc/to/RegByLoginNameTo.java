@@ -26,6 +26,8 @@ public class RegByLoginNameTo extends RegBaseTo {
     private String realname;
     @ApiModelProperty(value = "身份证号")
     private String idcard;
+    @ApiModelProperty(value = "领域id")
+    private String domainId;
 
     public String getLoginName() {
         return loginName;
@@ -83,10 +85,20 @@ public class RegByLoginNameTo extends RegBaseTo {
         this.idcard = idcard;
     }
 
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
+    }
+
     @Override
     public String toString() {
-        return "RegByLoginNameTo [loginName=" + loginName + ", loginPswd=" + loginPswd + ", email=" + email + ", mobile=" + mobile + ", nickname=" + nickname + ", realname="
-                + realname + ", idcard=" + idcard + ", getSysId()=" + getSysId() + ", getUserAgent()=" + getUserAgent() + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
+        return "RegByLoginNameTo [loginName=" + loginName + ", loginPswd=" + loginPswd + ", email=" + email
+                + ", mobile=" + mobile + ", nickname=" + nickname + ", realname=" + realname + ", idcard=" + idcard
+                + ", domainId=" + domainId + ", getSysId()=" + getSysId() + ", getUserAgent()=" + getUserAgent()
+                + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
     }
 
 }
