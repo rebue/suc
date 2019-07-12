@@ -699,6 +699,29 @@
     </where>
   </select>
   
+  <!-- 根据领域id和关键字批量查询用户信息 -->
+  <select id="listUserByDomainIdAndKeys" parameterType="String" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from SUC_USER 
+    <where>
+      <if test="domainId != null and domainId != ''">
+          	and domain_id in ('${domainId}') 
+      </if>
+      <if test="keys != null and keys != ''">
+	        and (LOGIN_NAME 	LIKE '%${keys}%' 
+	        OR NICKNAME 		LIKE '%${keys}%' 
+	        OR REALNAME 		LIKE '%${keys}%' 
+	        OR IDCARD 		LIKE '%${keys}%' 
+	        OR EMAIL 		LIKE '%${keys}%' 
+	        OR MOBILE 		LIKE '%${keys}%' 
+	        OR QQ_NICKNAME 	LIKE '%${keys}%' 
+	        OR WX_NICKNAME 	LIKE '%${keys}%'
+	        OR ID 			LIKE '%${keys}%')
+      </if>
+    </where>
+  </select>
+  
   <!-- 联查suc-org -->
   <select id="selectjoint" parameterType="String" resultMap="selectjointMap">
   	SELECT su.*, so.`NAME` FROM SUC_USER su

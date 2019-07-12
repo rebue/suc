@@ -70,9 +70,9 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * 判断支付时是否需要输入密码
      *
      * @param userId
-     *            用户ID
+     *               用户ID
      * @param amount
-     *            金额(判断金额在一定数量下可以免密码输入)
+     *               金额(判断金额在一定数量下可以免密码输入)
      */
     Boolean requirePayPswd(Long userId, Double amount);
 
@@ -80,11 +80,11 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * 校验支付密码 TODO 将参数参照verifyLoginPswdByUserName修改
      *
      * @param userId
-     *            用户ID
+     *                用户ID
      * @param payPswd
-     *            支付密码
+     *                支付密码
      * @param amount
-     *            支付金额(判断金额在一定数量下可以免密码输入)
+     *                支付金额(判断金额在一定数量下可以免密码输入)
      */
     PayPswdVerifyRo verifyPayPswd(Long userId, String payPswd, Double amount);
 
@@ -245,7 +245,7 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * @param ids
      * @return
      */
-    PageInfo<SucUserMo> listUserByIdsAndKeys(int pageNum, int pageSize, String ids,String keys);
+    PageInfo<SucUserMo> listUserByIdsAndKeys(int pageNum, int pageSize, String ids, String keys);
 
     /**
      * 获取当前用户信息
@@ -256,13 +256,13 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * 模糊查询关键字且在指定多个用户ID范围内的用户列表
      * 
      * @param keys
-     *            模糊查询用户的关键字
+     *                 模糊查询用户的关键字
      * @param userIds
-     *            用户ID列表的字符串，用逗号隔开
+     *                 用户ID列表的字符串，用逗号隔开
      * @param pageNum
-     *            第几页
+     *                 第几页
      * @param pageSize
-     *            每页大小
+     *                 每页大小
      */
     PageInfo<SucUserDetailRo> listByKeysAndUserIds(String keys, String userIds, Integer pageNum, Integer pageSize);
 
@@ -270,13 +270,13 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * 模糊查询关键字且排除指定多个用户ID外的用户列表
      * 
      * @param keys
-     *            模糊查询用户的关键字
+     *                 模糊查询用户的关键字
      * @param userIds
-     *            用户ID列表的字符串，用逗号隔开
+     *                 用户ID列表的字符串，用逗号隔开
      * @param pageNum
-     *            第几页
+     *                 第几页
      * @param pageSize
-     *            每页大小
+     *                 每页大小
      */
     PageInfo<SucUserDetailRo> listByKeysAndNotUserIds(String keys, String userIds, Integer pageNum, Integer pageSize);
 
@@ -300,30 +300,43 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
     PayPswdModifyRo changePayPassword(Long id, String oldPayPswd, String newPayPswd);
 
     /**
-	 * 根据组织id、用户id、关键字查询除指定id外的用户列表
-	 * 
-	 * @param orgId    组织id
-	 * @param userIds  要排除的用户，多个以逗号隔开
-	 * @param keys     模糊查询的用户关键字
-	 * @param pageNum  第几页
-	 * @param pageSize 每页大小
-	 * @return
-	 */
-	PageInfo<SucUserDetailRo> listUnaddedUsersByOrgIdAndUsers(Long orgId, String userIds, String keys, Integer pageNum,
-			Integer pageSize);
-	
-	/**
-	 * 根据领域id查询用户信息
-	 * @param mo
-	 * @return
-	 */
-	List<SucUserMo> selectByDomainId(String domainId);
-	
-	/**
-	 * 根据买家创建商家用户信息
-	 * @param mo
-	 * @return
-	 */
-	int installByBuyer(SucUserMo mo);
-	
+     * 根据组织id、用户id、关键字查询除指定id外的用户列表
+     * 
+     * @param orgId    组织id
+     * @param userIds  要排除的用户，多个以逗号隔开
+     * @param keys     模糊查询的用户关键字
+     * @param pageNum  第几页
+     * @param pageSize 每页大小
+     * @return
+     */
+    PageInfo<SucUserDetailRo> listUnaddedUsersByOrgIdAndUsers(Long orgId, String userIds, String keys, Integer pageNum,
+            Integer pageSize);
+
+    /**
+     * 根据领域id查询用户信息
+     * 
+     * @param mo
+     * @return
+     */
+    List<SucUserMo> selectByDomainId(String domainId);
+
+    /**
+     * 根据买家创建商家用户信息
+     * 
+     * @param mo
+     * @return
+     */
+    int installByBuyer(SucUserMo mo);
+
+    /**
+     * 根据领域id和关键字查询用户信息
+     * 
+     * @param pageNum
+     * @param pageSize
+     * @param domainId
+     * @param keys
+     * @return
+     */
+    PageInfo<SucUserMo> listUserByDomainIdAndKeys(int pageNum, int pageSize, String domainId, String keys);
+
 }
