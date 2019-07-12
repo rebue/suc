@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/6/21 20:59:43                           */
+/* Created on:     2019/7/12 15:43:17                           */
 /*==============================================================*/
 
 
@@ -229,13 +229,7 @@ create table SUC_USER
    MODIFIED_TIMESTAMP   bigint not null comment '修改时间戳',
    DOMAIN_ID            varchar(20) comment '记录用户所属领域(也可称为群组）',
    primary key (ID),
-   unique key AK_USER_LOGIN_NAME (LOGIN_NAME),
-   unique key AK_USER_IDCARD (IDCARD),
-   unique key AK_USER_EMAIL (EMAIL),
-   unique key AK_USER_MOBILE (MOBILE),
-   unique key AK_USER_QQ_ID (QQ_ID),
    unique key AK_USER_QQ_OPENID (QQ_OPENID),
-   unique key AK_USER_WX_ID (WX_ID),
    unique key AK_USER_WX_OPENID (WX_OPENID),
    unique key AK_DOMAIN_ID_AND_ORG_ID_AND_LOGIN_NAME (ORG_ID, LOGIN_NAME, DOMAIN_ID),
    unique key AK_DOMAIN_ID_AND_ORG_ID_AND_MOBILE (ORG_ID, DOMAIN_ID, MOBILE),
