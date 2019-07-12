@@ -399,8 +399,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserLoginRo loginByUserName(final LoginByUserNameTo to) {
         if (StringUtils.isAnyBlank(to.getUserName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
-                || to.getSysId() == null) {
-            _log.warn("没有填写用户名/密码/应用ID/浏览器类型/MAC/IP: {}", to);
+                || to.getSysId() == null || to.getOrgId() == null) {
+            _log.warn("没有填写用户名/密码/应用ID/浏览器类型/MAC/IP/组织id: {}", to);
             final UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.PARAM_ERROR);
             ro.setMsg("参数错误");
@@ -408,9 +408,15 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         }
         RegAndLoginTypeDic loginType = null;
         SucUserMo          userMo    = null;
+        List<SucUserMo>    userMos   = null;
         if (RegexUtils.matchEmail(to.getUserName())) {
-            userMo = _mapper.selectByEmail(to.getUserName());
-            if (userMo != null) {
+            userMos = _mapper.listByEmail(to.getUserName());
+            if (userMos != null) {
+                for (SucUserMo mo : userMos) {
+                    if (mo.getOrgId().equals(to.getOrgId()) && mo.getEmail().equals(to.getUserName())) {
+                        userMo = mo;
+                    }
+                }
                 if (!userMo.getIsVerifiedEmail()) {
                     _log.warn("用户用邮箱登录，但邮箱尚未通过验证: {}", to);
                     final UserLoginRo ro = new UserLoginRo();
@@ -421,8 +427,13 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 loginType = RegAndLoginTypeDic.EMAIL;
             }
         } else if (RegexUtils.matchMobile(to.getUserName())) {
-            userMo = _mapper.selectByMobile(to.getUserName());
-            if (userMo != null) {
+            userMos = _mapper.listByMobile(to.getUserName());
+            if (userMos != null) {
+                for (SucUserMo mo : userMos) {
+                    if (mo.getOrgId().equals(to.getOrgId()) && mo.getMobile().equals(to.getUserName())) {
+                        userMo = mo;
+                    }
+                }
                 if (!userMo.getIsVerifiedMobile()) {
                     _log.warn("用户用手机号登录，但手机号尚未通过验证: {}", to);
                     final UserLoginRo ro = new UserLoginRo();
@@ -434,8 +445,13 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             }
         }
         if (userMo == null) {
-            userMo = _mapper.selectByLoginName(to.getUserName());
-            if (userMo != null) {
+            userMos = _mapper.listByLoginName(to.getUserName());
+            if (userMos != null) {
+                for (SucUserMo mo : userMos) {
+                    if (mo.getOrgId().equals(to.getOrgId()) && mo.getLoginName().equals(to.getUserName())) {
+                        userMo = mo;
+                    }
+                }
                 loginType = RegAndLoginTypeDic.LOGIN_NAME;
             }
         }
@@ -448,11 +464,9 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         }
         // 查询用户是否能在该领域登录
         Boolean noDomain = true;
-        for (String domainId : to.getDomainId()) {
-            if (domainId.equals(userMo.getDomainId())) {
-                noDomain = false;
-                break;
-            }
+        String  domainId = to.getDomainId();
+        if (domainId.equals(userMo.getDomainId())) {
+            noDomain = false;
         }
         if (noDomain) {
             _log.info("该用户不在此领域中:" + to);

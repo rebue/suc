@@ -79,4 +79,9 @@ alter table suc.SUC_USER add unique key AK_DOMAIN_ID_AND_ORG_ID_AND_QQ_ID (ORG_I
 alter table suc.SUC_USER add constraint FK_Relationship_7 foreign key (DOMAIN_ID)
       references suc.SUC_DOMAIN (ID) on delete restrict on update restrict;
 -- ------------------------------------------------------------------ 以上已经更新到线上 2019-06-27 ------------------------------------------------------------------ 
-
+-- 删除旧的unique
+ALTER TABLE SUC_USER DROP INDEX AK_USER_LOGIN_NAME;
+ALTER TABLE SUC_USER DROP INDEX AK_USER_EMAIL;
+ALTER TABLE SUC_USER DROP INDEX AK_USER_MOBILE;
+ALTER TABLE SUC_USER DROP INDEX AK_USER_QQ_ID;
+ALTER TABLE SUC_USER DROP INDEX AK_USER_WX_ID;

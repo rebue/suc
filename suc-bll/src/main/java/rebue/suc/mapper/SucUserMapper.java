@@ -427,4 +427,24 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      * @return
      */
     List<SucUserMo> listUserByDomainIdAndKeys(@Param("domainId") String domainId, @Param("keys") String keys);
+
+    /**
+     * 根据邮箱获取多个用户信息
+     */
+    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_EMAIL, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER "
+            + " where lower(EMAIL) = lower(#{email,jdbcType=VARCHAR})")
+    List<SucUserMo> listByEmail(String email);
+
+    /**
+     * 根据手机号获取多个用户信息
+     */
+    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_MOBILE, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER "
+            + " where MOBILE = #{mobile,jdbcType=VARCHAR}")
+    List<SucUserMo> listByMobile(String mobile);
+
+    /**
+     * 根据用户登录名称获取多个用户信息
+     */
+    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER where lower(LOGIN_NAME) = lower(#{loginName,jdbcType=VARCHAR})")
+    List<SucUserMo> listByLoginName(String loginName);
 }
