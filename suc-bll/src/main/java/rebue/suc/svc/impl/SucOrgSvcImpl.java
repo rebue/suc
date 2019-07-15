@@ -64,9 +64,9 @@ public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public int add(SucOrgMo mo) {
-        if (mo.getShortName() == null) {
-            return -1;
-        }
+//        if (mo.getShortName() == null) {
+//            return -1;
+//        }
         // 如果id为空那么自动生成分布式id
         if (mo.getId() == null || mo.getId() == 0) {
             mo.setId(_idWorker.getId());
@@ -105,9 +105,12 @@ public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, 
     /**
      * 分页模糊查询组织
      * 
-     * @param keys     模糊查询的关键字
-     * @param pageNum  第几页
-     * @param pageSize 每页大小
+     * @param keys
+     *            模糊查询的关键字
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
      */
     @Override
     public PageInfo<SucOrgMo> list(String keys, int pageNum, int pageSize) {
