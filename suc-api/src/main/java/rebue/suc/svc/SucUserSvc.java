@@ -57,6 +57,11 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
     UserLoginRo loginByUserName(LoginByUserNameTo loginTo);
 
     /**
+     * 商家登录(通过用户名称登录，按照 邮箱->手机->登录名 的顺序查找用户)
+     */
+    UserLoginRo loginByBusinessName(LoginByUserNameTo loginTo);
+
+    /**
      * 用户登录(通过QQ登录)
      */
     UserLoginRo loginByQq(LoginByQqTo loginTo);
