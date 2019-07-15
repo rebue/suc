@@ -85,3 +85,6 @@ ALTER TABLE SUC_USER DROP INDEX AK_USER_EMAIL;
 ALTER TABLE SUC_USER DROP INDEX AK_USER_MOBILE;
 ALTER TABLE SUC_USER DROP INDEX AK_USER_QQ_ID;
 ALTER TABLE SUC_USER DROP INDEX AK_USER_WX_ID;
+
+-- ------------------------------------------------------------------ 以上已经更新到线上 2019-07-15 ------------------------------------------------------------------ 
+

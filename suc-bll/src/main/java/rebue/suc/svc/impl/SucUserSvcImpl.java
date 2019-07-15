@@ -402,7 +402,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserLoginRo loginByUserName(final LoginByUserNameTo to) {
         if (StringUtils.isAnyBlank(to.getUserName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
-                || to.getSysId() == null || to.getOrgId() == null) {
+                || to.getSysId() == null) {
             _log.warn("没有填写用户名/密码/应用ID/浏览器类型/MAC/IP/组织id: {}", to);
             final UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.PARAM_ERROR);
