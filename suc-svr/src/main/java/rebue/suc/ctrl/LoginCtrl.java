@@ -127,6 +127,7 @@ public class LoginCtrl {
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
         loginTo.setMac("不再获取MAC地址");
+        loginTo.setDomainId("buyer");
         final UserLoginRo ro = svc.loginByWx(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
             final Map<String, Object> addition = new LinkedHashMap<>();
