@@ -9,7 +9,7 @@ import rebue.sbs.feign.FeignConfig;
 import rebue.suc.ro.UserLoginRo;
 import rebue.suc.to.LoginByUserNameTo;
 
-@FeignClient(name = "suc-svr", configuration = FeignConfig.class)
+@FeignClient(name = "suc-svr", configuration = FeignConfig.class, contextId = "suc-svr-login")
 public interface LoginSvc {
 
     /**

@@ -22,7 +22,7 @@ import rebue.suc.to.LoginByUserNameTo;
 import rebue.suc.to.LoginByWxTo;
 import rebue.suc.to.RegByWxTo;
 
-@FeignClient(name = "suc-svr", configuration = FeignConfig.class)
+@FeignClient(name = "suc-svr", configuration = FeignConfig.class, contextId = "suc-svr-user")
 public interface SucUserSvc {
 
     /**
