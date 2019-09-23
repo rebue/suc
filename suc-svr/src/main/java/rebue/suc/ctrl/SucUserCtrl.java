@@ -26,7 +26,6 @@ import rebue.suc.ro.GetLoginNameRo;
 import rebue.suc.ro.SetLoginNameRo;
 import rebue.suc.ro.SucUserDetailRo;
 import rebue.suc.ro.SucUserRo;
-import rebue.suc.ro.UserPointRo;
 import rebue.suc.svc.SucUserSvc;
 import rebue.wheel.turing.JwtUtils;
 
@@ -81,8 +80,8 @@ public class SucUserCtrl {
     @DeleteMapping("/suc/user")
     SucUserRo del(@RequestParam("id") final java.lang.Long id) {
         _log.info("save SucUserMo:" + id);
-        final int       result = svc.del(id);
-        final SucUserRo ro     = new SucUserRo();
+        final int result = svc.del(id);
+        final SucUserRo ro = new SucUserRo();
         if (result == 1) {
             final String msg = "删除成功";
             _log.info("{}: id-{}", msg, id);
@@ -101,10 +100,10 @@ public class SucUserCtrl {
     private static final Logger _log = LoggerFactory.getLogger(SucUserCtrl.class);
 
     @Resource
-    private SucUserSvc svc;
+    private SucUserSvc          svc;
 
     @Value("${debug:false}")
-    private Boolean isDebug;
+    private Boolean             isDebug;
 
     /**
      * 获取用户信息（通过用户ID）
@@ -165,15 +164,18 @@ public class SucUserCtrl {
     /**
      * 模糊查询关键字且在指定多个用户ID范围内的用户列表
      * 
-     * @param keys     模糊查询用户的关键字
-     * @param userIds  用户ID列表的字符串，用逗号隔开
-     * @param pageNum  第几页
-     * @param pageSize 每页大小
+     * @param keys
+     *            模糊查询用户的关键字
+     * @param userIds
+     *            用户ID列表的字符串，用逗号隔开
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
      */
     @GetMapping("/suc/user/listbykeysanduserids")
     PageInfo<SucUserDetailRo> listByKeysAndUserIds(@RequestParam(value = "keys", required = false) final String keys,
-            @RequestParam(value = "userIds", required = false) final String userIds,
-            @RequestParam(value = "pageNum", required = false) Integer pageNum,
+            @RequestParam(value = "userIds", required = false) final String userIds, @RequestParam(value = "pageNum", required = false) Integer pageNum,
             @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         if (pageNum == null) {
             pageNum = 1;
@@ -193,15 +195,18 @@ public class SucUserCtrl {
     /**
      * 模糊查询关键字且排除指定多个用户ID外的用户列表
      * 
-     * @param keys     模糊查询用户的关键字
-     * @param userIds  用户ID列表的字符串，用逗号隔开
-     * @param pageNum  第几页
-     * @param pageSize 每页大小
+     * @param keys
+     *            模糊查询用户的关键字
+     * @param userIds
+     *            用户ID列表的字符串，用逗号隔开
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
      */
     @GetMapping("/suc/user/listbykeysandnotuserids")
     PageInfo<SucUserDetailRo> listByKeysAndNotUserIds(@RequestParam(value = "keys", required = false) final String keys,
-            @RequestParam(value = "userIds", required = false) final String userIds,
-            @RequestParam(value = "pageNum", required = false) Integer pageNum,
+            @RequestParam(value = "userIds", required = false) final String userIds, @RequestParam(value = "pageNum", required = false) Integer pageNum,
             @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         if (pageNum == null) {
             pageNum = 1;
@@ -209,8 +214,7 @@ public class SucUserCtrl {
         if (pageSize == null) {
             pageSize = 7;
         }
-        _log.info(
-                "list ByKeysAndNotUserIds: userIds=" + userIds + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+        _log.info("list ByKeysAndNotUserIds: userIds=" + userIds + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             final String msg = "pageSize不能大于50";
             _log.error(msg);
@@ -284,37 +288,32 @@ public class SucUserCtrl {
         return svc.getLoginNameByWx(id);
     }
 
-    /**
-     * 查询用户信息
-     * 
-     * @throws ParseException
-     *
-     * @mbg.overrideByMethodName
-     */
-    @GetMapping("/suc/user")
-    PageInfo<UserPointRo> list(@RequestParam(value = "keys", required = false) final String keys,
-            @RequestParam(value = "isOrgGet", required = false) final Boolean isOrgGet,
-            @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize,
-            HttpServletRequest request) throws ParseException {
-        _log.info("list users:" + keys + ", isOrgGet=" + isOrgGet + ", pageNum = " + pageNum + ", pageSize = "
-                + pageSize);
-        if (pageSize > 50) {
-            final String msg = "pageSize不能大于50";
-            _log.error(msg);
-            throw new IllegalArgumentException(msg);
-        }
-        Long orgId = null;
-        if (isOrgGet != null && isOrgGet) {
-            orgId = 560754349274431488L;
-            if (!isDebug) {
-                orgId = (Long) JwtUtils.getJwtAdditionItemInCookie(request, "orgId");
-            }
-        }
-
-        final PageInfo<UserPointRo> result = svc.listEx(keys, orgId, pageNum, pageSize);
-        _log.info("result: " + result);
-        return result;
-    }
+//    /**
+//     * 查询用户信息
+//     * 
+//     * @mbg.overrideByMethodName
+//     */
+//    @GetMapping("/suc/user")
+//    PageInfo<UserPointRo> list(@RequestParam(value = "keys", required = false) final String keys, @RequestParam(value = "isOrgGet", required = false) final Boolean isOrgGet,
+//            @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize, final HttpServletRequest request) throws ParseException {
+//        _log.info("list users:" + keys + ", isOrgGet=" + isOrgGet + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+//        if (pageSize > 50) {
+//            final String msg = "pageSize不能大于50";
+//            _log.error(msg);
+//            throw new IllegalArgumentException(msg);
+//        }
+//        Long orgId = null;
+//        if (isOrgGet != null && isOrgGet) {
+//            orgId = 560754349274431488L;
+//            if (!isDebug) {
+//                orgId = (Long) JwtUtils.getJwtAdditionItemInCookie(request, "orgId");
+//            }
+//        }
+//
+//        final PageInfo<UserPointRo> result = svc.listEx(keys, orgId, pageNum, pageSize);
+//        _log.info("result: " + result);
+//        return result;
+//    }
 
     /**
      * 蚂蚁根据ｉｄ获取单条记录的方式
@@ -440,8 +439,7 @@ public class SucUserCtrl {
      * @return
      */
     @GetMapping("/suc/user/listuserbyidsAndKeys")
-    PageInfo<SucUserMo> listUserByIdsAndKeys(@RequestParam("pageNum") final int pageNum,
-            @RequestParam("pageSize") final int pageSize, @RequestParam("userIds") final String ids,
+    PageInfo<SucUserMo> listUserByIdsAndKeys(@RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize, @RequestParam("userIds") final String ids,
             @RequestParam(value = "addedKeys", required = false) final String addedKeys) {
         _log.info("查询用户信息的参数为：pageNum={}, pageSize={}, ids={},kdys={}", pageNum, pageSize, ids, addedKeys);
         return svc.listUserByIdsAndKeys(pageNum, pageSize, ids, addedKeys);
@@ -451,8 +449,7 @@ public class SucUserCtrl {
      * 根据组织查询用户信息
      */
     @GetMapping("/suc/user/listbyorgid")
-    PageInfo<SucUserMo> listByOrgId(@RequestParam("orgId") final Long orgId, @RequestParam("pageNum") final int pageNum,
-            @RequestParam("pageSize") final int pageSize) {
+    PageInfo<SucUserMo> listByOrgId(@RequestParam("orgId") final Long orgId, @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize) {
         _log.info("查询用户信息的参数为：{}, pageNum={}, pageSize={}", orgId, pageNum, pageSize);
         final SucUserMo mo = new SucUserMo();
         mo.setOrgId(orgId);
@@ -505,27 +502,29 @@ public class SucUserCtrl {
     /**
      * 根据组织id、用户id、关键字查询除指定id外的用户列表
      * 
-     * @param orgId    组织id
-     * @param userIds  要排除的用户，多个以逗号隔开
-     * @param keys     模糊查询的用户关键字
-     * @param pageNum  第几页
-     * @param pageSize 每页大小
+     * @param orgId
+     *            组织id
+     * @param userIds
+     *            要排除的用户，多个以逗号隔开
+     * @param keys
+     *            模糊查询的用户关键字
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
      * @return
      */
     @GetMapping("/suc/user/listunaddedusersbyorgidandusers")
-    PageInfo<SucUserDetailRo> listUnaddedUsersByOrgIdAndUsers(
-            @RequestParam(value = "orgId", required = false) Long orgId,
-            @RequestParam(value = "userIds", required = false) String userIds,
-            @RequestParam(value = "keys", required = false) String keys, @RequestParam("pageNum") Integer pageNum,
-            @RequestParam("pageSize") Integer pageSize) {
+    PageInfo<SucUserDetailRo> listUnaddedUsersByOrgIdAndUsers(@RequestParam(value = "orgId", required = false) final Long orgId,
+            @RequestParam(value = "userIds", required = false) final String userIds, @RequestParam(value = "keys", required = false) final String keys,
+            @RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize) {
         if (pageNum == null) {
             pageNum = 1;
         }
         if (pageSize == null) {
             pageSize = 7;
         }
-        _log.info(
-                "list ByKeysAndNotUserIds: userIds=" + userIds + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+        _log.info("list ByKeysAndNotUserIds: userIds=" + userIds + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             final String msg = "pageSize不能大于50";
             _log.error(msg);
@@ -541,7 +540,7 @@ public class SucUserCtrl {
      * @return
      */
     @GetMapping("/suc/user/getone")
-    SucUserMo getOne(SucUserMo mo) {
+    SucUserMo getOne(final SucUserMo mo) {
         _log.info("getOne SucUserMo-{}", mo);
         return svc.getOne(mo);
     }
@@ -553,7 +552,7 @@ public class SucUserCtrl {
      * @return
      */
     @GetMapping("/suc/user/selectByDomainId")
-    List<SucUserMo> selectByDomainId(String domainId) {
+    List<SucUserMo> selectByDomainId(final String domainId) {
         _log.info("selectByDomainId domainId-{}", domainId);
         return svc.selectByDomainId(domainId);
     }
@@ -576,8 +575,7 @@ public class SucUserCtrl {
      * @return
      */
     @GetMapping("/suc/user/list-by-domain")
-    PageInfo<SucUserMo> listByDomain(@RequestParam("domainId") final String domainId,
-            @RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize) {
+    PageInfo<SucUserMo> listByDomain(@RequestParam("domainId") final String domainId, @RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize) {
         _log.info("查询用户信息的参数为：{}, pageNum={}, pageSize={}", domainId, pageNum, pageSize);
         if (pageNum == null) {
             pageNum = 1;
@@ -605,9 +603,8 @@ public class SucUserCtrl {
      * @return
      */
     @GetMapping("/suc/user/list-by-domain-and-keys")
-    PageInfo<SucUserMo> listUserByDomainIdAndKeys(@RequestParam("domainId") final String domainId,
-            @RequestParam(value = "keys", required = false) final String keys, @RequestParam("pageNum") Integer pageNum,
-            @RequestParam("pageSize") Integer pageSize) {
+    PageInfo<SucUserMo> listUserByDomainIdAndKeys(@RequestParam("domainId") final String domainId, @RequestParam(value = "keys", required = false) final String keys,
+            @RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize) {
         _log.info("查询用户信息的参数为：{}, pageNum={}, pageSize={},keys={}", domainId, pageNum, pageSize, keys);
         if (pageNum == null) {
             pageNum = 1;
@@ -620,7 +617,6 @@ public class SucUserCtrl {
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        final SucUserMo mo = new SucUserMo();
         return svc.listUserByDomainIdAndKeys(pageNum, pageSize, domainId, keys);
     }
 }

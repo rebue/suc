@@ -21,7 +21,6 @@ import com.github.pagehelper.PageInfo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 import rebue.suc.mo.SucOrgMo;
-import rebue.suc.ro.OrgAccountRo;
 import rebue.suc.ro.SucOrgInOrNotInRo;
 import rebue.suc.ro.SucOrgRo;
 import rebue.suc.svc.SucOrgSvc;
@@ -32,20 +31,20 @@ public class SucOrgCtrl {
     /**
      * @mbg.generated
      */
-    private static final Logger _log = LoggerFactory.getLogger(SucOrgCtrl.class);
+    private static final Logger _log             = LoggerFactory.getLogger(SucOrgCtrl.class);
 
     /**
      * @mbg.generated
      */
     @Resource
-    private SucOrgSvc svc;
+    private SucOrgSvc           svc;
 
     /**
      * 有唯一约束的字段名称
      *
      * @mbg.generated
      */
-    private String _uniqueFilesName = "某字段内容";
+    private final String        _uniqueFilesName = "某字段内容";
 
     /**
      * 添加公司/组织信息
@@ -53,26 +52,26 @@ public class SucOrgCtrl {
      * @mbg.generated
      */
     @PostMapping("/suc/org")
-    SucOrgRo add(@RequestBody SucOrgMo mo) throws Exception {
+    SucOrgRo add(@RequestBody final SucOrgMo mo) throws Exception {
         _log.info("add SucOrgMo:" + mo);
-        SucOrgRo ro = new SucOrgRo();
+        final SucOrgRo ro = new SucOrgRo();
         try {
-            int result = svc.add(mo);
+            final int result = svc.add(mo);
             if (result == 1) {
-                String msg = "添加成功";
+                final String msg = "添加成功";
                 _log.info("{}: mo-{}", msg, mo);
                 ro.setMsg(msg);
                 ro.setResult((byte) 1);
                 return ro;
             } else {
-                String msg = "添加失败";
+                final String msg = "添加失败";
                 _log.error("{}: mo-{}", msg, mo);
                 ro.setMsg(msg);
                 ro.setResult((byte) -1);
                 return ro;
             }
-        } catch (DuplicateKeyException e) {
-            String msg = "添加失败，" + _uniqueFilesName + "已存在，不允许出现重复";
+        } catch (final DuplicateKeyException e) {
+            final String msg = "添加失败，" + _uniqueFilesName + "已存在，不允许出现重复";
             _log.error("{}: mo-{}", msg, mo);
             ro.setMsg(msg);
             ro.setResult((byte) -1);
@@ -86,26 +85,26 @@ public class SucOrgCtrl {
      * @mbg.generated
      */
     @PutMapping("/suc/org")
-    SucOrgRo modify(@RequestBody SucOrgMo mo) throws Exception {
+    SucOrgRo modify(@RequestBody final SucOrgMo mo) throws Exception {
         _log.info("modify SucOrgMo:" + mo);
-        SucOrgRo ro = new SucOrgRo();
+        final SucOrgRo ro = new SucOrgRo();
         try {
-            int result = svc.modify(mo);
+            final int result = svc.modify(mo);
             if (result == 1) {
-                String msg = "修改成功";
+                final String msg = "修改成功";
                 _log.info("{}: mo-{}", msg, mo);
                 ro.setMsg(msg);
                 ro.setResult((byte) 1);
                 return ro;
             } else {
-                String msg = "修改失败";
+                final String msg = "修改失败";
                 _log.error("{}: mo-{}", msg, mo);
                 ro.setMsg(msg);
                 ro.setResult((byte) -1);
                 return ro;
             }
-        } catch (DuplicateKeyException e) {
-            String msg = "修改失败，" + _uniqueFilesName + "已存在，不允许出现重复";
+        } catch (final DuplicateKeyException e) {
+            final String msg = "修改失败，" + _uniqueFilesName + "已存在，不允许出现重复";
             _log.error("{}: mo-{}", msg, mo);
             ro.setMsg(msg);
             ro.setResult((byte) -1);
@@ -119,19 +118,19 @@ public class SucOrgCtrl {
      * @mbg.generated
      */
     @GetMapping("/suc/org/getbyid")
-    SucOrgRo getById(@RequestParam("id") java.lang.Long id) {
+    SucOrgRo getById(@RequestParam("id") final java.lang.Long id) {
         _log.info("get SucOrgMo by id: " + id);
-        SucOrgMo result = svc.getById(id);
+        final SucOrgMo result = svc.getById(id);
         _log.info("get: " + result);
-        SucOrgRo ro = new SucOrgRo();
+        final SucOrgRo ro = new SucOrgRo();
         if (result == null) {
-            String msg = "获取失败，没有找到该条记录";
+            final String msg = "获取失败，没有找到该条记录";
             _log.error("{}: id-{}", msg, id);
             ro.setMsg(msg);
             ro.setResult((byte) -1);
             return ro;
         } else {
-            String msg = "获取成功";
+            final String msg = "获取成功";
             _log.info("{}: id-{}", msg, id);
             ro.setMsg(msg);
             ro.setResult((byte) 1);
@@ -146,18 +145,18 @@ public class SucOrgCtrl {
      * @mbg.generated 自动生成，如需修改，请删除本行
      */
     @DeleteMapping("/suc/org")
-    Ro del(@RequestParam("id") java.lang.Long id) {
+    Ro del(@RequestParam("id") final java.lang.Long id) {
         _log.info("del SucOrgMo by id: {}", id);
-        int result = svc.del(id);
-        Ro  ro     = new Ro();
+        final int result = svc.del(id);
+        final Ro ro = new Ro();
         if (result == 1) {
-            String msg = "删除成功";
+            final String msg = "删除成功";
             _log.info("{}: id-{}", msg, id);
             ro.setMsg(msg);
             ro.setResult(ResultDic.SUCCESS);
             return ro;
         } else {
-            String msg = "删除失败，找不到该记录";
+            final String msg = "删除失败，找不到该记录";
             _log.error("{}: id-{}", msg, id);
             ro.setMsg(msg);
             ro.setResult(ResultDic.FAIL);
@@ -169,24 +168,24 @@ public class SucOrgCtrl {
      * 查询公司/组织信息
      * 
      * @param keys
-     *                 模糊查询的关键字
+     *            模糊查询的关键字
      * @param pageNum
-     *                 第几页
+     *            第几页
      * @param pageSize
-     *                 每页大小
+     *            每页大小
      * 
      * @mbg.overrideByMethodName
      */
     @GetMapping("/suc/org")
-    PageInfo<SucOrgMo> list(@RequestParam(value = "keys", required = false) String keys,
-            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
+    PageInfo<SucOrgMo> list(@RequestParam(value = "keys", required = false) final String keys, @RequestParam("pageNum") final int pageNum,
+            @RequestParam("pageSize") final int pageSize) {
         _log.info("list keys:" + keys + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
-            String msg = "pageSize不能大于50";
+            final String msg = "pageSize不能大于50";
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<SucOrgMo> result = svc.list(keys, pageNum, pageSize);
+        final PageInfo<SucOrgMo> result = svc.list(keys, pageNum, pageSize);
         _log.info("result: " + result);
         return result;
     }
@@ -197,7 +196,7 @@ public class SucOrgCtrl {
     @GetMapping("/suc/org/all")
     List<SucOrgMo> listAll() {
         _log.info("开始获取所有的组织");
-        List<SucOrgMo> result = svc.listAll();
+        final List<SucOrgMo> result = svc.listAll();
         _log.info("开始获取所有的组织结果为:{}", result);
         return result;
     }
@@ -208,7 +207,7 @@ public class SucOrgCtrl {
      * @param name
      */
     @GetMapping("/suc/org/selectbyname")
-    List<SucOrgMo> listByName(@RequestParam(value = "name", required = false) String name) {
+    List<SucOrgMo> listByName(@RequestParam(value = "name", required = false) final String name) {
         _log.info("查询组织信息的参数为：{}", name);
         return svc.listByName(name);
     }
@@ -221,7 +220,7 @@ public class SucOrgCtrl {
      * @return
      */
     @PutMapping("/suc/org/enable")
-    SucOrgRo enable(@RequestParam("id") Long id, @RequestParam("isEnabled") Boolean isEnabled) {
+    SucOrgRo enable(@RequestParam("id") final Long id, @RequestParam("isEnabled") final Boolean isEnabled) {
         _log.info("禁用或者启用组织的参数为：id={}, isEnabled={}", id, isEnabled);
         return svc.enable(id, isEnabled);
     }
@@ -233,9 +232,9 @@ public class SucOrgCtrl {
      * @return
      */
     @GetMapping("/suc/org/getone")
-    SucOrgMo getOne(@RequestParam("name") String name) {
+    SucOrgMo getOne(@RequestParam("name") final String name) {
         _log.info("根据组织名称获取单个组织信息的参数为：{}", name);
-        SucOrgMo mo = new SucOrgMo();
+        final SucOrgMo mo = new SucOrgMo();
         mo.setName(name);
         return svc.getOne(mo);
     }
@@ -245,39 +244,40 @@ public class SucOrgCtrl {
      * 
      * 
      */
-    @GetMapping("/suc/org/account")
-    PageInfo<OrgAccountRo> listOrgAccount(final SucOrgMo mo, @RequestParam("pageNum") int pageNum,
-            @RequestParam("pageSize") int pageSize) {
-        _log.info("listOrgAccount mo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
-        if (pageSize > 50) {
-            String msg = "pageSize不能大于50";
-            _log.error(msg);
-            throw new IllegalArgumentException(msg);
-        }
-        return svc.listOrgAccount(mo, pageNum, pageSize);
-    }
+//    @GetMapping("/suc/org/account")
+//    PageInfo<OrgAccountRo> listOrgAccount(final SucOrgMo mo, @RequestParam("pageNum") int pageNum,
+//            @RequestParam("pageSize") int pageSize) {
+//        _log.info("listOrgAccount mo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+//        if (pageSize > 50) {
+//            String msg = "pageSize不能大于50";
+//            _log.error(msg);
+//            throw new IllegalArgumentException(msg);
+//        }
+//        return svc.listOrgAccount(mo, pageNum, pageSize);
+//    }
 
     /**
      * 根据组织id集合查询已经存在和不存在的组织
      * 
      * @param id
-     *                 组织ID
+     *            组织ID
      * @param pageNum
-     *                 第几页
+     *            第几页
      * @param pageSize
-     *                 每页大小
+     *            每页大小
      */
     @GetMapping("/suc/org/listaddedandunaddedorgs")
-    SucOrgInOrNotInRo listAddedAndUnaddedOrgs(@RequestParam("orgIds") String orgIds,
-            @RequestParam(value = "pageNum", required = false) Integer pageNum,
+    SucOrgInOrNotInRo listAddedAndUnaddedOrgs(@RequestParam("orgIds") final String orgIds, @RequestParam(value = "pageNum", required = false) Integer pageNum,
             @RequestParam(value = "pageSize", required = false) Integer pageSize) {
-        if (pageNum == null)
+        if (pageNum == null) {
             pageNum = 1;
-        if (pageSize == null)
+        }
+        if (pageSize == null) {
             pageSize = 7;
+        }
         _log.info("list id:" + orgIds + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
-            String msg = "pageSize不能大于50";
+            final String msg = "pageSize不能大于50";
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
@@ -288,30 +288,30 @@ public class SucOrgCtrl {
      * 查询指定组织的已添加的组织列表
      * 
      * @param id
-     *                 组织ID
+     *            组织ID
      * @param keys
-     *                 模糊查询用户的关键字
+     *            模糊查询用户的关键字
      * @param pageNum
-     *                 第几页
+     *            第几页
      * @param pageSize
-     *                 每页大小
+     *            每页大小
      */
     @GetMapping("/suc/org/listaddedorgs")
-    PageInfo<SucOrgMo> listAddedOrgs(@RequestParam("orgIds") String orgIds,
-            @RequestParam(value = "keys", required = false) String keys,
-            @RequestParam(value = "pageNum", required = false) Integer pageNum,
-            @RequestParam(value = "pageSize", required = false) Integer pageSize) {
-        if (pageNum == null)
+    PageInfo<SucOrgMo> listAddedOrgs(@RequestParam("orgIds") final String orgIds, @RequestParam(value = "keys", required = false) final String keys,
+            @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        if (pageNum == null) {
             pageNum = 1;
-        if (pageSize == null)
+        }
+        if (pageSize == null) {
             pageSize = 7;
+        }
         _log.info("list id:" + orgIds + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
-            String msg = "pageSize不能大于50";
+            final String msg = "pageSize不能大于50";
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<SucOrgMo> added = svc.listAddedOrgs(orgIds, keys, pageNum, pageSize);
+        final PageInfo<SucOrgMo> added = svc.listAddedOrgs(orgIds, keys, pageNum, pageSize);
         _log.info("added: " + added.getList());
         return added;
     }
@@ -320,30 +320,30 @@ public class SucOrgCtrl {
      * 查询指定组织的未添加的组织列表
      * 
      * @param id
-     *                 组织ID
+     *            组织ID
      * @param keys
-     *                 模糊查询用户的关键字
+     *            模糊查询用户的关键字
      * @param pageNum
-     *                 第几页
+     *            第几页
      * @param pageSize
-     *                 每页大小
+     *            每页大小
      */
     @GetMapping("/suc/org/listunaddedorgs")
-    PageInfo<SucOrgMo> listUnaddedOrgs(@RequestParam("orgIds") String orgIds,
-            @RequestParam(value = "keys", required = false) String keys,
-            @RequestParam(value = "pageNum", required = false) Integer pageNum,
-            @RequestParam(value = "pageSize", required = false) Integer pageSize) {
-        if (pageNum == null)
+    PageInfo<SucOrgMo> listUnaddedOrgs(@RequestParam("orgIds") final String orgIds, @RequestParam(value = "keys", required = false) final String keys,
+            @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        if (pageNum == null) {
             pageNum = 1;
-        if (pageSize == null)
+        }
+        if (pageSize == null) {
             pageSize = 7;
+        }
         _log.info("list orgIds:" + orgIds + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
-            String msg = "pageSize不能大于50";
+            final String msg = "pageSize不能大于50";
             _log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-        PageInfo<SucOrgMo> unadded = svc.listUnaddedOrgs(orgIds, keys, pageNum, pageSize);
+        final PageInfo<SucOrgMo> unadded = svc.listUnaddedOrgs(orgIds, keys, pageNum, pageSize);
         _log.info("unadded: " + unadded.getList());
         return unadded;
     }
@@ -355,9 +355,9 @@ public class SucOrgCtrl {
      * @return
      */
     @GetMapping("/suc/org/select-id-by-orgCode")
-    List<SucOrgMo> selectIdByOrgCode(@RequestParam("orgCode") String orgCode) {
+    List<SucOrgMo> selectIdByOrgCode(@RequestParam("orgCode") final String orgCode) {
         if (orgCode.isEmpty()) {
-            List<SucOrgMo> mo = new ArrayList<>();
+            final List<SucOrgMo> mo = new ArrayList<>();
             _log.info("参数错误 orgCode-{}", orgCode);
             return mo;
         }
@@ -371,9 +371,9 @@ public class SucOrgCtrl {
      * @return
      */
     @GetMapping("/suc/org/select-id-by-name")
-    List<SucOrgMo> selectIdByName(@RequestParam("name") String name) {
+    List<SucOrgMo> selectIdByName(@RequestParam("name") final String name) {
         if (name.isEmpty()) {
-            List<SucOrgMo> mo = new ArrayList<>();
+            final List<SucOrgMo> mo = new ArrayList<>();
             _log.info("参数错误 orgCode-{}", name);
             return mo;
         }

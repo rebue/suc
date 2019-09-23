@@ -18,7 +18,6 @@ import rebue.suc.ro.SetLoginNameRo;
 import rebue.suc.ro.SucUserDetailRo;
 import rebue.suc.ro.SucUserRo;
 import rebue.suc.ro.UserLoginRo;
-import rebue.suc.ro.UserPointRo;
 import rebue.suc.ro.UserRegRo;
 import rebue.suc.to.BindWxTo;
 import rebue.suc.to.LoginByLoginNameTo;
@@ -75,9 +74,9 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * 判断支付时是否需要输入密码
      *
      * @param userId
-     *               用户ID
+     *            用户ID
      * @param amount
-     *               金额(判断金额在一定数量下可以免密码输入)
+     *            金额(判断金额在一定数量下可以免密码输入)
      */
     Boolean requirePayPswd(Long userId, Double amount);
 
@@ -85,11 +84,11 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * 校验支付密码 TODO 将参数参照verifyLoginPswdByUserName修改
      *
      * @param userId
-     *                用户ID
+     *            用户ID
      * @param payPswd
-     *                支付密码
+     *            支付密码
      * @param amount
-     *                支付金额(判断金额在一定数量下可以免密码输入)
+     *            支付金额(判断金额在一定数量下可以免密码输入)
      */
     PayPswdVerifyRo verifyPayPswd(Long userId, String payPswd, Double amount);
 
@@ -215,15 +214,15 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      */
     SucUserRo unbindQQ(Long id);
 
-    /**
-     * 多条件同时查询
-     * 
-     * @param users
-     * @param pageNum
-     * @param pageSize
-     * @return
-     */
-    PageInfo<UserPointRo> listEx(String keys, Long orgId, int pageNum, int pageSize);
+//    /**
+//     * 多条件同时查询
+//     * 
+//     * @param users
+//     * @param pageNum
+//     * @param pageSize
+//     * @return
+//     */
+//    PageInfo<UserPointRo> listEx(String keys, Long orgId, int pageNum, int pageSize);
 
     /**
      * 添加用户组织
@@ -261,13 +260,13 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * 模糊查询关键字且在指定多个用户ID范围内的用户列表
      * 
      * @param keys
-     *                 模糊查询用户的关键字
+     *            模糊查询用户的关键字
      * @param userIds
-     *                 用户ID列表的字符串，用逗号隔开
+     *            用户ID列表的字符串，用逗号隔开
      * @param pageNum
-     *                 第几页
+     *            第几页
      * @param pageSize
-     *                 每页大小
+     *            每页大小
      */
     PageInfo<SucUserDetailRo> listByKeysAndUserIds(String keys, String userIds, Integer pageNum, Integer pageSize);
 
@@ -275,13 +274,13 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      * 模糊查询关键字且排除指定多个用户ID外的用户列表
      * 
      * @param keys
-     *                 模糊查询用户的关键字
+     *            模糊查询用户的关键字
      * @param userIds
-     *                 用户ID列表的字符串，用逗号隔开
+     *            用户ID列表的字符串，用逗号隔开
      * @param pageNum
-     *                 第几页
+     *            第几页
      * @param pageSize
-     *                 每页大小
+     *            每页大小
      */
     PageInfo<SucUserDetailRo> listByKeysAndNotUserIds(String keys, String userIds, Integer pageNum, Integer pageSize);
 
@@ -307,15 +306,19 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
     /**
      * 根据组织id、用户id、关键字查询除指定id外的用户列表
      * 
-     * @param orgId    组织id
-     * @param userIds  要排除的用户，多个以逗号隔开
-     * @param keys     模糊查询的用户关键字
-     * @param pageNum  第几页
-     * @param pageSize 每页大小
+     * @param orgId
+     *            组织id
+     * @param userIds
+     *            要排除的用户，多个以逗号隔开
+     * @param keys
+     *            模糊查询的用户关键字
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
      * @return
      */
-    PageInfo<SucUserDetailRo> listUnaddedUsersByOrgIdAndUsers(Long orgId, String userIds, String keys, Integer pageNum,
-            Integer pageSize);
+    PageInfo<SucUserDetailRo> listUnaddedUsersByOrgIdAndUsers(Long orgId, String userIds, String keys, Integer pageNum, Integer pageSize);
 
     /**
      * 根据领域id查询用户信息

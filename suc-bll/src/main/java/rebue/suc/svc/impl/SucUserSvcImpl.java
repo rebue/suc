@@ -17,8 +17,6 @@ import com.github.dozermapper.core.Mapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-import rebue.pnt.mo.PntAccountMo;
-import rebue.pnt.svr.feign.PntAccountSvc;
 import rebue.robotech.svc.impl.MybatisBaseSvcImpl;
 import rebue.sbs.redis.RedisClient;
 import rebue.sbs.redis.RedisSetException;
@@ -54,7 +52,6 @@ import rebue.suc.ro.SetLoginNameRo;
 import rebue.suc.ro.SucUserDetailRo;
 import rebue.suc.ro.SucUserRo;
 import rebue.suc.ro.UserLoginRo;
-import rebue.suc.ro.UserPointRo;
 import rebue.suc.ro.UserRegRo;
 import rebue.suc.svc.SucLockLogSvc;
 import rebue.suc.svc.SucLoginLogSvc;
@@ -94,7 +91,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
 
     /**
      */
-    private static final Logger _log = LoggerFactory.getLogger(SucUserSvcImpl.class);
+    private static final Logger _log                                = LoggerFactory.getLogger(SucUserSvcImpl.class);
 
     /**
      * 缓存当天连续输入登录密码错误的次数的Key的前缀 后面跟用户的用户id拼接成Key Value为失败次数
@@ -104,44 +101,44 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     /**
      * 缓存当天连续输入支付密码错误的次数的Key的前缀 后面跟用户的用户id拼接成Key Value为失败次数
      */
-    private static final String REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX = "rebue.suc.svc.user.paypswd.errcount.";
+    private static final String REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX   = "rebue.suc.svc.user.paypswd.errcount.";
 
     /**
      * 用户账号的黑名单的前缀 后面跟用户的用户id拼接成Key Value为空值
      */
-    private static final String REDIS_KEY_USER_BLACKLIST_PREFIX = "rebue.suc.svc.user.blacklist.";
+    private static final String REDIS_KEY_USER_BLACKLIST_PREFIX     = "rebue.suc.svc.user.blacklist.";
 
     /**
      * 用户购买关系生效时间（以小时计）
      */
     @Value("${suc.buyRelationHoldHours}")
-    private Integer buyRelationHoldHours;
+    private Integer             buyRelationHoldHours;
 
     /**
      * 免密支付额度
      */
     @Value("${suc.notPwdPayLimit}")
-    private Double notPwdPayLimit;
+    private Double              notPwdPayLimit;
+
+//    @Resource
+//    private PntAccountSvc  pntAccountSvc;
+    @Resource
+    private SucLoginLogSvc    loginLogSvc;
 
     @Resource
-    private PntAccountSvc  pntAccountSvc;
-    @Resource
-    private SucLoginLogSvc loginLogSvc;
+    private SucLockLogSvc     lockLogSvc;
 
     @Resource
-    private SucLockLogSvc lockLogSvc;
+    private SucRegSvc         regSvc;
 
     @Resource
-    private SucRegSvc regSvc;
+    private SucOpLogSvc       opLogSvc;
 
     @Resource
-    private SucOpLogSvc opLogSvc;
+    private RedisClient       redisClient;
 
     @Resource
-    private RedisClient redisClient;
-
-    @Resource
-    private Mapper dozerMapper;
+    private Mapper            dozerMapper;
 
     @Resource
     private SucAddUserDonePub userAddPub;
@@ -169,16 +166,14 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserRegRo regByLoginName(final RegByLoginNameTo to) {
-        if (StringUtils.isAnyBlank(to.getLoginName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
-                || to.getSysId() == null) {
+        if (StringUtils.isAnyBlank(to.getLoginName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
             _log.warn("没有填写用户登录名称/登录密码/应用ID/浏览器类型/MAC/IP: {}", to);
             final UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.PARAM_ERROR);
             regRo.setMsg("参数不正确");
             return regRo;
         }
-        if (to.getLoginName().length() < 3 || to.getLoginName().length() > 20
-                || RegexUtils.matchEmail(to.getLoginName()) || RegexUtils.matchMobile(to.getLoginName())) {
+        if (to.getLoginName().length() < 3 || to.getLoginName().length() > 20 || RegexUtils.matchEmail(to.getLoginName()) || RegexUtils.matchMobile(to.getLoginName())) {
             _log.warn("登录名称格式不正确: {}", to);
             final UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.PARAM_ERROR);
@@ -256,7 +251,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             }
         }
         final SucUserMo userMo = dozerMapper.map(to, SucUserMo.class);
-        final String    salt   = RandomEx.random1(6);
+        final String salt = RandomEx.random1(6);
         userMo.setSalt(salt);
         userMo.setLoginPswd(saltPswd(to.getLoginPswd(), salt));
         userMo.setPayPswd(userMo.getLoginPswd());
@@ -270,8 +265,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserRegRo regByQq(final RegByQqTo to) {
-        if (StringUtils.isAnyBlank(to.getQqId(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getMac(),
-                to.getIp()) || to.getSysId() == null) {
+        if (StringUtils.isAnyBlank(to.getQqId(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
             _log.warn("没有填写用户QQ的ID/QQ昵称/QQ头像/应用ID/浏览器类型/MAC/IP: {}", to);
             final UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.PARAM_ERROR);
@@ -296,8 +290,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserRegRo regByWx(final RegByWxTo to) {
-        if (StringUtils.isAllBlank(to.getWxId(), to.getWxOpenid())
-                || StringUtils.isAnyBlank(to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp())
+        if (StringUtils.isAllBlank(to.getWxId(), to.getWxOpenid()) || StringUtils.isAnyBlank(to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp())
                 || to.getSysId() == null) {
             _log.warn("没有填写用户微信的OpenID或UnionID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
             final UserRegRo regRo = new UserRegRo();
@@ -337,15 +330,14 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 返回成功注册
      *
      * @param regTo
-     *                登录参数
+     *            登录参数
      * @param regType
-     *                登录类型
+     *            登录类型
      * @param userMo
-     *                获取到的用户信息
+     *            获取到的用户信息
      * @return
      */
-    private UserRegRo returnSuccessReg(final RegBaseTo regTo, final RegAndLoginTypeDic regType,
-            final SucUserMo userMo) {
+    private UserRegRo returnSuccessReg(final RegBaseTo regTo, final RegAndLoginTypeDic regType, final SucUserMo userMo) {
         final SucRegMo regMo = dozerMapper.map(regTo, SucRegMo.class);
         regMo.setId(userMo.getId());
         regMo.setRegTime(new Date(userMo.getModifiedTimestamp()));
@@ -365,8 +357,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserLoginRo loginByLoginName(final LoginByLoginNameTo to) {
-        if (StringUtils.isAnyBlank(to.getLoginName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
-                || to.getSysId() == null) {
+        if (StringUtils.isAnyBlank(to.getLoginName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
             _log.warn("没有填写用户登录名称/密码/应用ID/浏览器类型/MAC/IP: {}", to);
             final UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.PARAM_ERROR);
@@ -401,8 +392,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserLoginRo loginByUserName(final LoginByUserNameTo to) {
-        if (StringUtils.isAnyBlank(to.getUserName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
-                || to.getSysId() == null) {
+        if (StringUtils.isAnyBlank(to.getUserName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
             _log.warn("没有填写用户名/密码/应用ID/浏览器类型/MAC/IP: {}", to);
             final UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.PARAM_ERROR);
@@ -410,7 +400,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             return ro;
         }
         RegAndLoginTypeDic loginType = null;
-        SucUserMo          userMo    = null;
+        SucUserMo userMo = null;
         if (RegexUtils.matchEmail(to.getUserName())) {
             userMo = _mapper.selectByEmail(to.getUserName());
             if (userMo != null) {
@@ -481,8 +471,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      */
     @Override
     public UserLoginRo loginByBusinessName(final LoginByUserNameTo to) {
-        if (StringUtils.isAnyBlank(to.getUserName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp())
-                || to.getSysId() == null) {
+        if (StringUtils.isAnyBlank(to.getUserName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
             _log.warn("没有填写用户名/密码/应用ID/浏览器类型/MAC/IP/组织id: {}", to);
             final UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.PARAM_ERROR);
@@ -490,13 +479,13 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             return ro;
         }
         RegAndLoginTypeDic loginType = null;
-        SucUserMo          userMo    = null;
-        List<SucUserMo>    userMos   = null;
+        SucUserMo userMo = null;
+        List<SucUserMo> userMos = null;
         if (RegexUtils.matchEmail(to.getUserName())) {
             userMos = _mapper.listByEmail(to.getUserName());
             _log.info("listByEmail userMos-{}:", userMos);
             if (userMos != null) {
-                for (SucUserMo mo : userMos) {
+                for (final SucUserMo mo : userMos) {
                     if (mo.getOrgId().equals(to.getOrgId()) && mo.getEmail().equals(to.getUserName())) {
                         userMo = mo;
                     }
@@ -514,7 +503,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             userMos = _mapper.listByMobile(to.getUserName());
             _log.info("listByMobile userMos-{}:", userMos);
             if (userMos != null) {
-                for (SucUserMo mo : userMos) {
+                for (final SucUserMo mo : userMos) {
                     if (mo.getOrgId().equals(to.getOrgId()) && mo.getMobile().equals(to.getUserName())) {
                         userMo = mo;
                     }
@@ -533,7 +522,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             userMos = _mapper.listByLoginName(to.getUserName());
             _log.info("listByLoginName userMos-{}:", userMos);
             if (userMos != null) {
-                for (SucUserMo mo : userMos) {
+                for (final SucUserMo mo : userMos) {
                     if (mo.getOrgId().equals(to.getOrgId()) && mo.getLoginName().equals(to.getUserName())) {
                         userMo = mo;
                     }
@@ -550,7 +539,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         }
         // 查询用户是否能在该领域登录
         Boolean noDomain = true;
-        String  domainId = to.getDomainId();
+        final String domainId = to.getDomainId();
         if (domainId.equals(userMo.getDomainId())) {
             noDomain = false;
         }
@@ -582,8 +571,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserLoginRo loginByQq(final LoginByQqTo to) {
-        if (StringUtils.isAnyBlank(to.getQqId(), to.getQqOpenid(), to.getQqNickname(), to.getQqFace(),
-                to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
+        if (StringUtils.isAnyBlank(to.getQqId(), to.getQqOpenid(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
             _log.warn("没有填写用户QQ的ID/QQ昵称/QQ头像/应用ID/浏览器类型/MAC/IP: {}", to);
             final UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.PARAM_ERROR);
@@ -608,7 +596,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         if (!StringUtils.isAnyBlank(to.getQqNickname(), to.getQqFace())) {
             if (!userMo.getQqNickname().equals(to.getQqNickname()) || !userMo.getQqFace().equals(to.getQqFace())) {
                 _log.info("更新QQ的昵称和头像: {} {} -> {}", userMo.getQqNickname(), userMo.getQqFace(), to);
-                final Date      now          = new Date();
+                final Date now = new Date();
                 final SucUserMo modifyUserMo = new SucUserMo();
                 modifyUserMo.setId(userMo.getId());
                 modifyUserMo.setQqNickname(to.getQqNickname());
@@ -621,8 +609,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 opLogMo.setOpType((byte) SucOpTypeDic.MODIFY_QQ_INFO.getCode());
                 opLogMo.setOpTime(now);
                 //
-                opLogMo.setOpDetail(userMo.getQqNickname() + " " + userMo.getQqFace() + " ---> " + to.getQqNickname()
-                        + to.getQqFace());
+                opLogMo.setOpDetail(userMo.getQqNickname() + " " + userMo.getQqFace() + " ---> " + to.getQqNickname() + to.getQqFace());
                 opLogMo.setSysId(to.getSysId());
                 opLogMo.setUserAgent(to.getUserAgent());
                 opLogMo.setMac(to.getMac());
@@ -639,8 +626,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserLoginRo loginByWx(final LoginByWxTo to) {
-        if (StringUtils.isAllBlank(to.getWxId(), to.getWxOpenid())
-                || StringUtils.isAnyBlank(to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp())
+        if (StringUtils.isAllBlank(to.getWxId(), to.getWxOpenid()) || StringUtils.isAnyBlank(to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp())
                 || to.getSysId() == null) {
             _log.warn("没有填写用户微信的OpenID或UnionID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
             final UserLoginRo ro = new UserLoginRo();
@@ -679,7 +665,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                     || (!StringUtils.isBlank(to.getWxNickname()) && !to.getWxNickname().equals(userMo.getWxNickname()))
                     || (!StringUtils.isBlank(to.getWxFace()) && !to.getWxFace().equals(userMo.getWxFace()))) {
                 _log.info("更新微信的昵称和头像: {} {} -> {}", userMo.getWxNickname(), userMo.getWxFace(), to);
-                final Date      now          = new Date();
+                final Date now = new Date();
                 final SucUserMo modifyUserMo = new SucUserMo();
                 modifyUserMo.setId(userMo.getId());
                 if (!StringUtils.isBlank(to.getWxId())) {
@@ -702,8 +688,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 opLogMo.setOpType((byte) SucOpTypeDic.MODIFY_WX_INFO.getCode());
                 opLogMo.setOpTime(now);
                 //
-                opLogMo.setOpDetail(userMo.getWxNickname() + " " + userMo.getWxFace() + " ---> " + to.getWxNickname()
-                        + to.getWxFace());
+                opLogMo.setOpDetail(userMo.getWxNickname() + " " + userMo.getWxFace() + " ---> " + to.getWxNickname() + to.getWxFace());
                 opLogMo.setSysId(to.getSysId());
                 opLogMo.setUserAgent(to.getUserAgent());
                 opLogMo.setMac(to.getMac());
@@ -721,15 +706,14 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 返回成功登录
      *
      * @param loginTo
-     *                  登录参数
+     *            登录参数
      * @param loginType
-     *                  登录类型
+     *            登录类型
      * @param userMo
-     *                  获取到的用户信息
+     *            获取到的用户信息
      * @return
      */
-    private UserLoginRo returnSuccessLogin(final RegAndLoginBaseTo loginTo, final RegAndLoginTypeDic loginType,
-            final SucUserMo userMo) {
+    private UserLoginRo returnSuccessLogin(final RegAndLoginBaseTo loginTo, final RegAndLoginTypeDic loginType, final SucUserMo userMo) {
         _log.info("成功登录获取到的登录参数为：{}", loginTo);
         final SucLoginLogMo loginLogMo = dozerMapper.map(loginTo, SucLoginLogMo.class);
         loginLogMo.setUserId(userMo.getId());
@@ -769,7 +753,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 找到用户后，校验用户是否允许登录
      *
      * @param userMo
-     *               查找到的用户
+     *            查找到的用户
      * @return 如果允许，返回null；值不为null，表示不允许
      */
     private UserLoginRo verifyLogin(final SucUserMo userMo, final String loginPswd) {
@@ -791,8 +775,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             if (!userMo.getLoginPswd().equals(saltPswd(loginPswd, userMo.getSalt()))) {
                 Long errorCount;
                 try {
-                    errorCount = redisClient.incr(REDIS_KEY_LOGINPSWD_ERRCOUNT_PREFIX + userMo.getId(),
-                            DateUtils.getSecondUtilTomorrow());
+                    errorCount = redisClient.incr(REDIS_KEY_LOGINPSWD_ERRCOUNT_PREFIX + userMo.getId(), DateUtils.getSecondUtilTomorrow());
                 } catch (final RedisSetException e) {
                     _log.error("操作当天连续输入登录密码错误的次数的缓存失败: {}", userMo);
                     final UserLoginRo ro = new UserLoginRo();
@@ -827,9 +810,9 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 加盐摘要密码
      *
      * @param pswd
-     *             登录密码(不是明文，而是将明文MD5传过来)
+     *            登录密码(不是明文，而是将明文MD5传过来)
      * @param salt
-     *             盐值
+     *            盐值
      * @return
      */
     private String saltPswd(final String pswd, final String salt) {
@@ -866,9 +849,9 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 判断支付时是否需要输入密码
      *
      * @param userId
-     *               用户ID
+     *            用户ID
      * @param amount
-     *               金额
+     *            金额
      */
     @Override
     public Boolean requirePayPswd(final Long userId, final Double amount) {
@@ -879,11 +862,11 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 校验支付密码
      *
      * @param userId
-     *                用户ID
+     *            用户ID
      * @param payPswd
-     *                支付密码
+     *            支付密码
      * @param amount
-     *                支付金额(判断金额在一定数量下可以免密码输入)
+     *            支付金额(判断金额在一定数量下可以免密码输入)
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -930,8 +913,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             if (!userMo.getPayPswd().equals(saltPswd(payPswd, userMo.getSalt()))) {
                 Long errorCount;
                 try {
-                    errorCount = redisClient.incr(REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX + userMo.getId(),
-                            DateUtils.getSecondUtilTomorrow());
+                    errorCount = redisClient.incr(REDIS_KEY_PAYPSWD_ERRCOUNT_PREFIX + userMo.getId(), DateUtils.getSecondUtilTomorrow());
                 } catch (final RedisSetException e) {
                     _log.error("操作当天连续输入密码错误的次数的缓存失败: {}", userMo);
                     final PayPswdVerifyRo ro = new PayPswdVerifyRo();
@@ -990,8 +972,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      */
     @Override
     public BindWxRo bindWx(final BindWxTo to) {
-        if (to.getUserId() == null || to.getSysId() == null || StringUtils.isAnyBlank(to.getWxId(), to.getWxNickname(),
-                to.getUserAgent(), to.getMac(), to.getIp())) {
+        if (to.getUserId() == null || to.getSysId() == null || StringUtils.isAnyBlank(to.getWxId(), to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp())) {
             _log.warn("没有填写用户ID/微信ID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
             final BindWxRo ro = new BindWxRo();
             ro.setResult(BindWxResultDic.PARAM_ERROR);
@@ -1034,8 +1015,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         opLogMo.setOpType((byte) SucOpTypeDic.BIND_WX.getCode());
         opLogMo.setOpTime(now);
         //
-        opLogMo.setOpDetail(
-                userMo.getWxNickname() + " " + userMo.getWxFace() + " ---> " + to.getWxNickname() + to.getWxFace());
+        opLogMo.setOpDetail(userMo.getWxNickname() + " " + userMo.getWxFace() + " ---> " + to.getWxNickname() + to.getWxFace());
         opLogMo.setSysId(to.getSysId());
         opLogMo.setUserAgent(to.getUserAgent());
         opLogMo.setMac(to.getMac());
@@ -1135,8 +1115,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             setRo.setMsg("找不到用户信息");
             return setRo;
         }
-        if (userMo.getLoginPswd() != null && !userMo.getLoginPswd().equals("")
-                && !userMo.getLoginPswd().equals("null")) {
+        if (userMo.getLoginPswd() != null && !userMo.getLoginPswd().equals("") && !userMo.getLoginPswd().equals("null")) {
             _log.error("微信设置登录密码时出现该用户微信用户已设置了登录密码，ID为：{}", id);
             setRo.setResult(LoginPswdSetDic.HAVE_SET);
             setRo.setMsg("您已设置过登录密码");
@@ -1204,7 +1183,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             modifyRo.setMsg("找不到用户信息");
             return modifyRo;
         }
-        String       salt         = "";
+        String salt = "";
         final String oriLoginPswd = userMo.getLoginPswd();
         if (oriLoginPswd != null && !oriLoginPswd.equals("") && !oriLoginPswd.equals("null")) {
             oldLoginPswd = saltPswd(oldLoginPswd, userMo.getSalt());
@@ -1214,7 +1193,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 modifyRo.setMsg("输入的旧密码不正确");
                 return modifyRo;
             } else {
-                salt         = userMo.getSalt();
+                salt = userMo.getSalt();
                 newLoginPswd = saltPswd(newLoginPswd, salt);
                 _log.info("修改登录密码的参数为：{}", id + ", " + newLoginPswd);
                 final int updateResult = _mapper.updateloginPswd(id, newLoginPswd);
@@ -1342,7 +1321,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             modifyRo.setMsg("找不到用户信息");
             return modifyRo;
         }
-        String       salt       = "";
+        String salt = "";
         final String oriPayPswd = userMo.getPayPswd();
         if (oriPayPswd != null && !oriPayPswd.equals("") && !oriPayPswd.equals("null")) {
             oldPayPswd = saltPswd(oldPayPswd, userMo.getSalt());
@@ -1352,7 +1331,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 modifyRo.setMsg("输入的旧密码不正确");
                 return modifyRo;
             } else {
-                salt       = userMo.getSalt();
+                salt = userMo.getSalt();
                 newPayPswd = saltPswd(newPayPswd, salt);
                 _log.info("修改支付密码的参数为：{}", id + ", " + newPayPswd);
                 final int updateResult = _mapper.updatePayPswd(id, newPayPswd);
@@ -1447,8 +1426,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      */
     @Override
     public GetLoginNameRo getLoginNameByWx(final Long id) {
-        final GetLoginNameRo ro        = new GetLoginNameRo();
-        final String         loginName = _mapper.selectLoginNameByWx(id);
+        final GetLoginNameRo ro = new GetLoginNameRo();
+        final String loginName = _mapper.selectLoginNameByWx(id);
         _log.info("用户登录名称是: {}", loginName);
         if (StringUtils.isBlank(loginName)) {
             ro.setResult(GetLoginNameDic.FAIL);
@@ -1491,7 +1470,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         final SucUserRo ro = new SucUserRo();
         _log.info("加密前修改用户登录密码的参数为：{}", mo);
         final SucUserMo userMo = new SucUserMo();
-        final String    salt   = RandomEx.random1(6);
+        final String salt = RandomEx.random1(6);
         userMo.setId(mo.getId());
         userMo.setSalt(salt);
         userMo.setLoginPswd(saltPswd(mo.getLoginPswd(), salt));
@@ -1522,8 +1501,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public SucUserRo enable(final Long id, final Boolean isLock) {
         _log.info("禁用或解锁用户的参数为：{}，{}", id, isLock);
-        final SucUserRo ro                     = new SucUserRo();
-        final int       lockOrUnlockByIdResult = _mapper.lockOrUnlockById(id, isLock);
+        final SucUserRo ro = new SucUserRo();
+        final int lockOrUnlockByIdResult = _mapper.lockOrUnlockById(id, isLock);
         _log.info("禁用或解锁用户的返回值为：{}", lockOrUnlockByIdResult);
         if (lockOrUnlockByIdResult != 1) {
             _log.error("禁用或解锁用户失败，用户id为：{}", id);
@@ -1546,8 +1525,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public SucUserRo removeLoginPassWord(final Long id) {
         _log.info("解除用户登录密码的id为：{}", id);
-        final SucUserRo ro                        = new SucUserRo();
-        final int       removeLoginPassWordResult = _mapper.removeLoginPassWord(id);
+        final SucUserRo ro = new SucUserRo();
+        final int removeLoginPassWordResult = _mapper.removeLoginPassWord(id);
         _log.info("解除登录密码的返回值为：{}", removeLoginPassWordResult);
         if (removeLoginPassWordResult != 1) {
             _log.error("解除登录密码出错，用户id为：{}", id);
@@ -1571,8 +1550,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public SucUserRo removePayPassWord(final Long id) {
         _log.info("解除用户支付密码的id为：{}", id);
-        final SucUserRo ro                      = new SucUserRo();
-        final int       removePayPassWordResult = _mapper.removePayPassWord(id);
+        final SucUserRo ro = new SucUserRo();
+        final int removePayPassWordResult = _mapper.removePayPassWord(id);
         _log.info("解除支付密码的返回值为：{}", removePayPassWordResult);
         if (removePayPassWordResult != 1) {
             _log.error("解除支付密码出错，用户id为：{}", id);
@@ -1596,8 +1575,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public SucUserRo unbindWeChat(final Long id) {
         _log.info("解绑微信的id为：{}", id);
-        final SucUserRo ro                 = new SucUserRo();
-        final int       unbindWeChatResult = _mapper.unbindWeChat(id);
+        final SucUserRo ro = new SucUserRo();
+        final int unbindWeChatResult = _mapper.unbindWeChat(id);
         _log.info("解绑微信的返回值为：{}", unbindWeChatResult);
         if (unbindWeChatResult != 1) {
             _log.error("解绑微信出错，用户id为：{}", id);
@@ -1621,8 +1600,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public SucUserRo unbindQQ(final Long id) {
         _log.info("解绑QQ的id为：{}", id);
-        final SucUserRo ro             = new SucUserRo();
-        final int       unbindQQResult = _mapper.unbindQQ(id);
+        final SucUserRo ro = new SucUserRo();
+        final int unbindQQResult = _mapper.unbindQQ(id);
         _log.info("解绑QQ的返回值为：{}", unbindQQResult);
         if (unbindQQResult != 1) {
             _log.error("解绑QQ出错，用户id为：{}", id);
@@ -1636,31 +1615,30 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         return ro;
     }
 
-    /**
-     * 多条件同时查询
-     *
-     * @param keys
-     * @param pageNum
-     * @param pageSize
-     * @return
-     */
-    @Override
-    public PageInfo<UserPointRo> listEx(final String keys, Long orgId, final int pageNum, final int pageSize) {
-        _log.info("list: qo-{}; orgId-{}; pageNum-{}; pageSize-{}", keys, orgId, pageNum, pageSize);
-        PageInfo<UserPointRo> result = PageHelper.startPage(pageNum, pageSize)
-                .doSelectPageInfo(() -> _mapper.listUserInformation(keys, orgId));
-        List<UserPointRo>     list   = result.getList();
-        for (UserPointRo ro : list) {
-            _log.info("获取当前账户参数： ro:-{}", ro);
-            PntAccountMo pnt = pntAccountSvc.getById(ro.getId());
-            _log.info("获取当前账户总积分返回的结果： PntAccountMo:-{}", pnt);
-            if (pnt != null) {
-                ro.setPoint(pnt.getPoint());
-                ro.setModifiedTimestamp(pnt.getModifiedTimestamp());
-            }
-        }
-        return result;
-    }
+//    /**
+//     * 多条件同时查询
+//     *
+//     * @param keys
+//     * @param pageNum
+//     * @param pageSize
+//     * @return
+//     */
+//    @Override
+//    public PageInfo<UserPointRo> listEx(final String keys, final Long orgId, final int pageNum, final int pageSize) {
+//        _log.info("list: qo-{}; orgId-{}; pageNum-{}; pageSize-{}", keys, orgId, pageNum, pageSize);
+//        final PageInfo<UserPointRo> result = PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.listUserInformation(keys, orgId));
+//        final List<UserPointRo> list = result.getList();
+//        for (final UserPointRo ro : list) {
+//            _log.info("获取当前账户参数： ro:-{}", ro);
+//            final PntAccountMo pnt = pntAccountSvc.getById(ro.getId());
+//            _log.info("获取当前账户总积分返回的结果： PntAccountMo:-{}", pnt);
+//            if (pnt != null) {
+//                ro.setPoint(pnt.getPoint());
+//                ro.setModifiedTimestamp(pnt.getModifiedTimestamp());
+//            }
+//        }
+//        return result;
+//    }
 
     /**
      * 根据用户id查询用户分页信息
@@ -1671,8 +1649,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * @return
      */
     @Override
-    public PageInfo<SucUserMo> listUserByIdsAndKeys(final int pageNum, final int pageSize, final String ids,
-            final String keys) {
+    public PageInfo<SucUserMo> listUserByIdsAndKeys(final int pageNum, final int pageSize, final String ids, final String keys) {
         return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.listUserByIdsAndKeys(ids, keys));
     }
 
@@ -1725,8 +1702,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public SucUserRo delUserOrgById(final Long id) {
         _log.info("删除用户组织的参数为：{}", id);
-        final SucUserRo ro                   = new SucUserRo();
-        final int       delUserOrgByIdResult = _mapper.delUserOrgById(id);
+        final SucUserRo ro = new SucUserRo();
+        final int delUserOrgByIdResult = _mapper.delUserOrgById(id);
         _log.info("删除用户组织的返回值为：{}", delUserOrgByIdResult);
         if (delUserOrgByIdResult != 1) {
             _log.info("删除用户组织失败，用户id为：{}", id);
@@ -1746,8 +1723,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     public CurrentUserRo getCurrentUser(final Long userId) {
         _log.info("获取当前用户信息: {}", userId);
-        final CurrentUserRo ro     = new CurrentUserRo();
-        final SucUserMo     userMo = _mapper.selectByPrimaryKey(userId);
+        final CurrentUserRo ro = new CurrentUserRo();
+        final SucUserMo userMo = _mapper.selectByPrimaryKey(userId);
         ro.setUserId(userMo.getId());
         ro.setOrgId(userMo.getOrgId());
         // 判断应该返回的昵称
@@ -1773,24 +1750,21 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 模糊查询关键字且在指定多个用户ID范围内的用户列表
      * 
      * @param keys
-     *                 模糊查询用户的关键字
+     *            模糊查询用户的关键字
      * @param userIds
-     *                 用户ID列表的字符串，用逗号隔开
+     *            用户ID列表的字符串，用逗号隔开
      * @param pageNum
-     *                 第几页
+     *            第几页
      * @param pageSize
-     *                 每页大小
+     *            每页大小
      */
     @Override
-    public PageInfo<SucUserDetailRo> listByKeysAndUserIds(final String keys, final String userIds,
-            final Integer pageNum, final Integer pageSize) {
+    public PageInfo<SucUserDetailRo> listByKeysAndUserIds(final String keys, final String userIds, final Integer pageNum, final Integer pageSize) {
         _log.info("模糊查询关键字且在指定多个用户ID范围内的用户列表：keys={}, userIds={}", keys, userIds);
         if (StringUtils.isBlank(keys)) {
-            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC")
-                    .doSelectPageInfo(() -> _mapper.selectByUserIds(userIds));
+            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> _mapper.selectByUserIds(userIds));
         } else {
-            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC")
-                    .doSelectPageInfo(() -> _mapper.selectByKeysAndUserIds(keys, userIds));
+            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> _mapper.selectByKeysAndUserIds(keys, userIds));
         }
     }
 
@@ -1798,33 +1772,28 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 模糊查询关键字且排除指定多个用户ID外的用户列表
      * 
      * @param keys
-     *                 模糊查询用户的关键字
+     *            模糊查询用户的关键字
      * @param userIds
-     *                 用户ID列表的字符串，用逗号隔开
+     *            用户ID列表的字符串，用逗号隔开
      * @param pageNum
-     *                 第几页
+     *            第几页
      * @param pageSize
-     *                 每页大小
+     *            每页大小
      */
     @Override
-    public PageInfo<SucUserDetailRo> listByKeysAndNotUserIds(final String keys, final String userIds,
-            final Integer pageNum, final Integer pageSize) {
+    public PageInfo<SucUserDetailRo> listByKeysAndNotUserIds(final String keys, final String userIds, final Integer pageNum, final Integer pageSize) {
         _log.info("模糊查询关键字且排除指定多个用户ID外的用户列表：keys={}, userIds={}", keys, userIds);
         if (StringUtils.isBlank(keys)) {
             if (StringUtils.isBlank(userIds)) {
-                return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC")
-                        .doSelectPageInfo(() -> _mapper.selectAll());
+                return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> _mapper.selectAll());
             } else {
-                return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC")
-                        .doSelectPageInfo(() -> _mapper.selectByNotUserIds(userIds));
+                return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> _mapper.selectByNotUserIds(userIds));
             }
         } else {
             if (StringUtils.isBlank(userIds)) {
-                return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC")
-                        .doSelectPageInfo(() -> _mapper.selectByKeys(keys));
+                return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> _mapper.selectByKeys(keys));
             } else {
-                return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC")
-                        .doSelectPageInfo(() -> _mapper.selectByKeysAndNotUserIds(keys, userIds));
+                return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> _mapper.selectByKeysAndNotUserIds(keys, userIds));
             }
         }
     }
@@ -1833,25 +1802,22 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 根据组织id、用户id、关键字查询除指定id外的用户列表
      * 
      * @param orgId
-     *                 组织id
+     *            组织id
      * @param userIds
-     *                 要排除的用户，多个以逗号隔开
+     *            要排除的用户，多个以逗号隔开
      * @param keys
-     *                 模糊查询的用户关键字
+     *            模糊查询的用户关键字
      * @param pageNum
-     *                 第几页
+     *            第几页
      * @param pageSize
-     *                 每页大小
+     *            每页大小
      * @return
      */
     @Override
-    public PageInfo<SucUserDetailRo> listUnaddedUsersByOrgIdAndUsers(Long orgId, String userIds, String keys,
-            Integer pageNum, Integer pageSize) {
-        _log.info("根据组织id、用户id、关键字查询除指定id外的用户列表的参数为：orgId-{}, userIds-{}, keys-{}, pageNum-{}, pageSize-{}", orgId,
-                userIds, keys, pageNum, pageSize);
+    public PageInfo<SucUserDetailRo> listUnaddedUsersByOrgIdAndUsers(final Long orgId, final String userIds, final String keys, final Integer pageNum, final Integer pageSize) {
+        _log.info("根据组织id、用户id、关键字查询除指定id外的用户列表的参数为：orgId-{}, userIds-{}, keys-{}, pageNum-{}, pageSize-{}", orgId, userIds, keys, pageNum, pageSize);
         if (StringUtils.isBlank(userIds)) {
-            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC")
-                    .doSelectPageInfo(() -> _mapper.selectUnaddedUsersByOrgIdAndkeys(orgId, keys));
+            return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC").doSelectPageInfo(() -> _mapper.selectUnaddedUsersByOrgIdAndkeys(orgId, keys));
         } else {
             return PageHelper.startPage(pageNum, pageSize, "MODIFIED_TIMESTAMP DESC")
                     .doSelectPageInfo(() -> _mapper.selectUnaddedUsersByOrgIdAndUserIdsAndKeys(orgId, userIds, keys));
@@ -1862,11 +1828,11 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 根据领域id查询用户信息
      */
     @Override
-    public List<SucUserMo> selectByDomainId(String domainId) {
-        SucUserMo mo = new SucUserMo();
+    public List<SucUserMo> selectByDomainId(final String domainId) {
+        final SucUserMo mo = new SucUserMo();
         mo.setDomainId(domainId);
         _log.info("根据领域id查询的参数是:SucUserMo-{}" + mo);
-        List<SucUserMo> result = _mapper.selectSelective(mo);
+        final List<SucUserMo> result = _mapper.selectSelective(mo);
         _log.info("根据领域id查询的返回值是:List<SucUserMo>-{}" + result);
         return result;
     }
@@ -1875,13 +1841,13 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 根据买家创建商家用户信息
      */
     @Override
-    public int installByBuyer(SucUserMo mo) {
+    public int installByBuyer(final SucUserMo mo) {
         _log.info("根据买家创建商家用户信息开始");
-        if (mo.getOrgId() == null || mo.getLoginName() == null || mo.getLoginPswd() == null || mo.getPayPswd() == null
-                || mo.getSalt() == null || !mo.getDomainId().equals("bussines")) {
+        if (mo.getOrgId() == null || mo.getLoginName() == null || mo.getLoginPswd() == null || mo.getPayPswd() == null || mo.getSalt() == null
+                || !mo.getDomainId().equals("bussines")) {
             _log.info("参数错误：SucUserMo-{}", mo);
         }
-        int result = add(mo);
+        final int result = add(mo);
         _log.info("根据买家创建商家用户信息结束");
         return result;
     }
@@ -1890,10 +1856,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 根据领域id和关键字查询用户信息
      */
     @Override
-    public PageInfo<SucUserMo> listUserByDomainIdAndKeys(final int pageNum, final int pageSize, final String domainId,
-            final String keys) {
-        return PageHelper.startPage(pageNum, pageSize)
-                .doSelectPageInfo(() -> _mapper.listUserByDomainIdAndKeys(domainId, keys));
+    public PageInfo<SucUserMo> listUserByDomainIdAndKeys(final int pageNum, final int pageSize, final String domainId, final String keys) {
+        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.listUserByDomainIdAndKeys(domainId, keys));
     }
 
 }

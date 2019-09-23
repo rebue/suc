@@ -15,28 +15,27 @@ import rebue.wheel.idworker.IdWorker3;
 import rebue.wheel.turing.DigestUtils;
 
 public class SucLoginTest {
-    private String              hostUrl       = "http://localhost:9100";
-    private ObjectMapper        _objectMapper = new ObjectMapper();
+    private final String        hostUrl       = "http://localhost:9100";
+    private final ObjectMapper  _objectMapper = new ObjectMapper();
     private final static Logger _log          = LoggerFactory.getLogger(SucLoginTest.class);
 
     // @Test
     public void LoginByLoginName() throws IOException {
-        LoginByUserNameTo to = new LoginByUserNameTo();
+        final LoginByUserNameTo to = new LoginByUserNameTo();
         to.setUserName("admin");
         to.setLoginPswd(DigestUtils.md5AsHexStr("12345678".getBytes()));
         to.setSysId("damai-pos-food-app");
         to.setDomainId("platform");
-        String result = OkhttpUtils.postByJsonParams(hostUrl + "/user/login/by/user/name", to);
+        final String result = OkhttpUtils.postByJsonParams(hostUrl + "/user/login/by/user/name", to);
         System.out.println(result);
     }
 
     @Test
     public void addBussines() throws IOException {
-        SucUserMo[] result = _objectMapper.readValue(
-                OkhttpUtils.get(hostUrl + "/suc/user/selectByDomainId" + "?domainId=bussines"), SucUserMo[].class);
-        IdWorker3 _idWorker = new IdWorker3();
-        for (SucUserMo buyer : result) {
-            SucUserMo bussines = new SucUserMo();
+        final SucUserMo[] result = _objectMapper.readValue(OkhttpUtils.get(hostUrl + "/suc/user/selectByDomainId" + "?domainId=bussines"), SucUserMo[].class);
+        final IdWorker3 _idWorker = new IdWorker3();
+        for (final SucUserMo buyer : result) {
+            final SucUserMo bussines = new SucUserMo();
             bussines.setId(_idWorker.getId());
             // 组织id
             bussines.setOrgId(buyer.getOrgId());
@@ -59,19 +58,19 @@ public class SucLoginTest {
 
             _log.info("开始修改买家信息");
             _log.info("买家账号信息为：buyer-{}", buyer);
-            String updateBuyerResult = OkhttpUtils.putByJsonParams(hostUrl + "/suc/user", buyer);
+            final String updateBuyerResult = OkhttpUtils.putByJsonParams(hostUrl + "/suc/user", buyer);
             _log.info("修改买家账号的返回值为：updateBuyerResult-{}", updateBuyerResult);
             _log.info("结束修改买家信息");
 
             _log.info("开始添加商家信息");
             _log.info("商家账号信息参数为：bussines-{}", bussines);
-            String installBussinesResult = OkhttpUtils.putByJsonParams(hostUrl + "/suc/user/installByBuyer", bussines);
+            final String installBussinesResult = OkhttpUtils.putByJsonParams(hostUrl + "/suc/user/installByBuyer", bussines);
             _log.info("添加商家账号信息返回值为：bussines-{}", installBussinesResult);
 
             _log.info("开始修改商家角色,修改平台的话需要注释掉");
-            String pfmHostUrl = "http://localhost:20182";
-            String roleResult = OkhttpUtils.put(pfmHostUrl + "/pfm/userrole/updateByUserId?oldUserId=" + buyer.getId()
-                    + "&userId=" + bussines.getId());
+            final String pfmHostUrl = "http://localhost:20182";
+            final String roleResult = OkhttpUtils.put(pfmHostUrl + "/pfm/userrole/updateByUserId?oldUserId=" + buyer.getId() + "&userId=" + bussines.getId());
+            _log.info("返回结果: {}", roleResult);
             _log.info("结束修改商家角色");
             _log.info("结束添加商家信息");
         }
