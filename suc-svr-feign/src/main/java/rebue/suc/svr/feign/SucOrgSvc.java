@@ -13,6 +13,7 @@ import com.github.pagehelper.PageInfo;
 
 import rebue.sbs.feign.FeignConfig;
 import rebue.suc.mo.SucOrgMo;
+import rebue.suc.ro.OrgAccountRo;
 import rebue.suc.ro.SucOrgInOrNotInRo;
 import rebue.suc.ro.SucOrgRo;
 
@@ -119,4 +120,8 @@ public interface SucOrgSvc {
             @RequestParam(value = "keys", required = false) String keys,
             @RequestParam(value = "pageNum", required = false) Integer pageNum,
             @RequestParam(value = "pageSize", required = false) Integer pageSize);
+
+    @GetMapping("/suc/org/account")
+    PageInfo<OrgAccountRo> listOrgAccount(final SucOrgMo mo, @RequestParam("pageNum") int pageNum,
+            @RequestParam("pageSize") int pageSize);
 }

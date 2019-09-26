@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 
 import rebue.robotech.svc.MybatisBaseSvc;
 import rebue.suc.mo.SucOrgMo;
+import rebue.suc.ro.OrgAccountRo;
 import rebue.suc.ro.SucOrgInOrNotInRo;
 import rebue.suc.ro.SucOrgRo;
 
@@ -40,17 +41,17 @@ public interface SucOrgSvc extends MybatisBaseSvc<SucOrgMo, java.lang.Long> {
      */
     PageInfo<SucOrgMo> list(String keys, int pageNum, int pageSize);
 
-//    /**
-//     * 分页查询
-//     * 
-//     * @param keys
-//     *                 模糊查询的关键字
-//     * @param pageNum
-//     *                 第几页
-//     * @param pageSize
-//     *                 每页大小
-//     */
-//    PageInfo<OrgAccountRo> listOrgAccount(SucOrgMo mo, int pageNum, int pageSize);
+    /**
+     * 分页查询
+     * 
+     * @param keys
+     *            模糊查询的关键字
+     * @param pageNum
+     *            第几页
+     * @param pageSize
+     *            每页大小
+     */
+    PageInfo<OrgAccountRo> listOrgAccount(SucOrgMo mo, int pageNum, int pageSize);
 
     /**
      * 根据组织id集合查询已经存在和没有存在的组织
@@ -68,7 +69,8 @@ public interface SucOrgSvc extends MybatisBaseSvc<SucOrgMo, java.lang.Long> {
      * @param unaddedPageNum
      *            未添加用户是第几页
      */
-    SucOrgInOrNotInRo listAddedAndUnaddedOrgs(String orgIds, Integer pageSize, String addedKeys, Integer addedPageNum, String unaddedKeys, Integer unaddedPageNum);
+    SucOrgInOrNotInRo listAddedAndUnaddedOrgs(String orgIds, Integer pageSize, String addedKeys, Integer addedPageNum,
+            String unaddedKeys, Integer unaddedPageNum);
 
     /**
      * 查询指定组织的已添加的用户列表

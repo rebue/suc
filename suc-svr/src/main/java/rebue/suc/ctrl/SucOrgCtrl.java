@@ -21,6 +21,7 @@ import com.github.pagehelper.PageInfo;
 import rebue.robotech.dic.ResultDic;
 import rebue.robotech.ro.Ro;
 import rebue.suc.mo.SucOrgMo;
+import rebue.suc.ro.OrgAccountRo;
 import rebue.suc.ro.SucOrgInOrNotInRo;
 import rebue.suc.ro.SucOrgRo;
 import rebue.suc.svc.SucOrgSvc;
@@ -31,20 +32,20 @@ public class SucOrgCtrl {
     /**
      * @mbg.generated
      */
-    private static final Logger _log             = LoggerFactory.getLogger(SucOrgCtrl.class);
+    private static final Logger _log = LoggerFactory.getLogger(SucOrgCtrl.class);
 
     /**
      * @mbg.generated
      */
     @Resource
-    private SucOrgSvc           svc;
+    private SucOrgSvc svc;
 
     /**
      * 有唯一约束的字段名称
      *
      * @mbg.generated
      */
-    private final String        _uniqueFilesName = "某字段内容";
+    private final String _uniqueFilesName = "某字段内容";
 
     /**
      * 添加公司/组织信息
@@ -177,8 +178,8 @@ public class SucOrgCtrl {
      * @mbg.overrideByMethodName
      */
     @GetMapping("/suc/org")
-    PageInfo<SucOrgMo> list(@RequestParam(value = "keys", required = false) final String keys, @RequestParam("pageNum") final int pageNum,
-            @RequestParam("pageSize") final int pageSize) {
+    PageInfo<SucOrgMo> list(@RequestParam(value = "keys", required = false) final String keys,
+            @RequestParam("pageNum") final int pageNum, @RequestParam("pageSize") final int pageSize) {
         _log.info("list keys:" + keys + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
         if (pageSize > 50) {
             final String msg = "pageSize不能大于50";
@@ -244,17 +245,17 @@ public class SucOrgCtrl {
      * 
      * 
      */
-//    @GetMapping("/suc/org/account")
-//    PageInfo<OrgAccountRo> listOrgAccount(final SucOrgMo mo, @RequestParam("pageNum") int pageNum,
-//            @RequestParam("pageSize") int pageSize) {
-//        _log.info("listOrgAccount mo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
-//        if (pageSize > 50) {
-//            String msg = "pageSize不能大于50";
-//            _log.error(msg);
-//            throw new IllegalArgumentException(msg);
-//        }
-//        return svc.listOrgAccount(mo, pageNum, pageSize);
-//    }
+    @GetMapping("/suc/org/account")
+    PageInfo<OrgAccountRo> listOrgAccount(final SucOrgMo mo, @RequestParam("pageNum") int pageNum,
+            @RequestParam("pageSize") int pageSize) {
+        _log.info("listOrgAccount mo:" + mo + ", pageNum = " + pageNum + ", pageSize = " + pageSize);
+        if (pageSize > 50) {
+            String msg = "pageSize不能大于50";
+            _log.error(msg);
+            throw new IllegalArgumentException(msg);
+        }
+        return svc.listOrgAccount(mo, pageNum, pageSize);
+    }
 
     /**
      * 根据组织id集合查询已经存在和不存在的组织
@@ -267,7 +268,8 @@ public class SucOrgCtrl {
      *            每页大小
      */
     @GetMapping("/suc/org/listaddedandunaddedorgs")
-    SucOrgInOrNotInRo listAddedAndUnaddedOrgs(@RequestParam("orgIds") final String orgIds, @RequestParam(value = "pageNum", required = false) Integer pageNum,
+    SucOrgInOrNotInRo listAddedAndUnaddedOrgs(@RequestParam("orgIds") final String orgIds,
+            @RequestParam(value = "pageNum", required = false) Integer pageNum,
             @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         if (pageNum == null) {
             pageNum = 1;
@@ -297,8 +299,10 @@ public class SucOrgCtrl {
      *            每页大小
      */
     @GetMapping("/suc/org/listaddedorgs")
-    PageInfo<SucOrgMo> listAddedOrgs(@RequestParam("orgIds") final String orgIds, @RequestParam(value = "keys", required = false) final String keys,
-            @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+    PageInfo<SucOrgMo> listAddedOrgs(@RequestParam("orgIds") final String orgIds,
+            @RequestParam(value = "keys", required = false) final String keys,
+            @RequestParam(value = "pageNum", required = false) Integer pageNum,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         if (pageNum == null) {
             pageNum = 1;
         }
@@ -329,8 +333,10 @@ public class SucOrgCtrl {
      *            每页大小
      */
     @GetMapping("/suc/org/listunaddedorgs")
-    PageInfo<SucOrgMo> listUnaddedOrgs(@RequestParam("orgIds") final String orgIds, @RequestParam(value = "keys", required = false) final String keys,
-            @RequestParam(value = "pageNum", required = false) Integer pageNum, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+    PageInfo<SucOrgMo> listUnaddedOrgs(@RequestParam("orgIds") final String orgIds,
+            @RequestParam(value = "keys", required = false) final String keys,
+            @RequestParam(value = "pageNum", required = false) Integer pageNum,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         if (pageNum == null) {
             pageNum = 1;
         }

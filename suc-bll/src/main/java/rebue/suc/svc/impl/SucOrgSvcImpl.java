@@ -20,6 +20,7 @@ import rebue.suc.mapper.SucUserMapper;
 import rebue.suc.mo.SucOrgMo;
 import rebue.suc.msg.SucAddOrgDoneMsg;
 import rebue.suc.pub.SucAddOrgDonePub;
+import rebue.suc.ro.OrgAccountRo;
 import rebue.suc.ro.SucOrgInOrNotInRo;
 import rebue.suc.ro.SucOrgRo;
 import rebue.suc.svc.SucOrgSvc;
@@ -80,7 +81,7 @@ public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, 
     private static final Logger _log = LoggerFactory.getLogger(SucOrgSvcImpl.class);
 
     @Resource
-    private SucUserMapper       sucUserMapper;
+    private SucUserMapper sucUserMapper;
 
     /**
      * 删除组织
@@ -149,48 +150,17 @@ public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, 
         return ro;
     }
 
-//    @Override
-//    public PageInfo<OrgAccountRo> listOrgAccount(final SucOrgMo mo, final int pageNum, final int pageSize) {
-//        _log.info("查询组织的参数SucOrgMo：{} pageNum-{} pageSize-{} ", mo, pageNum, pageSize);
-//        final PageInfo<OrgAccountRo> result = PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectOrg(mo));
-//        _log.info("查询组织的参数返回的结果是 {}", result);
-//        for (final OrgAccountRo item : result.getList()) {
-//            _log.info("获取供应商账户余额和订单结算信息循环开始----------------------------------------");
-//            // 获取供应商账户
-//            _log.info("获取供应商账户的参数是-id-{}", item.getSupplierId());
-//            final AfcAccountMo AfcAccountResult = afcAccountSvc.getById(item.getSupplierId());
-//            _log.info("获取供应商账户的结果是-AfcAccountResult-{}", AfcAccountResult);
-//            if (AfcAccountResult != null) {
-//                item.setBalance(AfcAccountResult.getBalance());
-//                item.setWithdrawing(AfcAccountResult.getWithdrawing());
-//            }
-//            // 获取供应商已经提现总额
-//            _log.info("获取供应商已经提现总额的参数是-id-{}", item.getSupplierId());
-//            final OrgWithdrawRo orgWithdrawRo = afcTradeSvc.getOrgWithdrawTotal(item.getSupplierId());
-//            _log.info("获取供应商已经提现总额的结果是-orgWithdrawRo-{}", orgWithdrawRo);
-//            if (orgWithdrawRo != null) {
-//                item.setWithdrawTotal(orgWithdrawRo.getWithdrawTotal());
-//            }
-//            // 获取供应商已经结算和待结算总成本
-//            _log.info("获取供应商订单待结算和已结算成本的参数为 SupplierId-{} ", item.getSupplierId());
-//            final OrdSettleRo ordSettleResult = ordOrderSvc.getSettleTotal(item.getSupplierId());
-//            _log.info("获取供应商订单待结算和已结算成本的结果为 ordSettleResult-{} ", ordSettleResult);
-//            if (ordSettleResult != null) {
-//                if (ordSettleResult.getAlreadySettle() != null) {
-//                    item.setAlreadySettle(ordSettleResult.getAlreadySettle());
-//                }
-//                if (ordSettleResult.getNotSettle() != null) {
-//                    item.setNotSettle(ordSettleResult.getNotSettle());
-//                }
-//            }
-//            _log.info("获取供应商账户余额和订单结算信息循环开结束+++++++++++++++++++++++++++++++++++++++");
-//
-//        }
-//        return result;
-//    }
+    @Override
+    public PageInfo<OrgAccountRo> listOrgAccount(final SucOrgMo mo, final int pageNum, final int pageSize) {
+        _log.info("查询组织的参数SucOrgMo：{} pageNum-{} pageSize-{} ", mo, pageNum, pageSize);
+        final PageInfo<OrgAccountRo> result = PageHelper.startPage(pageNum, pageSize)
+                .doSelectPageInfo(() -> _mapper.selectOrg(mo));
+        return result;
+    }
 
     @Override
-    public SucOrgInOrNotInRo listAddedAndUnaddedOrgs(final String orgIds, final Integer pageSize, final String addedKeys, final Integer addedPageNum, final String unaddedKeys,
+    public SucOrgInOrNotInRo listAddedAndUnaddedOrgs(final String orgIds, final Integer pageSize,
+            final String addedKeys, final Integer addedPageNum, final String unaddedKeys,
             final Integer unaddedPageNum) {
         final SucOrgInOrNotInRo ro = new SucOrgInOrNotInRo();
         // 获取已添加组织列表
@@ -205,23 +175,29 @@ public class SucOrgSvcImpl extends MybatisBaseSvcImpl<SucOrgMo, java.lang.Long, 
     }
 
     @Override
-    public PageInfo<SucOrgMo> listAddedOrgs(final String orgIds, final String keys, final Integer pageNum, final Integer pageSize) {
+    public PageInfo<SucOrgMo> listAddedOrgs(final String orgIds, final String keys, final Integer pageNum,
+            final Integer pageSize) {
         _log.info("查询指定组织的已添加的组织列表：orgId-{},keys-{},pageNum-{},pageSize-{}", orgIds, keys, pageNum, pageSize);
         if (StringUtils.isBlank(keys)) {
-            return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectAddedOrgsByOrgIds(orgIds));
+            return PageHelper.startPage(pageNum, pageSize)
+                    .doSelectPageInfo(() -> _mapper.selectAddedOrgsByOrgIds(orgIds));
         } else {
-            return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectAddedOrgsByOrgIdsAndKeys(orgIds, keys));
+            return PageHelper.startPage(pageNum, pageSize)
+                    .doSelectPageInfo(() -> _mapper.selectAddedOrgsByOrgIdsAndKeys(orgIds, keys));
         }
 
     }
 
     @Override
-    public PageInfo<SucOrgMo> listUnaddedOrgs(final String orgIds, final String keys, final Integer pageNum, final Integer pageSize) {
+    public PageInfo<SucOrgMo> listUnaddedOrgs(final String orgIds, final String keys, final Integer pageNum,
+            final Integer pageSize) {
         _log.info("查询指定组织的没有添加的组织列表：orgId-{}", orgIds);
         if (StringUtils.isBlank(keys)) {
-            return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectUnaddedOrgsByOrgIds(orgIds));
+            return PageHelper.startPage(pageNum, pageSize)
+                    .doSelectPageInfo(() -> _mapper.selectUnaddedOrgsByOrgIds(orgIds));
         } else {
-            return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> _mapper.selectUnaddedOrgsByOrgIdsAndKeys(orgIds, keys));
+            return PageHelper.startPage(pageNum, pageSize)
+                    .doSelectPageInfo(() -> _mapper.selectUnaddedOrgsByOrgIdsAndKeys(orgIds, keys));
         }
     }
 
