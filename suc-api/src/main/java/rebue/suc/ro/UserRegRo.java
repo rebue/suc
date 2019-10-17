@@ -18,6 +18,14 @@ import rebue.suc.dic.RegResultDic;
 @JsonInclude(Include.NON_NULL)
 public class UserRegRo {
     /**
+     * 注册返回结果代码
+     */
+    private RegResultDic result;
+    /**
+     * 返回的结果
+     */
+    private String       msg;
+    /**
      * 用户ID
      */
     private Long         userId;
@@ -29,14 +37,6 @@ public class UserRegRo {
      * 用户WxUnionID
      */
     private String       userWxUnionId;
-    /**
-     * 注册返回结果代码
-     */
-    private RegResultDic result;
-    /**
-     * 返回的结果
-     */
-    private String       msg;
     /**
      * 签名(成功后可将签名放入Cookie中)
      */

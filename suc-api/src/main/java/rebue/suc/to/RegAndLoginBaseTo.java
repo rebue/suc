@@ -16,6 +16,10 @@ public abstract class RegAndLoginBaseTo {
      */
     private String sysId;
     /**
+     * 领域id
+     */
+    private String domainId;
+    /**
      * 用户的浏览器类型
      */
     private String userAgent;

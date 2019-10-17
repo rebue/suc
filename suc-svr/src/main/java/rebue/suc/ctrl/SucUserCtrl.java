@@ -147,18 +147,18 @@ public class SucUserCtrl {
      * 获取用户ID(通过用户名称)
      */
     @GetMapping("/user/id/byusername")
-    Long getIdByUserName(@RequestParam("userName") final String userName) {
-        _log.info("获取用户ID(通过用户名称): {}", userName);
-        return svc.getIdByUserName(userName);
+    Long getIdByUserName(@RequestParam("domainId") final String domainId, @RequestParam("userName") final String userName) {
+        _log.info("获取用户ID(通过用户名称):  domainId-{} userName-{}", domainId, userName);
+        return svc.getIdByUserName(domainId, userName);
     }
 
     /**
      * 获取用户ID(通过微信ID)
      */
     @GetMapping("/user/id/bywxid")
-    Long getIdByWxId(@RequestParam("wxId") final String wxId) {
-        _log.info("获取用户ID(通过微信ID): wxId-{}", wxId);
-        return svc.getIdByWxId(wxId);
+    Long getIdByWxId(@RequestParam("domainId") final String domainId, @RequestParam("wxId") final String wxId) {
+        _log.info("获取用户ID(通过微信ID): domainId-{} wxId-{}", domainId, wxId);
+        return svc.getIdByWxId(domainId, wxId);
     }
 
     /**

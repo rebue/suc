@@ -26,14 +26,12 @@ public class RegByLoginNameTo extends RegBaseTo {
     private String realname;
     @ApiModelProperty(value = "身份证号")
     private String idcard;
-    @ApiModelProperty(value = "领域id")
-    private String domainId;
 
     public String getLoginName() {
         return loginName;
     }
 
-    public void setLoginName(String loginName) {
+    public void setLoginName(final String loginName) {
         this.loginName = loginName;
     }
 
@@ -41,7 +39,7 @@ public class RegByLoginNameTo extends RegBaseTo {
         return loginPswd;
     }
 
-    public void setLoginPswd(String loginPswd) {
+    public void setLoginPswd(final String loginPswd) {
         this.loginPswd = loginPswd;
     }
 
@@ -49,7 +47,7 @@ public class RegByLoginNameTo extends RegBaseTo {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(final String email) {
         this.email = email;
     }
 
@@ -57,7 +55,7 @@ public class RegByLoginNameTo extends RegBaseTo {
         return mobile;
     }
 
-    public void setMobile(String mobile) {
+    public void setMobile(final String mobile) {
         this.mobile = mobile;
     }
 
@@ -65,7 +63,7 @@ public class RegByLoginNameTo extends RegBaseTo {
         return nickname;
     }
 
-    public void setNickname(String nickname) {
+    public void setNickname(final String nickname) {
         this.nickname = nickname;
     }
 
@@ -73,7 +71,7 @@ public class RegByLoginNameTo extends RegBaseTo {
         return realname;
     }
 
-    public void setRealname(String realname) {
+    public void setRealname(final String realname) {
         this.realname = realname;
     }
 
@@ -81,24 +79,14 @@ public class RegByLoginNameTo extends RegBaseTo {
         return idcard;
     }
 
-    public void setIdcard(String idcard) {
+    public void setIdcard(final String idcard) {
         this.idcard = idcard;
-    }
-
-    public String getDomainId() {
-        return domainId;
-    }
-
-    public void setDomainId(String domainId) {
-        this.domainId = domainId;
     }
 
     @Override
     public String toString() {
-        return "RegByLoginNameTo [loginName=" + loginName + ", loginPswd=" + loginPswd + ", email=" + email
-                + ", mobile=" + mobile + ", nickname=" + nickname + ", realname=" + realname + ", idcard=" + idcard
-                + ", domainId=" + domainId + ", getSysId()=" + getSysId() + ", getUserAgent()=" + getUserAgent()
-                + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
+        return "RegByLoginNameTo [loginName=" + loginName + ", loginPswd=" + loginPswd + ", email=" + email + ", mobile=" + mobile + ", nickname=" + nickname + ", realname="
+                + realname + ", idcard=" + idcard + ", getSysId()=" + getSysId() + ", getUserAgent()=" + getUserAgent() + ", getMac()=" + getMac() + ", getIp()=" + getIp() + "]";
     }
 
 }

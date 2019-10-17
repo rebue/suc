@@ -17,34 +17,38 @@ import lombok.ToString;
 @JsonInclude(Include.NON_NULL)
 public class LoginByWxTo extends RegAndLoginBaseTo {
     /**
+     * 用户不存在时先注册(默认不传此参数为false)
+     */
+    private Boolean regWhenNoExist = false;
+    /**
      * 微信的UnionID
      */
-    private String wxId;
-    /**
-     * 微信昵称
-     */
-    private String wxNickname;
-    /**
-     * 微信头像
-     */
-    private String wxFace;
+    private String  wxId;
     /**
      * 微信openid
      */
-    private String wxOpenid;
+    private String  wxOpenid;
+    /**
+     * 微信昵称
+     */
+    private String  wxNickname;
+    /**
+     * 微信头像
+     */
+    private String  wxFace;
 
     /**
      * 推广人id
      */
-    private Long   promoterId;
+    private Long    promoterId;
 
     /**
      * 上线id
+     * TODO 删除此属性
+     * 
+     * @deprecated
      */
-    private Long   onlineId;
-    
-    /**
-     * 领域id
-     */
-    private String domainId; 
+    @Deprecated
+    private Long    onlineId;
+
 }

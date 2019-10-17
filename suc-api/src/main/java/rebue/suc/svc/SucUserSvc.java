@@ -110,12 +110,12 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
     /**
      * 获取用户ID(通过用户名称)
      */
-    Long getIdByUserName(String userName);
+    Long getIdByUserName(String domainId, String userName);
 
     /**
      * 获取用户ID(通过微信ID)
      */
-    Long getIdByWxId(String wxId);
+    Long getIdByWxId(String domainId, String wxId);
 
     /**
      * 微信设置登录密码 Title: setLoginPassword Description:

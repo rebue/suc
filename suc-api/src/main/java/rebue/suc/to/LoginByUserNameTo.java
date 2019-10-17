@@ -26,12 +26,7 @@ public class LoginByUserNameTo extends RegAndLoginBaseTo {
     private String loginPswd;
 
     /**
-     * 领域id
-     */
-    private String domainId;
-
-    /**
      * 组织id
      */
-    private Long orgId;
+    private Long   orgId;
 }

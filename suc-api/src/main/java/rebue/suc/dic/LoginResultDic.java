@@ -18,7 +18,6 @@ import rebue.wheel.baseintf.EnumBase;
  * -4 账号被锁定
  * -5 用户用邮箱登录，但邮箱尚未通过验证
  * -6 用户用手机号登录，但手机号尚未通过验证
- * -7 用户不在此领域中
  */
 @ApiModel(value = "登录返回结果", description = "登录返回结果的字典")
 public enum LoginResultDic implements EnumBase {
@@ -62,12 +61,7 @@ public enum LoginResultDic implements EnumBase {
      * -6: 用户用手机号登录，但手机号尚未通过验证
      */
     @ApiModelProperty(value = "用户用手机号登录，但手机号尚未通过验证")
-    NO_VERITY_MOBILE(-6),
-    /**
-     * -7: 用户不在此领域中
-     */
-    @ApiModelProperty(value = "用户不在此领域中")
-    NO_IN_DOMAIN(-7);
+    NO_VERITY_MOBILE(-6);
     /**
      * 枚举的所有项，注意这个变量是静态单例的
      */
@@ -75,7 +69,7 @@ public enum LoginResultDic implements EnumBase {
     // 初始化map，保存枚举的所有项到map中以方便通过code查找
     static {
         valueMap = new HashMap<>();
-        for (EnumBase item : values()) {
+        for (final EnumBase item : values()) {
             valueMap.put(item.getCode(), item);
         }
     }
@@ -86,8 +80,8 @@ public enum LoginResultDic implements EnumBase {
      * 否则jackson将调用默认的反序列化方法，而不会调用本方法
      */
     @JsonCreator
-    public static LoginResultDic getItem(int code) {
-        EnumBase result = valueMap.get(code);
+    public static LoginResultDic getItem(final int code) {
+        final EnumBase result = valueMap.get(code);
         if (result == null) {
             throw new IllegalArgumentException("输入的code" + code + "不在枚举的取值范围内");
         }
@@ -99,7 +93,7 @@ public enum LoginResultDic implements EnumBase {
     /**
      * 构造器，传入code
      */
-    LoginResultDic(int code) {
+    LoginResultDic(final int code) {
         this.code = code;
     }
 
@@ -110,7 +104,7 @@ public enum LoginResultDic implements EnumBase {
     public int getCode() {
         return code;
     }
-    
+
     @Override
     public String getName() {
         return name();

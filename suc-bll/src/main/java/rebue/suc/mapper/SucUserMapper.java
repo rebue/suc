@@ -80,50 +80,51 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      * 根据邮箱获取用户信息
      */
     @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_EMAIL, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER "
-            + " where lower(EMAIL) = lower(#{email,jdbcType=VARCHAR})")
-    SucUserMo selectByEmail(String email);
+            + " where DOMAIN_ID=#{domainId} and lower(EMAIL) = lower(#{email,jdbcType=VARCHAR})")
+    SucUserMo selectByEmail(String domainId, String email);
 
     /**
      * 根据手机号获取用户信息
      */
     @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_MOBILE, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER "
-            + " where MOBILE = #{mobile,jdbcType=VARCHAR}")
-    SucUserMo selectByMobile(String mobile);
+            + " where DOMAIN_ID=#{domainId} and MOBILE = #{mobile,jdbcType=VARCHAR}")
+    SucUserMo selectByMobile(String domainId, String mobile);
 
     /**
      * 根据用户登录名称获取用户信息
      */
-    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER where lower(LOGIN_NAME) = lower(#{loginName,jdbcType=VARCHAR})")
-    SucUserMo selectByLoginName(String loginName);
+    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER where DOMAIN_ID=#{domainId} and lower(LOGIN_NAME) = lower(#{loginName,jdbcType=VARCHAR})")
+    SucUserMo selectByLoginName(String domainId, String loginName);
 
     /**
      * 根据QQ的id获取用户信息
      */
-    @Select("select ID, NICKNAME, QQ_NICKNAME, QQ_FACE, IS_LOCK,DOMAIN_ID from SUC_USER where QQ_ID = #{qqId,jdbcType=VARCHAR}")
-    SucUserMo selectByQq(String qqId);
+    @Select("select ID, NICKNAME, QQ_NICKNAME, QQ_FACE, IS_LOCK,DOMAIN_ID from SUC_USER where DOMAIN_ID=#{domainId} and QQ_ID = #{qqId,jdbcType=VARCHAR}")
+    SucUserMo selectByQq(String domainId, String qqId);
 
     /**
      * 根据QQ的id获取用户信息
      */
-    @Select("select ID, NICKNAME, QQ_NICKNAME, QQ_FACE, IS_LOCK,DOMAIN_ID from SUC_USER where QQ_OPENID = #{qqOpenid,jdbcType=VARCHAR}")
-    SucUserMo selectByQqopenId(String qqOpenid);
+    @Select("select ID, NICKNAME, QQ_NICKNAME, QQ_FACE, IS_LOCK,DOMAIN_ID from SUC_USER where DOMAIN_ID=#{domainId} and QQ_OPENID = #{qqOpenid,jdbcType=VARCHAR}")
+    SucUserMo selectByQqopenId(String domainId, String qqOpenid);
 
     /**
      * 根据微信的id获取用户信息
      */
-    @Select("select ID, NICKNAME, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER where WX_ID = #{wxId,jdbcType=VARCHAR}")
-    SucUserMo selectByWx(String wxId);
+    @Select("select ID, WX_ID, NICKNAME, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER where DOMAIN_ID=#{domainId} and WX_ID = #{wxId,jdbcType=VARCHAR}")
+    SucUserMo selectByWx(String domainId, String wxId);
 
     /**
      * 根据微信的openid获取用户信息
      */
-    @Select("select ID, NICKNAME, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER where WX_OPENID = #{wxOpenid,jdbcType=VARCHAR}")
-    SucUserMo selectByWxOpenid(String wxOpenid);
+    @Select("select ID, WX_ID, NICKNAME, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER where DOMAIN_ID=#{domainId} and WX_OPENID = #{wxOpenid,jdbcType=VARCHAR}")
+    SucUserMo selectByWxOpenid(String domainId, String wxOpenid);
 
     /**
      * 模糊查询关键字的用户列表
      *
-     * @param keys 模糊查询用户的关键字
+     * @param keys
+     *            模糊查询用户的关键字
      */
     @Select("SELECT * FROM SUC_USER WHERE (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%' OR ID LIKE '%${keys}%')")
     List<SucUserDetailRo> selectByKeys(@Param("keys") String keys);
@@ -131,7 +132,8 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
     /**
      * 查询在指定多个用户ID范围内的用户列表
      *
-     * @param userIds 多个用户ID组成的字符串，用逗号分隔
+     * @param userIds
+     *            多个用户ID组成的字符串，用逗号分隔
      */
     @Select("SELECT * FROM SUC_USER WHERE ID IN (${userIds})")
     List<SucUserDetailRo> selectByUserIds(@Param("userIds") String userIds);
@@ -139,8 +141,10 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
     /**
      * 模糊查询关键字且在指定多个用户ID范围内的用户列表
      *
-     * @param keys    模糊查询用户的关键字
-     * @param userIds 多个用户ID组成的字符串，用逗号分隔
+     * @param keys
+     *            模糊查询用户的关键字
+     * @param userIds
+     *            多个用户ID组成的字符串，用逗号分隔
      */
     @Select("SELECT * FROM SUC_USER WHERE ID IN (${userIds}) AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%' OR ID LIKE '%${keys}%')")
     List<SucUserDetailRo> selectByKeysAndUserIds(@Param("keys") String keys, @Param("userIds") String userIds);
@@ -148,7 +152,8 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
     /**
      * 查询除指定多个用户ID外的用户列表
      *
-     * @param userIds 多个用户ID组成的字符串，用逗号分隔
+     * @param userIds
+     *            多个用户ID组成的字符串，用逗号分隔
      */
     @Select("SELECT * FROM SUC_USER WHERE ID NOT IN (${userIds})")
     List<SucUserDetailRo> selectByNotUserIds(@Param("userIds") String userIds);
@@ -156,8 +161,10 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
     /**
      * 模糊查询关键字且排除指定多个用户ID外的用户列表
      *
-     * @param keys    模糊查询用户的关键字
-     * @param userIds 多个用户ID组成的字符串，用逗号分隔
+     * @param keys
+     *            模糊查询用户的关键字
+     * @param userIds
+     *            多个用户ID组成的字符串，用逗号分隔
      */
     @Select("SELECT * FROM SUC_USER WHERE ID NOT IN (${userIds}) AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%' OR ID LIKE '%${keys}%')")
     List<SucUserDetailRo> selectByKeysAndNotUserIds(@Param("keys") String keys, @Param("userIds") String userIds);
@@ -165,7 +172,8 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
     /**
      * 查询指定组织的已添加的用户列表
      *
-     * @param orgId 组织ID
+     * @param orgId
+     *            组织ID
      */
     @Select("SELECT * FROM SUC_USER WHERE ORG_ID = #{orgId,jdbcType=BIGINT}")
     List<SucUserDetailRo> selectAddedUsersByOrgId(@Param("orgId") Long orgId);
@@ -173,8 +181,10 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
     /**
      * 查询指定组织的已添加的用户列表
      *
-     * @param orgId 组织ID
-     * @param keys  模糊查询用户的关键字
+     * @param orgId
+     *            组织ID
+     * @param keys
+     *            模糊查询用户的关键字
      */
     @Select("SELECT * FROM SUC_USER WHERE ORG_ID = #{orgId,jdbcType=BIGINT} AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%' OR ID LIKE '%${keys}%')")
     List<SucUserDetailRo> selectAddedUsersByOrgIdAndKeys(@Param("orgId") Long orgId, @Param("keys") String keys);
@@ -182,7 +192,8 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
     /**
      * 查询指定组织的未添加的用户列表
      *
-     * @param orgId 组织ID
+     * @param orgId
+     *            组织ID
      */
     @Select("SELECT * FROM SUC_USER WHERE ORG_ID IS NULL or ORG_ID != #{orgId,jdbcType=BIGINT}")
     List<SucUserDetailRo> selectUnaddedUsersByOrgId(@Param("orgId") Long orgId);
@@ -190,8 +201,10 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
     /**
      * 根据条件查询指定组织的未添加的用户列表
      *
-     * @param orgId 组织ID
-     * @param keys  模糊查询用户的关键字
+     * @param orgId
+     *            组织ID
+     * @param keys
+     *            模糊查询用户的关键字
      */
     @Select("SELECT * FROM SUC_USER WHERE (ORG_ID IS NULL or ORG_ID != #{orgId,jdbcType=BIGINT}) AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%' OR ID LIKE '%${keys}%' )")
     List<SucUserDetailRo> selectUnaddedUsersByOrgIdAndKeys(@Param("orgId") Long orgId, @Param("keys") String keys);
@@ -199,20 +212,24 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
     /**
      * 根据组织id、用户id、关键字查询该组织除去指定用户之外的用户列表
      *
-     * @param orgId   组织id
-     * @param userIds 需要排除的用户id，多个以逗号隔开
-     * @param keys    模糊查询用户的关键字
+     * @param orgId
+     *            组织id
+     * @param userIds
+     *            需要排除的用户id，多个以逗号隔开
+     * @param keys
+     *            模糊查询用户的关键字
      * @return
      */
     @Select("SELECT * FROM SUC_USER WHERE ID NOT IN (${userIds}) and ORG_ID = #{orgId,jdbcType=BIGINT} AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%' OR ID LIKE '%${keys}%' )")
-    List<SucUserDetailRo> selectUnaddedUsersByOrgIdAndUserIdsAndKeys(@Param("orgId") Long orgId,
-            @Param("userIds") String userIds, @Param("keys") String keys);
+    List<SucUserDetailRo> selectUnaddedUsersByOrgIdAndUserIdsAndKeys(@Param("orgId") Long orgId, @Param("userIds") String userIds, @Param("keys") String keys);
 
     /**
      * 根据组织id、关键字查询该组织用户列表
      *
-     * @param orgId 组织id
-     * @param keys  模糊查询用户的关键字
+     * @param orgId
+     *            组织id
+     * @param keys
+     *            模糊查询用户的关键字
      * @return
      */
     @Select("SELECT * FROM SUC_USER WHERE ORG_ID = #{orgId,jdbcType=BIGINT} AND (LOGIN_NAME LIKE '%${keys}%' OR NICKNAME LIKE '%${keys}%' OR REALNAME LIKE '%${keys}%' OR IDCARD = '%${keys}%' OR EMAIL LIKE '%${keys}%' OR MOBILE LIKE '%${keys}%' OR QQ_NICKNAME LIKE '%${keys}%' OR WX_NICKNAME LIKE '%${keys}%' OR ID LIKE '%${keys}%' )")
