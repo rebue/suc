@@ -40,20 +40,19 @@ public class LoginCtrl {
      * 前面经过的代理
      */
     @Value("${suc.passProxy:noproxy}")
-    private String passProxy;
+    private String              passProxy;
 
     @Resource
-    private SucUserSvc svc;
+    private SucUserSvc          svc;
     @Resource
-    private JwtSvc     jwtSvc;
+    private JwtSvc              jwtSvc;
 
     /**
      * 用户登录(登录名称)
      */
     @ApiOperation("用户通过登录名称(LoginName)登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-3: 密码错误;-4: 账号被锁定)")
     @PostMapping("/user/login/by/login/name")
-    UserLoginRo loginByLoginName(@RequestBody final LoginByLoginNameTo loginTo, final HttpServletRequest req,
-            final HttpServletResponse resp) {
+    UserLoginRo loginByLoginName(@RequestBody final LoginByLoginNameTo loginTo, final HttpServletRequest req, final HttpServletResponse resp) {
         _log.info("login: " + loginTo);
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
@@ -70,8 +69,7 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过用户名称(Email/Moblie/LoginName)登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-3: 密码错误;-4: 账号被锁定;-5: 用户用Email登录，但Email尚未通过验证;-6: 用户用手机号登录，但手机号尚未通过验证;-7: 用户不在此领域中)")
     @PostMapping("/user/login/by/user/name")
-    UserLoginRo loginByUserName(@RequestBody final LoginByUserNameTo loginTo, final HttpServletRequest req,
-            final HttpServletResponse resp) {
+    UserLoginRo loginByUserName(@RequestBody final LoginByUserNameTo loginTo, final HttpServletRequest req, final HttpServletResponse resp) {
         _log.info("login: " + loginTo);
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
@@ -85,8 +83,7 @@ public class LoginCtrl {
 
     @ApiOperation("商家通过商家名称(Email/Moblie/LoginName)登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-3: 密码错误;-4: 账号被锁定;-5: 用户用Email登录，但Email尚未通过验证;-6: 用户用手机号登录，但手机号尚未通过验证;-7: 用户不在此领域中)")
     @PostMapping("/user/login/by/business/name")
-    UserLoginRo loginByBusinessName(@RequestBody final LoginByUserNameTo loginTo, final HttpServletRequest req,
-            final HttpServletResponse resp) {
+    UserLoginRo loginByBusinessName(@RequestBody final LoginByUserNameTo loginTo, final HttpServletRequest req, final HttpServletResponse resp) {
         _log.info("login: " + loginTo);
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
@@ -103,8 +100,7 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过QQ登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-4: 账号被锁定)")
     @PostMapping("/user/login/by/qq")
-    UserLoginRo loginByQq(@RequestBody final LoginByQqTo loginTo, final HttpServletRequest req,
-            final HttpServletResponse resp) {
+    UserLoginRo loginByQq(@RequestBody final LoginByQqTo loginTo, final HttpServletRequest req, final HttpServletResponse resp) {
         _log.info("login: " + loginTo);
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
@@ -121,13 +117,12 @@ public class LoginCtrl {
      */
     @ApiOperation("用户通过微信登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-4: 账号被锁定)")
     @PostMapping("/user/login/by/wx")
-    UserLoginRo loginByWx(@RequestBody final LoginByWxTo loginTo, final HttpServletRequest req,
-            final HttpServletResponse resp) throws RedisSetException {
+    UserLoginRo loginByWx(@RequestBody final LoginByWxTo loginTo, final HttpServletRequest req, final HttpServletResponse resp) throws RedisSetException {
         _log.info("login: " + loginTo);
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
         loginTo.setMac("不再获取MAC地址");
-        loginTo.setDomainId("buyer");
+//        loginTo.setDomainId("buyer");
         final UserLoginRo ro = svc.loginByWx(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
             final Map<String, Object> addition = new LinkedHashMap<>();
@@ -142,8 +137,7 @@ public class LoginCtrl {
     /**
      * JWT签名并将其加入Cookie
      */
-    private void jwtSignWithCookie(final UserLoginRo userLoginRo, final String sysId, Map<String, Object> addition,
-            final HttpServletResponse resp) {
+    private void jwtSignWithCookie(final UserLoginRo userLoginRo, final String sysId, Map<String, Object> addition, final HttpServletResponse resp) {
         if (addition == null) {
             addition = new LinkedHashMap<>();
         }
