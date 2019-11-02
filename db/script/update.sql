@@ -1,3 +1,19 @@
+-- MAC地址设为可空
+alter table suc.SUC_LOGIN_LOG 	modify MAC                  varchar(30) comment 'MAC地址';
+alter table suc.SUC_REG 				modify MAC                  varchar(30) comment 'MAC地址';
+
+
+
+
+
+
+
+
+
+
+-- ------------------------------------------------------------------ 以下已经更新到线上 2019-11-02 ------------------------------------------------------------------ 
+
+
 -- 2018年9月19日 更新到大卖网线上
 -- 在SUC_OP_LOG、SUC_LOGIN_LOG、SUC_REG等表中添加系统id和修改appid为非必填，在SUC_ORG中添加IS_ENABLED（是否启用）并设置默认值
 alter table suc.SUC_OP_LOG add SYS_ID varchar(20) not null;
