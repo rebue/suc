@@ -12,13 +12,17 @@ import lombok.ToString;
 @ToString
 public abstract class RegAndLoginBaseTo {
     /**
+     * 领域id
+     */
+    private String domainId;
+    /**
      * 系统ID
      */
     private String sysId;
     /**
-     * 领域id
+     * 组织id
      */
-    private String domainId;
+    private Long   orgId;
     /**
      * 用户的浏览器类型
      */

@@ -56,7 +56,6 @@ public class LoginCtrl {
         _log.info("login: " + loginTo);
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
-        loginTo.setMac("不再获取MAC地址");
         final UserLoginRo ro = svc.loginByLoginName(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
             jwtSignWithCookie(ro, loginTo.getSysId(), null, resp);
@@ -73,7 +72,6 @@ public class LoginCtrl {
         _log.info("login: " + loginTo);
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
-        loginTo.setMac("不再获取MAC地址");
         final UserLoginRo ro = svc.loginByUserName(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
             jwtSignWithCookie(ro, loginTo.getSysId(), null, resp);
@@ -81,19 +79,18 @@ public class LoginCtrl {
         return ro;
     }
 
-    @ApiOperation("商家通过商家名称(Email/Moblie/LoginName)登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-3: 密码错误;-4: 账号被锁定;-5: 用户用Email登录，但Email尚未通过验证;-6: 用户用手机号登录，但手机号尚未通过验证;-7: 用户不在此领域中)")
-    @PostMapping("/user/login/by/business/name")
-    UserLoginRo loginByBusinessName(@RequestBody final LoginByUserNameTo loginTo, final HttpServletRequest req, final HttpServletResponse resp) {
-        _log.info("login: " + loginTo);
-        loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
-        loginTo.setUserAgent(AgentUtils.getUserAgent(req));
-        loginTo.setMac("不再获取MAC地址");
-        final UserLoginRo ro = svc.loginByBusinessName(loginTo);
-        if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
-            jwtSignWithCookie(ro, loginTo.getSysId(), null, resp);
-        }
-        return ro;
-    }
+//    @ApiOperation("商家通过商家名称(Email/Moblie/LoginName)登录\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 找不到用户信息;-3: 密码错误;-4: 账号被锁定;-5: 用户用Email登录，但Email尚未通过验证;-6: 用户用手机号登录，但手机号尚未通过验证;-7: 用户不在此领域中)")
+//    @PostMapping("/user/login/by/business/name")
+//    UserLoginRo loginByBusinessName(@RequestBody final LoginByUserNameTo loginTo, final HttpServletRequest req, final HttpServletResponse resp) {
+//        _log.info("login: " + loginTo);
+//        loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
+//        loginTo.setUserAgent(AgentUtils.getUserAgent(req));
+//        final UserLoginRo ro = svc.loginByBusinessName(loginTo);
+//        if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
+//            jwtSignWithCookie(ro, loginTo.getSysId(), null, resp);
+//        }
+//        return ro;
+//    }
 
     /**
      * 用户登录(QQ)
@@ -104,7 +101,6 @@ public class LoginCtrl {
         _log.info("login: " + loginTo);
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
-        loginTo.setMac("不再获取MAC地址");
         final UserLoginRo ro = svc.loginByQq(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
             jwtSignWithCookie(ro, loginTo.getSysId(), null, resp);
@@ -121,7 +117,6 @@ public class LoginCtrl {
         _log.info("login: " + loginTo);
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
-        loginTo.setMac("不再获取MAC地址");
 //        loginTo.setDomainId("buyer");
         final UserLoginRo ro = svc.loginByWx(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {

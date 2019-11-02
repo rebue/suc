@@ -77,50 +77,6 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
     boolean existSelective(SucUserMo record);
 
     /**
-     * 根据邮箱获取用户信息
-     */
-    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_EMAIL, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER "
-            + " where DOMAIN_ID=#{domainId} and lower(EMAIL) = lower(#{email,jdbcType=VARCHAR})")
-    SucUserMo selectByEmail(String domainId, String email);
-
-    /**
-     * 根据手机号获取用户信息
-     */
-    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_MOBILE, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER "
-            + " where DOMAIN_ID=#{domainId} and MOBILE = #{mobile,jdbcType=VARCHAR}")
-    SucUserMo selectByMobile(String domainId, String mobile);
-
-    /**
-     * 根据用户登录名称获取用户信息
-     */
-    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER where DOMAIN_ID=#{domainId} and lower(LOGIN_NAME) = lower(#{loginName,jdbcType=VARCHAR})")
-    SucUserMo selectByLoginName(String domainId, String loginName);
-
-    /**
-     * 根据QQ的id获取用户信息
-     */
-    @Select("select ID, NICKNAME, QQ_NICKNAME, QQ_FACE, IS_LOCK,DOMAIN_ID from SUC_USER where DOMAIN_ID=#{domainId} and QQ_ID = #{qqId,jdbcType=VARCHAR}")
-    SucUserMo selectByQq(String domainId, String qqId);
-
-    /**
-     * 根据QQ的id获取用户信息
-     */
-    @Select("select ID, NICKNAME, QQ_NICKNAME, QQ_FACE, IS_LOCK,DOMAIN_ID from SUC_USER where DOMAIN_ID=#{domainId} and QQ_OPENID = #{qqOpenid,jdbcType=VARCHAR}")
-    SucUserMo selectByQqopenId(String domainId, String qqOpenid);
-
-    /**
-     * 根据微信的id获取用户信息
-     */
-    @Select("select ID, WX_ID, NICKNAME, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER where DOMAIN_ID=#{domainId} and WX_ID = #{wxId,jdbcType=VARCHAR}")
-    SucUserMo selectByWx(String domainId, String wxId);
-
-    /**
-     * 根据微信的openid获取用户信息
-     */
-    @Select("select ID, WX_ID, NICKNAME, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER where DOMAIN_ID=#{domainId} and WX_OPENID = #{wxOpenid,jdbcType=VARCHAR}")
-    SucUserMo selectByWxOpenid(String domainId, String wxOpenid);
-
-    /**
      * 模糊查询关键字的用户列表
      *
      * @param keys
@@ -445,23 +401,23 @@ public interface SucUserMapper extends MybatisBaseMapper<SucUserMo, Long> {
      */
     List<SucUserMo> listUserByDomainIdAndKeys(@Param("domainId") String domainId, @Param("keys") String keys);
 
-    /**
-     * 根据邮箱获取多个用户信息
-     */
-    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_EMAIL, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER "
-            + " where lower(EMAIL) = lower(#{email,jdbcType=VARCHAR})")
-    List<SucUserMo> listByEmail(String email);
-
-    /**
-     * 根据手机号获取多个用户信息
-     */
-    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_MOBILE, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER "
-            + " where MOBILE = #{mobile,jdbcType=VARCHAR}")
-    List<SucUserMo> listByMobile(String mobile);
-
-    /**
-     * 根据用户登录名称获取多个用户信息
-     */
-    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER where lower(LOGIN_NAME) = lower(#{loginName,jdbcType=VARCHAR})")
-    List<SucUserMo> listByLoginName(String loginName);
+//    /**
+//     * 根据邮箱获取多个用户信息
+//     */
+//    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_EMAIL, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER "
+//            + " where lower(EMAIL) = lower(#{email,jdbcType=VARCHAR})")
+//    List<SucUserMo> listByEmail(String email);
+//
+//    /**
+//     * 根据手机号获取多个用户信息
+//     */
+//    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, IS_VERIFIED_MOBILE, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER "
+//            + " where MOBILE = #{mobile,jdbcType=VARCHAR}")
+//    List<SucUserMo> listByMobile(String mobile);
+//
+//    /**
+//     * 根据用户登录名称获取多个用户信息
+//     */
+//    @Select("select ID, LOGIN_NAME, LOGIN_PSWD, SALT, NICKNAME, FACE, QQ_NICKNAME, QQ_FACE, WX_NICKNAME, WX_FACE, IS_LOCK, ORG_ID,DOMAIN_ID from SUC_USER where lower(LOGIN_NAME) = lower(#{loginName,jdbcType=VARCHAR})")
+//    List<SucUserMo> listByLoginName(String loginName);
 }

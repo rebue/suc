@@ -55,10 +55,10 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
      */
     UserLoginRo loginByUserName(LoginByUserNameTo loginTo);
 
-    /**
-     * 商家登录(通过用户名称登录，按照 邮箱->手机->登录名 的顺序查找用户)
-     */
-    UserLoginRo loginByBusinessName(LoginByUserNameTo loginTo);
+//    /**
+//     * 商家登录(通过用户名称登录，按照 邮箱->手机->登录名 的顺序查找用户)
+//     */
+//    UserLoginRo loginByBusinessName(LoginByUserNameTo loginTo);
 
     /**
      * 用户登录(通过QQ登录)
@@ -110,12 +110,12 @@ public interface SucUserSvc extends MybatisBaseSvc<SucUserMo, java.lang.Long> {
     /**
      * 获取用户ID(通过用户名称)
      */
-    Long getIdByUserName(String domainId, String userName);
+    Long getIdByUserName(String domainId, Long orgId, String userName);
 
     /**
      * 获取用户ID(通过微信ID)
      */
-    Long getIdByWxId(String domainId, String wxId);
+    Long getIdByWxId(String domainId, Long orgId, String wxId, String wxOpenId);
 
     /**
      * 微信设置登录密码 Title: setLoginPassword Description:

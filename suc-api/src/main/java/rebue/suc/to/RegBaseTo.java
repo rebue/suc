@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 注册与登录的基础传输对象
+ * 注册的基础传输对象
  */
 @Getter
 @Setter
@@ -22,7 +22,7 @@ public abstract class RegBaseTo extends RegAndLoginBaseTo {
     private Long    orgId;
 
     /**
-     * 是否为组织添加
+     * 是否添加到当前操作人的组织
      */
-    private Boolean isOrgAdd;
+    private Boolean isAddToCurOrg;
 }

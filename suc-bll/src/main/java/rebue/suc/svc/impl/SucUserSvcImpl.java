@@ -164,13 +164,14 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     }
 
     /**
-     * 用户注册(通过登录名称) TODO SUC : 用户注册(通过Email/Mobile)
+     * 用户注册(通过登录名称)
+     * TODO SUC : 用户注册(通过Email/Mobile)
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserRegRo regByLoginName(final RegByLoginNameTo to) {
-        if (StringUtils.isAnyBlank(to.getLoginName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
-            _log.warn("没有填写用户登录名称/登录密码/应用ID/浏览器类型/MAC/IP: {}", to);
+        if (StringUtils.isAnyBlank(to.getSysId(), to.getLoginName(), to.getLoginPswd(), to.getUserAgent(), to.getIp()) || to.getDomainId() == null) {
+            _log.warn("没有填写用户登录名称/登录密码/系统ID/领域ID/浏览器类型/IP: {}", to);
             final UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.PARAM_ERROR);
             regRo.setMsg("参数不正确");
@@ -211,9 +212,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             regRo.setMsg("身份证号码格式不正确");
             return regRo;
         }
-        SucUserMo condition = new SucUserMo();
-        condition.setLoginName(to.getLoginName());
-        if (_mapper.existSelective(condition)) {
+        SucUserMo qo = new SucUserMo();
+        qo.setDomainId(to.getDomainId());
+        qo.setLoginName(to.getLoginName());
+        if (_mapper.existSelective(qo)) {
             _log.warn("用户登录名称已存在: {}", to);
             final UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.LOGIN_NAME_EXIST);
@@ -221,9 +223,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             return regRo;
         }
         if (!StringUtils.isBlank(to.getEmail())) {
-            condition = new SucUserMo();
-            condition.setEmail(to.getEmail());
-            if (_mapper.existSelective(condition)) {
+            qo = new SucUserMo();
+            qo.setDomainId(to.getDomainId());
+            qo.setEmail(to.getEmail());
+            if (_mapper.existSelective(qo)) {
                 _log.warn("电子邮箱已存在: {}", to);
                 final UserRegRo regRo = new UserRegRo();
                 regRo.setResult(RegResultDic.EMAIL_EXIST);
@@ -232,9 +235,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             }
         }
         if (!StringUtils.isBlank(to.getMobile())) {
-            condition = new SucUserMo();
-            condition.setMobile(to.getMobile());
-            if (_mapper.existSelective(condition)) {
+            qo = new SucUserMo();
+            qo.setDomainId(to.getDomainId());
+            qo.setMobile(to.getMobile());
+            if (_mapper.existSelective(qo)) {
                 _log.warn("手机号码已存在: {}", to);
                 final UserRegRo regRo = new UserRegRo();
                 regRo.setResult(RegResultDic.MOBILE_EXIST);
@@ -243,9 +247,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             }
         }
         if (!StringUtils.isBlank(to.getIdcard())) {
-            condition = new SucUserMo();
-            condition.setIdcard(to.getIdcard());
-            if (_mapper.existSelective(condition)) {
+            qo = new SucUserMo();
+            qo.setDomainId(to.getDomainId());
+            qo.setIdcard(to.getIdcard());
+            if (_mapper.existSelective(qo)) {
                 _log.warn("身份证号码已存在: {}", to);
                 final UserRegRo regRo = new UserRegRo();
                 regRo.setResult(RegResultDic.IDCARD_EXIST);
@@ -268,15 +273,16 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserRegRo regByQq(final RegByQqTo to) {
-        if (StringUtils.isAnyBlank(to.getQqId(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
-            _log.warn("没有填写用户QQ的ID/QQ昵称/QQ头像/应用ID/浏览器类型/MAC/IP: {}", to);
+        if (StringUtils.isAnyBlank(to.getSysId(), to.getQqId(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getIp()) || to.getDomainId() == null) {
+            _log.warn("没有填写用户QQ的ID/QQ昵称/QQ头像/系统ID/领域ID/浏览器类型/IP: {}", to);
             final UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.PARAM_ERROR);
             return regRo;
         }
-        final SucUserMo condition = new SucUserMo();
-        condition.setQqId(to.getQqId());
-        if (_mapper.existSelective(condition)) {
+        final SucUserMo qo = new SucUserMo();
+        qo.setDomainId(to.getDomainId());
+        qo.setQqId(to.getQqId());
+        if (_mapper.existSelective(qo)) {
             _log.warn("QQ的ID已存在: {}", to);
             final UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.QQ_ID_EXIST);
@@ -293,30 +299,23 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserRegRo regByWx(final RegByWxTo to) {
-        if (StringUtils.isAllBlank(to.getWxId(), to.getWxOpenid()) || StringUtils.isAnyBlank(to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp())
-                || to.getSysId() == null) {
-            _log.warn("没有填写用户微信的OpenID或UnionID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
+        if (StringUtils.isAllBlank(to.getSysId(), to.getWxId(), to.getWxOpenid()) || StringUtils.isAnyBlank(to.getWxNickname(), to.getUserAgent(), to.getIp())
+                || to.getDomainId() == null) {
+            _log.warn("没有填写用户微信的OpenID或UnionID/微信昵称/系统ID/领域ID/浏览器类型/IP: {}", to);
             final UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.PARAM_ERROR);
             return regRo;
         }
-        SucUserMo condition = new SucUserMo();
+        final SucUserMo qo = new SucUserMo();
+        qo.setDomainId(to.getDomainId());
         if (to.getWxId() != null) {
-            condition.setWxId(to.getWxId());
+            qo.setWxId(to.getWxId());
         }
         if (to.getWxOpenid() != null) {
-            condition.setWxOpenid(to.getWxOpenid());
+            qo.setWxOpenid(to.getWxOpenid());
         }
-        if (_mapper.existSelective(condition)) {
+        if (_mapper.existSelective(qo)) {
             _log.warn("微信的UnionID或OpenID已存在: {}", to);
-            final UserRegRo regRo = new UserRegRo();
-            regRo.setResult(RegResultDic.WX_ID_EXIST);
-            return regRo;
-        }
-        condition = new SucUserMo();
-        condition.setWxOpenid(to.getWxOpenid());
-        if (_mapper.existSelective(condition)) {
-            _log.warn("微信的ID已存在: {}", to);
             final UserRegRo regRo = new UserRegRo();
             regRo.setResult(RegResultDic.WX_ID_EXIST);
             return regRo;
@@ -360,14 +359,14 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserLoginRo loginByLoginName(final LoginByLoginNameTo to) {
-        if (StringUtils.isAnyBlank(to.getLoginName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
-            _log.warn("没有填写用户登录名称/密码/应用ID/浏览器类型/MAC/IP: {}", to);
+        if (StringUtils.isAnyBlank(to.getSysId(), to.getLoginName(), to.getLoginPswd(), to.getUserAgent(), to.getIp()) || to.getDomainId() == null) {
+            _log.warn("没有填写用户登录名称/密码/系统ID/领域ID/浏览器类型/IP: {}", to);
             final UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.PARAM_ERROR);
             ro.setMsg("参数错误");
             return ro;
         }
-        final SucUserMo userMo = _mapper.selectByLoginName(to.getDomainId(), to.getLoginName());
+        final SucUserMo userMo = getOneByLoginName(to.getDomainId(), to.getOrgId(), to.getLoginName());
         if (userMo == null) {
             _log.warn("找不到此用户: {}", to);
             final UserLoginRo ro = new UserLoginRo();
@@ -395,8 +394,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserLoginRo loginByUserName(final LoginByUserNameTo to) {
-        if (StringUtils.isAnyBlank(to.getUserName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
-            _log.warn("没有填写用户名/密码/应用ID/浏览器类型/MAC/IP: {}", to);
+        if (StringUtils.isAnyBlank(to.getSysId(), to.getUserName(), to.getLoginPswd(), to.getUserAgent(), to.getIp()) || to.getDomainId() == null) {
+            _log.warn("没有填写用户名/密码/系统ID/领域ID/浏览器类型/IP: {}", to);
             final UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.PARAM_ERROR);
             ro.setMsg("参数错误");
@@ -405,7 +404,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         RegAndLoginTypeDic loginType = null;
         SucUserMo userMo = null;
         if (RegexUtils.matchEmail(to.getUserName())) {
-            userMo = _mapper.selectByEmail(to.getDomainId(), to.getUserName());
+            userMo = getOneByEmail(to.getDomainId(), to.getOrgId(), to.getUserName());
             if (userMo != null) {
                 if (!userMo.getIsVerifiedEmail()) {
                     _log.warn("用户用邮箱登录，但邮箱尚未通过验证: {}", to);
@@ -417,7 +416,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 loginType = RegAndLoginTypeDic.EMAIL;
             }
         } else if (RegexUtils.matchMobile(to.getUserName())) {
-            userMo = _mapper.selectByMobile(to.getDomainId(), to.getUserName());
+            userMo = getOneByMobile(to.getDomainId(), to.getOrgId(), to.getUserName());
             if (userMo != null) {
                 if (!userMo.getIsVerifiedMobile()) {
                     _log.warn("用户用手机号登录，但手机号尚未通过验证: {}", to);
@@ -430,93 +429,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             }
         }
         if (userMo == null) {
-            userMo = _mapper.selectByLoginName(to.getDomainId(), to.getUserName());
+            userMo = getOneByLoginName(to.getDomainId(), to.getOrgId(), to.getUserName());
             if (userMo != null) {
-                loginType = RegAndLoginTypeDic.LOGIN_NAME;
-            }
-        }
-        if (userMo == null) {
-            _log.warn("找不到此用户:" + to);
-            final UserLoginRo ro = new UserLoginRo();
-            ro.setResult(LoginResultDic.NOT_FOUND_USER);
-            ro.setMsg("找不到此用户");
-            return ro;
-        }
-
-        if (userMo.getLoginPswd() == null) {
-            final UserLoginRo ro = new UserLoginRo();
-            ro.setResult(LoginResultDic.PASSWORD_ERROR);
-            ro.setMsg("该用户没有设置登录密码，请设置好登录密码才能登录");
-            return ro;
-        }
-        final UserLoginRo ro = verifyLogin(userMo, to.getLoginPswd());
-        if (ro != null) {
-            return ro;
-        }
-        return returnSuccessLogin(to, loginType, userMo);
-    }
-
-    /**
-     * 商家登录(通过用户名称登录，按照 邮箱->手机->登录名 的顺序查找商家)
-     */
-    @Override
-    public UserLoginRo loginByBusinessName(final LoginByUserNameTo to) {
-        if (StringUtils.isAnyBlank(to.getUserName(), to.getLoginPswd(), to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
-            _log.warn("没有填写用户名/密码/应用ID/浏览器类型/MAC/IP/组织id: {}", to);
-            final UserLoginRo ro = new UserLoginRo();
-            ro.setResult(LoginResultDic.PARAM_ERROR);
-            ro.setMsg("参数错误");
-            return ro;
-        }
-        RegAndLoginTypeDic loginType = null;
-        SucUserMo userMo = null;
-        List<SucUserMo> userMos = null;
-        if (RegexUtils.matchEmail(to.getUserName())) {
-            userMos = _mapper.listByEmail(to.getUserName());
-            _log.info("listByEmail userMos-{}:", userMos);
-            if (userMos != null) {
-                for (final SucUserMo mo : userMos) {
-                    if (mo.getOrgId().equals(to.getOrgId()) && mo.getEmail().equals(to.getUserName())) {
-                        userMo = mo;
-                    }
-                }
-                if (!userMo.getIsVerifiedEmail()) {
-                    _log.warn("用户用邮箱登录，但邮箱尚未通过验证: {}", to);
-                    final UserLoginRo ro = new UserLoginRo();
-                    ro.setResult(LoginResultDic.NO_VERITY_EMAIL);
-                    ro.setMsg("该邮箱未认证");
-                    return ro;
-                }
-                loginType = RegAndLoginTypeDic.EMAIL;
-            }
-        } else if (RegexUtils.matchMobile(to.getUserName())) {
-            userMos = _mapper.listByMobile(to.getUserName());
-            _log.info("listByMobile userMos-{}:", userMos);
-            if (userMos != null) {
-                for (final SucUserMo mo : userMos) {
-                    if (mo.getOrgId().equals(to.getOrgId()) && mo.getMobile().equals(to.getUserName())) {
-                        userMo = mo;
-                    }
-                }
-                if (!userMo.getIsVerifiedMobile()) {
-                    _log.warn("用户用手机号登录，但手机号尚未通过验证: {}", to);
-                    final UserLoginRo ro = new UserLoginRo();
-                    ro.setResult(LoginResultDic.NO_VERITY_MOBILE);
-                    ro.setMsg("该手机号码未认证");
-                    return ro;
-                }
-                loginType = RegAndLoginTypeDic.MOBILE;
-            }
-        }
-        if (userMo == null) {
-            userMos = _mapper.listByLoginName(to.getUserName());
-            _log.info("listByLoginName userMos-{}:", userMos);
-            if (userMos != null) {
-                for (final SucUserMo mo : userMos) {
-                    if (mo.getOrgId().equals(to.getOrgId()) && mo.getLoginName().equals(to.getUserName())) {
-                        userMo = mo;
-                    }
-                }
                 loginType = RegAndLoginTypeDic.LOGIN_NAME;
             }
         }
@@ -547,22 +461,19 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserLoginRo loginByQq(final LoginByQqTo to) {
-        if (StringUtils.isAnyBlank(to.getQqId(), to.getQqOpenid(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getMac(), to.getIp()) || to.getSysId() == null) {
-            _log.warn("没有填写用户QQ的ID/QQ昵称/QQ头像/应用ID/浏览器类型/MAC/IP: {}", to);
+        if (StringUtils.isAnyBlank(to.getSysId(), to.getQqNickname(), to.getQqFace(), to.getUserAgent(), to.getIp()) || StringUtils.isAllBlank(to.getQqId(), to.getQqOpenid()) //
+                || to.getDomainId() == null) {
+            _log.warn("没有填写用户QQ的UnionID或OpenID/QQ昵称/QQ头像/系统ID/领域ID/浏览器类型/IP: {}", to);
             final UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.PARAM_ERROR);
             return ro;
         }
-        SucUserMo userMo = _mapper.selectByQq(to.getDomainId(), to.getQqId());
+        final SucUserMo userMo = getOneByQq(to.getDomainId(), to.getOrgId(), to.getQqId(), to.getQqOpenid());
         if (userMo == null) {
             _log.warn("根据QQId找不到此用户: {}", to);
-            userMo = _mapper.selectByQqopenId(to.getDomainId(), to.getQqOpenid());
-            if (userMo == null) {
-                _log.warn("根据QQopenid找不到此用户: {}", to);
-                final UserLoginRo ro = new UserLoginRo();
-                ro.setResult(LoginResultDic.NOT_FOUND_USER);
-                return ro;
-            }
+            final UserLoginRo ro = new UserLoginRo();
+            ro.setResult(LoginResultDic.NOT_FOUND_USER);
+            return ro;
         }
         final UserLoginRo ro = verifyLogin(userMo, null);
         if (ro != null) {
@@ -602,9 +513,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserLoginRo loginByWx(final LoginByWxTo to) {
-        if (StringUtils.isAllBlank(to.getWxId(), to.getWxOpenid()) || StringUtils.isAnyBlank(to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp())
-                || to.getSysId() == null) {
-            _log.warn("没有填写用户微信的OpenID或UnionID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
+        if (StringUtils.isAnyBlank(to.getSysId(), to.getWxNickname(), to.getWxFace(), to.getUserAgent(), to.getIp())//
+                || StringUtils.isAllBlank(to.getWxId(), to.getWxOpenid())//
+                || to.getDomainId() == null) {
+            _log.warn("没有填写用户微信的OpenID或UnionID/微信昵称/系统ID/领域ID/浏览器类型/IP: {}", to);
             final UserLoginRo ro = new UserLoginRo();
             ro.setResult(LoginResultDic.PARAM_ERROR);
             return ro;
@@ -612,23 +524,19 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         SucUserMo userMo = null;
         if (to.getWxId() != null) {
             _log.info("根据微信UnionID查找用户: {}", to);
-            userMo = _mapper.selectByWx(to.getDomainId(), to.getWxId());
+            userMo = getOneByWx(to.getDomainId(), to.getOrgId(), to.getWxId(), to.getWxOpenid());
         }
         if (userMo == null) {
-            _log.info("根据微信OpenId查找用户: {}", to);
-            userMo = _mapper.selectByWxOpenid(to.getDomainId(), to.getWxOpenid());
-            if (userMo == null) {
-                _log.info("未找到用户: {}", to);
-                if (to.getRegWhenNoExist()) {
-                    _log.info("未找到用户则直接进行注册: {}", to);
-                    final RegByWxTo regTo = dozerMapper.map(to, RegByWxTo.class);
-                    final UserRegRo regRo = thisSvc.regByWx(regTo);
-                    return dozerMapper.map(regRo, UserLoginRo.class);
-                } else {
-                    final UserLoginRo ro = new UserLoginRo();
-                    ro.setResult(LoginResultDic.NOT_FOUND_USER);
-                    return ro;
-                }
+            _log.info("未找到用户: {}", to);
+            if (to.getRegWhenNoExist()) {
+                _log.info("未找到用户则直接进行注册: {}", to);
+                final RegByWxTo regTo = dozerMapper.map(to, RegByWxTo.class);
+                final UserRegRo regRo = thisSvc.regByWx(regTo);
+                return dozerMapper.map(regRo, UserLoginRo.class);
+            } else {
+                final UserLoginRo ro = new UserLoginRo();
+                ro.setResult(LoginResultDic.NOT_FOUND_USER);
+                return ro;
             }
         }
         UserLoginRo ro = verifyLogin(userMo, null);
@@ -677,6 +585,79 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         ro.setUserWxUnionId(to.getWxId());
         ro.setUserWxOpenId(to.getWxOpenid());
         return ro;
+    }
+
+    /**
+     * 根据邮箱获取用户信息
+     */
+    private SucUserMo getOneByEmail(final String domainId, final Long orgId, final String email) {
+        final SucUserMo qo = new SucUserMo();
+        qo.setDomainId(domainId);
+        if (orgId != null) {
+            qo.setOrgId(orgId);
+        }
+        qo.setEmail(email);
+        return thisSvc.getOne(qo);
+    }
+
+    /**
+     * 根据手机号获取用户信息
+     */
+    private SucUserMo getOneByMobile(final String domainId, final Long orgId, final String mobile) {
+        final SucUserMo qo = new SucUserMo();
+        qo.setDomainId(domainId);
+        if (orgId != null) {
+            qo.setOrgId(orgId);
+        }
+        qo.setMobile(mobile);
+        return thisSvc.getOne(qo);
+    }
+
+    /**
+     * 根据用户登录名称获取用户信息
+     */
+    private SucUserMo getOneByLoginName(final String domainId, final Long orgId, final String loginName) {
+        final SucUserMo qo = new SucUserMo();
+        qo.setDomainId(domainId);
+        if (orgId != null) {
+            qo.setOrgId(orgId);
+        }
+        qo.setLoginName(loginName);
+        return thisSvc.getOne(qo);
+    }
+
+    /**
+     * 根据用户登录名称获取用户信息
+     */
+    private SucUserMo getOneByQq(final String domainId, final Long orgId, final String qqId, final String qqOpenId) {
+        final SucUserMo qo = new SucUserMo();
+        qo.setDomainId(domainId);
+        if (orgId != null) {
+            qo.setOrgId(orgId);
+        }
+        if (!StringUtils.isBlank(qqId)) {
+            qo.setQqId(qqId);
+        } else if (!StringUtils.isBlank(qqOpenId)) {
+            qo.setQqOpenid(qqOpenId);
+        }
+        return thisSvc.getOne(qo);
+    }
+
+    /**
+     * 根据用户登录名称获取用户信息
+     */
+    private SucUserMo getOneByWx(final String domainId, final Long orgId, final String wxId, final String wxOpenId) {
+        final SucUserMo qo = new SucUserMo();
+        qo.setDomainId(domainId);
+        if (orgId != null) {
+            qo.setOrgId(orgId);
+        }
+        if (!StringUtils.isBlank(wxId)) {
+            qo.setWxId(wxId);
+        } else if (!StringUtils.isBlank(wxOpenId)) {
+            qo.setWxOpenid(wxOpenId);
+        }
+        return thisSvc.getOne(qo);
     }
 
     /**
@@ -949,8 +930,8 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      */
     @Override
     public BindWxRo bindWx(final BindWxTo to) {
-        if (to.getUserId() == null || to.getSysId() == null || StringUtils.isAnyBlank(to.getWxId(), to.getWxNickname(), to.getUserAgent(), to.getMac(), to.getIp())) {
-            _log.warn("没有填写用户ID/微信ID/微信昵称/应用ID/浏览器类型/MAC/IP: {}", to);
+        if (to.getUserId() == null || to.getSysId() == null || StringUtils.isAnyBlank(to.getWxId(), to.getWxNickname(), to.getUserAgent(), to.getIp())) {
+            _log.warn("没有填写用户ID/微信ID/微信昵称/应用ID/浏览器类型/IP: {}", to);
             final BindWxRo ro = new BindWxRo();
             ro.setResult(BindWxResultDic.PARAM_ERROR);
             return ro;
@@ -1009,14 +990,14 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 获取用户ID(通过用户名称)
      */
     @Override
-    public Long getIdByUserName(final String domainId, final String userName) {
+    public Long getIdByUserName(final String domainId, final Long orgId, final String userName) {
         if (userName == null) {
             _log.warn("没有填写用户名称: {}", userName);
             return null;
         }
         SucUserMo userMo = null;
         if (RegexUtils.matchEmail(userName)) {
-            userMo = _mapper.selectByEmail(domainId, userName);
+            userMo = getOneByEmail(domainId, orgId, userName);
             if (userMo != null) {
                 if (!userMo.getIsVerifiedEmail()) {
                     _log.warn("用户用邮箱登录，但邮箱尚未通过验证: {}", userName);
@@ -1024,7 +1005,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
                 }
             }
         } else if (RegexUtils.matchMobile(userName)) {
-            userMo = _mapper.selectByMobile(domainId, userName);
+            userMo = getOneByMobile(domainId, orgId, userName);
             if (userMo != null) {
                 if (!userMo.getIsVerifiedMobile()) {
                     _log.warn("用户用手机号登录，但手机号尚未通过验证: {}", userName);
@@ -1033,7 +1014,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             }
         }
         if (userMo == null) {
-            userMo = _mapper.selectByLoginName(domainId, userName);
+            userMo = getOneByLoginName(domainId, orgId, userName);
         }
         if (userMo == null) {
             return null;
@@ -1045,12 +1026,12 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
      * 获取用户ID(通过微信ID)
      */
     @Override
-    public Long getIdByWxId(final String domainId, final String wxId) {
-        if (wxId == null) {
-            _log.warn("没有填写领域ID/微信ID: domain-{} wxId-{}", domainId, wxId);
+    public Long getIdByWxId(final String domainId, final Long orgId, final String wxId, final String wxOpenId) {
+        if (domainId == null || StringUtils.isAllBlank(wxId, wxOpenId)) {
+            _log.warn("没有填写领域ID/微信ID: domain-{} orgId-{} wxId-{} wxOpenId-{}", domainId, orgId, wxId, wxOpenId);
             return null;
         }
-        final SucUserMo userMo = _mapper.selectByWx(domainId, wxId);
+        final SucUserMo userMo = getOneByWx(domainId, orgId, wxId, wxOpenId);
         if (userMo == null) {
             return null;
         }

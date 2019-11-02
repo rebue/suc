@@ -39,36 +39,34 @@ public class RegCtrl {
      * 前面经过的代理
      */
     @Value("${suc.passProxy:noproxy}")
-    private String passProxy;
+    private String              passProxy;
 
     @Resource
-    private SucUserSvc svc;
+    private SucUserSvc          svc;
     @Resource
-    private JwtSvc     jwtSvc;
-
-    @Value("${debug:true}")
-    private Boolean isDebug;
+    private JwtSvc              jwtSvc;
 
     /**
      * 用户注册(登录名称)
-     * 
-     * @throws ParseException
+     * 1: 成功;0: 缓存失败;
+     * -1: 参数不正确;
+     * -2: 用户登录名已存在;
+     * -3: Email已存在;
+     * -4: 手机号码已存在;
+     * -5: 身份证号码已存在;
+     * -6: QQ的ID已存在;
+     * -7: 微信的ID已存在
      */
     @ApiOperation("用户通过登录名称注册\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 用户登录名已存在;-3: Email已存在;-4: 手机号码已存在;-5: 身份证号码已存在;-6: QQ的ID已存在;-7: 微信的ID已存在)")
     @PostMapping("/user/reg/by/login/name")
-    UserRegRo regByLoginName(@RequestBody final RegByLoginNameTo regTo, final HttpServletRequest req,
-            final HttpServletResponse resp) throws ParseException {
+    UserRegRo regByLoginName(@RequestBody final RegByLoginNameTo regTo, final HttpServletRequest req, final HttpServletResponse resp) throws ParseException {
         _log.info("reg by login name: {}", regTo);
         regTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         regTo.setUserAgent(AgentUtils.getUserAgent(req));
-        regTo.setMac("不再获取MAC地址");
-        if (regTo.getIsOrgAdd()) {
-            Long orgId = 560754349274431488L;
-            if (!isDebug) {
-                orgId = (Long) JwtUtils.getJwtAdditionItemInCookie(req, "orgId");
-            }
-            regTo.setOrgId(orgId);
-        }
+//        if (regTo.getIsAddToCurOrg() != null && regTo.getIsAddToCurOrg()) {
+        // 下一行在调试模式下直接设置当前组织，免得从cookie中获取麻烦
+//        regTo.setOrgId(560754349274431488L);
+        regTo.setOrgId((Long) JwtUtils.getJwtAdditionItemInCookie(req, "orgId"));
         final UserRegRo ro = svc.regByLoginName(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
             jwtSignWithCookie(ro, regTo.getSysId(), null, resp);
@@ -81,12 +79,10 @@ public class RegCtrl {
      */
     @ApiOperation("用户通过QQ注册\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 用户登录名已存在;-3: Email已存在;-4: 手机号码已存在;-5: 身份证号码已存在;-6: QQ的ID已存在;-7: 微信的ID已存在)")
     @PostMapping("/user/reg/by/qq")
-    UserRegRo regByQq(@RequestBody final RegByQqTo regTo, final HttpServletRequest req,
-            final HttpServletResponse resp) {
+    UserRegRo regByQq(@RequestBody final RegByQqTo regTo, final HttpServletRequest req, final HttpServletResponse resp) {
         _log.info("reg by qq: {}", regTo);
         regTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         regTo.setUserAgent(AgentUtils.getUserAgent(req));
-        regTo.setMac("不再获取MAC地址");
         final UserRegRo ro = svc.regByQq(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
             jwtSignWithCookie(ro, regTo.getSysId(), null, resp);
@@ -99,13 +95,10 @@ public class RegCtrl {
      */
     @ApiOperation("用户通过微信注册\n(1: 成功;0: 缓存失败;-1: 参数不正确;-2: 用户登录名已存在;-3: Email已存在;-4: 手机号码已存在;-5: 身份证号码已存在;-6: 微信的ID已存在;-7: 微信的ID已存在)")
     @PostMapping("/user/reg/by/wx")
-    UserRegRo regByWx(@RequestBody final RegByWxTo regTo, final HttpServletRequest req,
-            final HttpServletResponse resp) {
+    UserRegRo regByWx(@RequestBody final RegByWxTo regTo, final HttpServletRequest req, final HttpServletResponse resp) {
         _log.info("reg by wx: {}", regTo);
         regTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         regTo.setUserAgent(AgentUtils.getUserAgent(req));
-        regTo.setMac("不再获取MAC地址");
-        regTo.setDomainId("buyer");
         final UserRegRo ro = svc.regByWx(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {
             final Map<String, Object> addition = new LinkedHashMap<>();
@@ -122,8 +115,7 @@ public class RegCtrl {
      * @param userId
      *            用户ID
      */
-    private void jwtSignWithCookie(final UserRegRo userRegRo, final String sysId, Map<String, Object> addition,
-            final HttpServletResponse resp) {
+    private void jwtSignWithCookie(final UserRegRo userRegRo, final String sysId, Map<String, Object> addition, final HttpServletResponse resp) {
         if (addition == null) {
             addition = new LinkedHashMap<>();
         }

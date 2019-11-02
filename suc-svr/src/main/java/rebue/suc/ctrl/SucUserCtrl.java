@@ -147,18 +147,21 @@ public class SucUserCtrl {
      * 获取用户ID(通过用户名称)
      */
     @GetMapping("/user/id/byusername")
-    Long getIdByUserName(@RequestParam("domainId") final String domainId, @RequestParam("userName") final String userName) {
-        _log.info("获取用户ID(通过用户名称):  domainId-{} userName-{}", domainId, userName);
-        return svc.getIdByUserName(domainId, userName);
+    Long getIdByUserName(@RequestParam("domainId") final String domainId, @RequestParam(value = "orgId", required = false) final Long orgId,
+            @RequestParam("userName") final String userName) {
+        _log.info("获取用户ID(通过用户名称):  domainId-{} orgId-{} userName-{}", domainId, orgId, userName);
+        return svc.getIdByUserName(domainId, orgId, userName);
     }
 
     /**
      * 获取用户ID(通过微信ID)
      */
     @GetMapping("/user/id/bywxid")
-    Long getIdByWxId(@RequestParam("domainId") final String domainId, @RequestParam("wxId") final String wxId) {
-        _log.info("获取用户ID(通过微信ID): domainId-{} wxId-{}", domainId, wxId);
-        return svc.getIdByWxId(domainId, wxId);
+    Long getIdByWxId(@RequestParam("domainId") final String domainId, @RequestParam(value = "orgId", required = false) final Long orgId,
+            @RequestParam(value = "wxId", required = false) final String wxId,//
+            @RequestParam(value = "wxOpenId", required = false) final String wxOpenId) {
+        _log.info("获取用户ID(通过微信ID): domainId-{} orgId-{} wxId-{} wxOpenId-{}", domainId, orgId, wxId, wxOpenId);
+        return svc.getIdByWxId(domainId, orgId, wxId, wxOpenId);
     }
 
     /**
