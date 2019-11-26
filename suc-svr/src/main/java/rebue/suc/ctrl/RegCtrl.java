@@ -66,6 +66,7 @@ public class RegCtrl {
 //        if (regTo.getIsAddToCurOrg() != null && regTo.getIsAddToCurOrg()) {
         // 下一行在调试模式下直接设置当前组织，免得从cookie中获取麻烦
 //        regTo.setOrgId(560754349274431488L);
+        regTo.setDomainId("bussines");
         regTo.setOrgId((Long) JwtUtils.getJwtAdditionItemInCookie(req, "orgId"));
         final UserRegRo ro = svc.regByLoginName(regTo);
         if (RegResultDic.SUCCESS.equals(ro.getResult())) {

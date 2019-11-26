@@ -179,7 +179,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             regRo.setMsg("参数不正确");
             return regRo;
         }
-        if (to.getLoginName().length() < 3 || to.getLoginName().length() > 20
+        if (to.getLoginName().length() < 2 || to.getLoginName().length() > 20
                 || RegexUtils.matchEmail(to.getLoginName()) || RegexUtils.matchMobile(to.getLoginName())) {
             _log.warn("登录名称格式不正确: {}", to);
             final UserRegRo regRo = new UserRegRo();
