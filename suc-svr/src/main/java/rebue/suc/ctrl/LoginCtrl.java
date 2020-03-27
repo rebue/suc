@@ -117,7 +117,7 @@ public class LoginCtrl {
         _log.info("login: " + loginTo);
         loginTo.setIp(AgentUtils.getIpAddr(req, passProxy));
         loginTo.setUserAgent(AgentUtils.getUserAgent(req));
-//        loginTo.setDomainId("buyer");
+       loginTo.setDomainId("buyer");
         final UserLoginRo ro = svc.loginByWx(loginTo);
         if (LoginResultDic.SUCCESS.equals(ro.getResult())) {
             final Map<String, Object> addition = new LinkedHashMap<>();

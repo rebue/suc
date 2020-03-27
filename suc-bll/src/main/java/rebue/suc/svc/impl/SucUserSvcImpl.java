@@ -523,7 +523,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public UserLoginRo loginByWx(final LoginByWxTo to) {
-        if (StringUtils.isAnyBlank(to.getSysId(), to.getWxNickname(), to.getWxFace(), to.getUserAgent(), to.getIp())//
+        if (StringUtils.isAnyBlank(to.getSysId(), to.getWxNickname(), to.getUserAgent(), to.getIp())//
                 || StringUtils.isAllBlank(to.getWxId(), to.getWxOpenid())//
                 || to.getDomainId() == null) {
             _log.warn("没有填写用户微信的OpenID或UnionID/微信昵称/系统ID/领域ID/浏览器类型/IP: {}", to);
@@ -668,6 +668,7 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
         } else if (!StringUtils.isBlank(wxOpenId)) {
             qo.setWxOpenid(wxOpenId);
         }
+        _log.info("获取用户的参数为-{}",qo);
         return thisSvc.getOne(qo);
     }
 
