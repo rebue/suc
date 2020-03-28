@@ -532,10 +532,10 @@ public class SucUserSvcImpl extends MybatisBaseSvcImpl<SucUserMo, java.lang.Long
             return ro;
         }
         SucUserMo userMo = null;
-        if (to.getWxId() != null) {
+     //   if (to.getWxId() != null) { 这里是因为线下没有wxId注释掉
             _log.info("根据微信UnionID查找用户: {}", to);
             userMo = getOneByWx(to.getDomainId(), to.getOrgId(), to.getWxId(), to.getWxOpenid());
-        }
+       // }
         if (userMo == null) {
             _log.info("未找到用户: {}", to);
             if (to.getRegWhenNoExist()) {
